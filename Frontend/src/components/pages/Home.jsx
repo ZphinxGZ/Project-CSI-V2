@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Home.css";
@@ -41,7 +42,8 @@ export const Home = () => {
     for (let i = 1; i <= lastDate; i++) {
       let dateKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
       let meetingInfo = meetings[dateKey] ? `<div class="meeting">${meetings[dateKey]}</div>` : "";
-      calendarDays.innerHTML += `<div class="date">${i}${meetingInfo}</div>`;
+      let isToday = new Date().getDate() === i && new Date().getMonth() === currentMonth && new Date().getFullYear() + 543 === currentYear;
+      calendarDays.innerHTML += `<div class="date ${isToday ? 'highlight-today' : ''}">${i}${meetingInfo}</div>`;
     }
   };
 
