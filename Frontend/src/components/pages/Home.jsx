@@ -15,10 +15,6 @@ export const Home = () => {
     "2568-04-01": "13:00 น."
   };
 
-  useEffect(() => {
-    updateCalendar();
-  }, [currentMonth, currentYear]);
-
   const updateCalendar = () => {
     document.getElementById("calendarTitle").textContent = `${monthNames[currentMonth]} ${currentYear}`;
     renderDates();
@@ -49,48 +45,49 @@ export const Home = () => {
     }
   };
 
-  const handlePrevMonth = () => {
-    setCurrentMonth((prev) => {
-      if (prev === 0) {
-        setCurrentYear((prevYear) => prevYear - 1);
-        return 11;
-      }
-      return prev - 1;
-    });
-  };
-
-  const handleNextMonth = () => {
-    setCurrentMonth((prev) => {
-      if (prev === 11) {
-        setCurrentYear((prevYear) => prevYear + 1);
-        return 0;
-      }
-      return prev + 1;
-    });
-  };
+  useEffect(() => {
+    updateCalendar();
+  }, [currentMonth, currentYear]);
 
   return (
     <div>
-      <div className="dashboard-grid">
-        <div className="card blue">จองห้อง อนุมัติ </div>
-        <div className="card green">จองห้อง ไม่อนุมัติ </div>
-        <div className="card orange">จองห้อง รอตรวจสอบ</div>
-        <div className="card red">ห้องทั้งหมด </div>
-      </div>
-      <div className="calendar">
-        <div className="calendar-header">
-          <button onClick={handlePrevMonth}>{"<"}</button>
-          <h3 id="calendarTitle"></h3>
-          <button onClick={handleNextMonth}>{">"}</button>
+      <div className="container">
+        <div className="header">
+          <i className="bi bi-list"></i>
+          <h2>Dashboard</h2>
         </div>
-        <div className="calendar-days" id="calendarDays">
-          <div className="day">อา.</div>
-          <div className="day">จ.</div>
-          <div className="day">อ.</div>
-          <div className="day">พ.</div>
-          <div className="day">พฤ.</div>
-          <div className="day">ศ.</div>
-          <div className="day">ส.</div>
+        
+        <div className="dashboard-grid">
+          <div className="card blue">จองห้อง อนุมัติ <span>0</span></div>
+          <div className="card green">จองห้อง ไม่อนุมัติ <span>0</span></div>
+          <div className="card orange">จองห้อง รอตรวจสอบ <span>0</span></div>
+          <div className="card red">ห้องทั้งหมด <span>0</span></div>
+        </div>
+        
+        <div className="calendar">
+          <div className="calendar-header">
+            <i className="bi bi-chevron-left" id="prevMonth" onClick={() => {
+              setCurrentMonth((prev) => prev === 0 ? 11 : prev - 1);
+              if (currentMonth === 0) setCurrentYear((prev) => prev - 1);
+            }}></i>
+
+            <h3 id="calendarTitle"></h3>
+            <i className="bi bi-chevron-right" id="nextMonth" onClick={() => {
+              setCurrentMonth((prev) => prev === 11 ? 0 : prev + 1);
+              if (currentMonth === 11) setCurrentYear((prev) => prev + 1);
+            }}></i>
+
+            
+          </div>
+          <div className="calendar-days" id="calendarDays">
+            <div className="day">อา.</div>
+            <div className="day">จ.</div>
+            <div className="day">อ.</div>
+            <div className="day">พ.</div>
+            <div className="day">พฤ.</div>
+            <div className="day">ศ.</div>
+            <div className="day">ส.</div>
+          </div>
         </div>
       </div>
     </div>
