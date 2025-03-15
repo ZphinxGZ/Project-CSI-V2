@@ -1,0 +1,65 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8f9fa;
+}
+.container {
+    width: 90%;
+    margin: auto;
+    padding-top: 20px;
+}
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.header i {
+    margin-right: 10px;
+}
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+.card {
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.blue { background: #2d5f90; }
+.green { background: #7a8b41; }
+.orange { background: #c89c2d; }
+.red { background: #c32f2f; }
+.calendar {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-top: 10px;
+}
+.day, .date {
+    padding: 10px;
+}
+.meeting {
+    background: #ffcc00;
+    border-radius: 50%;
+    padding: 5px;
+}
