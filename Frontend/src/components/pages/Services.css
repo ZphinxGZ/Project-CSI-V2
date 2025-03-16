@@ -22,7 +22,7 @@
 .filter-section label {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 }
 
 .filter-section select, .filter-section input, .filter-section button {
