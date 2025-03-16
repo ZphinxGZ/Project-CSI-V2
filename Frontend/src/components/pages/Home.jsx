@@ -34,9 +34,10 @@ export const Home = () => {
     `;
     const firstDay = new Date(currentYear - 543, currentMonth, 1).getDay();
     const lastDate = new Date(currentYear - 543, currentMonth + 1, 0).getDate();
+    const prevLastDate = new Date(currentYear - 543, currentMonth, 0).getDate();
 
-    for (let i = 0; i < firstDay; i++) {
-      calendarDays.innerHTML += '<div class="date"></div>';
+    for (let i = firstDay - 1; i >= 0; i--) {
+      calendarDays.innerHTML += `<div class="date prev-month">${prevLastDate - i}</div>`;
     }
 
     for (let i = 1; i <= lastDate; i++) {
@@ -44,6 +45,11 @@ export const Home = () => {
       let meetingInfo = meetings[dateKey] ? `<div class="meeting">${meetings[dateKey]}</div>` : "";
       let isToday = new Date().getDate() === i && new Date().getMonth() === currentMonth && new Date().getFullYear() + 543 === currentYear;
       calendarDays.innerHTML += `<div class="date ${isToday ? 'highlight-today' : ''}">${i}${meetingInfo}</div>`;
+    }
+
+    const nextDays = 42 - calendarDays.children.length;
+    for (let i = 1; i <= nextDays; i++) {
+      calendarDays.innerHTML += `<div class="date next-month">${i}</div>`;
     }
   };
 
@@ -60,10 +66,10 @@ export const Home = () => {
         </div>
         
         <div className="dashboard-grid">
-          <div className="card blue">จองห้อง อนุมัติ <span>0</span></div>
-          <div className="card green">จองห้อง ไม่อนุมัติ <span>0</span></div>
-          <div className="card orange">จองห้อง รอตรวจสอบ <span>0</span></div>
-          <div className="card red">ห้องทั้งหมด <span>0</span></div>
+          <div className="card blue">จองห้อง อนุมัติ </div>
+          <div className="card green">จองห้อง ไม่อนุมัติ </div>
+          <div className="card orange">จองห้อง รอตรวจสอบ</div>
+          <div className="card red">ห้องทั้งหมด </div>
         </div>
         
         <div className="calendar">
@@ -78,8 +84,6 @@ export const Home = () => {
               setCurrentMonth((prev) => prev === 11 ? 0 : prev + 1);
               if (currentMonth === 11) setCurrentYear((prev) => prev + 1);
             }}></i>
-
-            
           </div>
           <div className="calendar-days" id="calendarDays">
             <div className="day">อา.</div>
