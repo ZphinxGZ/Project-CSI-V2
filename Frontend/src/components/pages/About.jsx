@@ -5,7 +5,7 @@ export const About = () => {
   return (
     <div className="about-container centered-content">
       <div className="title-container">
-        <h2>รายการห้อง</h2>
+        <h2>รายการ ห้อง</h2>
       </div>
       <ul className="about-list">
         <li>
@@ -14,7 +14,7 @@ export const About = () => {
             <h2 className="room-title">ห้องประชุม 1</h2>
             <p>ห้องประชุมพร้อมระบบ Video conference ที่มีผู้เข้าร่วมประชุมรูปตัว U </p>
             <button className="btn blue">จองห้อง</button>
-            <button className="btn orange">รายละเอียด</button>
+            <button className="btn yellow">รายละเอียด</button>
           </div>
         </li>
         <li>
@@ -23,7 +23,7 @@ export const About = () => {
             <h2 className="room-title">ห้องประชุม 2</h2>
             <p>ห้องประชุมขนาดใหญ่ พร้อมสิ่งอำนวยความสะดวกครบครัน</p>
             <button className="btn blue">จองห้อง</button>
-            <button className="btn orange">รายละเอียด</button>
+            <button className="btn yellow">รายละเอียด</button>
           </div>
         </li>
         <li>
@@ -32,7 +32,7 @@ export const About = () => {
             <h2 className="room-title-red">ห้องประชุมสาขาเทคโนโลยีสารสนเทศ</h2>
             <p>ห้องประชุมขนาดใหญ่ (Hall) เหมาะสำหรับการสัมมนาเป็นหมู่คณะ และ จัดเลี้ยง</p>
             <button className="btn blue">จองห้อง</button>
-            <button className="btn orange">รายละเอียด</button>
+            <button className="btn yellow">รายละเอียด</button>
           </div>
         </li>
       </ul>

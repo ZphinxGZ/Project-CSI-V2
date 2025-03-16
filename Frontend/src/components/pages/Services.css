@@ -1,12 +1,10 @@
 .booking-history {
-  background-color: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
   margin-top: 20px;
   width: 100%; /* Ensure full width */
   color: black; /* Set text color to black */
 }
-
 
 .booking-history h2 {
   color: #333;
@@ -71,9 +69,50 @@ th, td {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-  width: 100%; /* Ensure full width */
+  width: 100%; 
 }
 
 .large-table {
   font-size: 1.2em;
+}
+
+.show-select {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn.yellow {
+  background-color: #ffc107;
+}
+
+.btn.blue {
+  background-color: #007bff;
+}
+
+.btn.green {
+  background-color: #28a745;
+}
+
+.btn.orange {
+  background-color: #fd7e14;
+}
+
+.filter-nav ul {
+  display: flex;
+  gap: 10px;
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.filter-nav ul li {
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+}
+
+.filter-nav ul li:hover {
+  background-color: #ddd;
 }
