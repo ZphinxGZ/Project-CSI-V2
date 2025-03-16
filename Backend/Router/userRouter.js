@@ -1,15 +1,7 @@
 import express from "express";
-import mysql from "mysql2/promise"; // ใช้ mysql2 แบบ promise
+import mongoose from "mongoose";
 
 const userRouter = express.Router();
-
-// สร้างการเชื่อมต่อฐานข้อมูล
-const db = await mysql.createPool({
-  host: "localhost", // แก้ไขตามการตั้งค่าของคุณ
-  user: "root", // ชื่อผู้ใช้ MySQL
-  password: "your_password", // รหัสผ่าน MySQL
-  database: "your_database_name", // ชื่อฐานข้อมูล
-});
 
 // เส้นทางสำหรับการลงทะเบียนผู้ใช้
 userRouter.post("/register", (req, res) => {
@@ -56,11 +48,15 @@ userRouter.get("/notifications", (req, res) => {
 // เส้นทางตัวอย่างสำหรับดึงข้อมูลผู้ใช้ทั้งหมด
 userRouter.get("/", async (req, res) => {
   try {
-    // ดึงข้อมูลผู้ใช้ทั้งหมดจากตาราง Users
-    const [rows] = await db.query("SELECT user_id, username, role, created_at FROM Users");
+    // Fetch all users without excluding any fields
+    const users = await mongoose.connection.db
+      .collection("Users")
+      .find({})
+      .toArray();
+
     res.status(200).json({
       message: "ดึงข้อมูลผู้ใช้ทั้งหมดสำเร็จ",
-      data: rows,
+      data: users,
     });
   } catch (error) {
     console.error("Error fetching users:", error);
