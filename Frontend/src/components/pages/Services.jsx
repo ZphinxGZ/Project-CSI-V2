@@ -4,7 +4,7 @@ import './Services.css';
 export const Services = () => {
   return (
     <>
-      <h1 className="header">Services</h1>
+      <h2 className="header">Services</h2>
       <div className="card">
         <section className="booking-history" style={{ width: '100%', color: 'black' }}>
           <h2>Booking History</h2>
@@ -22,8 +22,8 @@ export const Services = () => {
               <select>
                 <option>All</option>
                 <option>Room 1</option>
-                <option>Room 2</option>
-                <option>Room 3</option>
+                <option>Room 2 </option>
+                <option>Room 3 </option>
               </select>
             </label>
             <button>Go</button>
