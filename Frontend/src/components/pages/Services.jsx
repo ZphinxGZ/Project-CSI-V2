@@ -19,7 +19,7 @@ export const Services = () => {
             <label>From <input type="date" /></label>
             <label>To <input type="date" /></label>
             <label>Room 
-              <select>
+              <select >
                 <option>All</option>
                 <option>Room 1</option>
                 <option>Room 2</option>
