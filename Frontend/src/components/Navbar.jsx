@@ -18,7 +18,7 @@ export const Navbar = () => {
       </div>
       <ul className={menuOpen ? "open" : ""}>
         <li>
-          <NavLink to="/about">การจอง</NavLink>
+          <NavLink to="/about">จองห้อง</NavLink>
         </li>
         <li>
           <NavLink to="/services">ดูประวัติการจอง</NavLink>
