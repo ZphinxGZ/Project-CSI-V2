@@ -1,33 +1,17 @@
 import express from "express";
 import cors from "cors";
-import mysql from "mysql2";
 import morgan from "morgan";
+import connectDB from "./connectDatabase/connectDB.js"; // Import MongoDB connection
 
-// const host = "192.168.1.14";
-const port = 3700;
+const port = 3000;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(morgan("combined")); // Add morgan middleware for logging
 
-const config = {
-  user: "root",
-  password: "root",
-  host: "25.32.51.163",
-  port: 3400,
-  database: "meetingroombooking",
-};
-
-const connection = mysql.createConnection(config);
-
-connection.connect((err) => {
-  if (err) {
-    console.error("Error connecting to MySQL:", err);
-    return;
-  }
-  console.log("Connected to MySQL database");
-});
+// Connect to MongoDB
+connectDB();
 
 // Define a route for the root URL
 app.get("/", (req, res) => {
