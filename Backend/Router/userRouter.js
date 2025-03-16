@@ -1,6 +1,15 @@
 import express from "express";
+import mysql from "mysql2/promise"; // ใช้ mysql2 แบบ promise
 
 const userRouter = express.Router();
+
+// สร้างการเชื่อมต่อฐานข้อมูล
+const db = await mysql.createPool({
+  host: "localhost", // แก้ไขตามการตั้งค่าของคุณ
+  user: "root", // ชื่อผู้ใช้ MySQL
+  password: "your_password", // รหัสผ่าน MySQL
+  database: "your_database_name", // ชื่อฐานข้อมูล
+});
 
 // เส้นทางสำหรับการลงทะเบียนผู้ใช้
 userRouter.post("/register", (req, res) => {
@@ -45,8 +54,21 @@ userRouter.get("/notifications", (req, res) => {
 });
 
 // เส้นทางตัวอย่างสำหรับดึงข้อมูลผู้ใช้ทั้งหมด
-userRouter.get("/", (req, res) => {
-  res.send("ดึงข้อมูลผู้ใช้ทั้งหมด");
+userRouter.get("/", async (req, res) => {
+  try {
+    // ดึงข้อมูลผู้ใช้ทั้งหมดจากตาราง Users
+    const [rows] = await db.query("SELECT user_id, username, role, created_at FROM Users");
+    res.status(200).json({
+      message: "ดึงข้อมูลผู้ใช้ทั้งหมดสำเร็จ",
+      data: rows,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({
+      message: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้",
+      error: error.message,
+    });
+  }
 });
 
 // เส้นทางตัวอย่างสำหรับสร้างผู้ใช้ใหม่
