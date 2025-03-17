@@ -22,17 +22,17 @@ nav .title {
     color: white;
     margin-right: 1rem;
 }
-nav ul{
-    display : flex;    
-    padding: 0;
-    margin: 0;
+
+nav ul {
+    display: flex;
     flex-grow: 1;
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 nav ul li {
-   list-style: none; 
-   margin: 0 10px;
+    margin: 0 10px;
 }
 
 nav ul li a {
@@ -45,11 +45,38 @@ nav ul li a {
     transition: background-color 0.3s ease;
 }
 
+nav ul li a:hover {
+    background-color: #575757;
+}
+
 .profile-link {
     margin-left: auto;
 }
 
+nav .menu {
+    display: none;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.5rem;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
 
+nav .menu span {
+    height: 3px;
+    width: 25px;
+    background: white;
+    margin: 4px 0;
+    border-radius: 0.2rem;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
 
 .dropbtn {
     background-color: #333;
@@ -71,6 +98,15 @@ nav ul li a {
     z-index: 1;
     border-radius: 5px;
     overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-10px);
+}
+
+.dropdown-content.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .dropdown-content a {
@@ -85,10 +121,73 @@ nav ul li a {
     background-color: #f1f1f1;
 }
 
-.dropdown:hover .dropdown-content {
-    display: block;
+.dropdown-content a:focus,
+.dropdown-content a:active {
+    background-color: transparent;
+    color: inherit;
 }
 
 .dropdown:hover .dropbtn {
     background-color: #575757;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+@media (max-width: 480px) {
+    nav .menu {
+        display: flex;
+    }
+
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+
+    nav ul.open {
+        display: flex;
+    }
+
+    nav ul li {
+        width: 100%;
+        text-align: center;
+        margin: 5px 0;
+    }
+
+    nav ul li a {
+        margin: 0.2rem 0.5rem;
+    }
+
+    .profile-link {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu {
+        display: flex;
+    }
+
+    ul {
+        flex-direction: column;
+        display: none;
+    }
+
+    ul.open {
+        display: flex;
+    }
+
+    ul li {
+        margin: 5px 0;
+    }
 }

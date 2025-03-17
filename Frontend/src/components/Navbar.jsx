@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Navbar.css";
 import { Link, NavLink } from "react-router-dom";
+import { FaBell } from "react-icons/fa"; // Import the icon
 
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,7 +31,7 @@ export const Navbar = () => {
           </div>
         </li>
         <li>
-          <NavLink to="/contact">แจ้งเตือน</NavLink>
+          <NavLink to="/contact">แจ้งเตือน <FaBell /></NavLink> {/* Add the icon next to the link */}
         </li>
         <li className="profile-link">
           <NavLink to="/profile">Profile</NavLink>
