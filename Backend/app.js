@@ -1,5 +1,5 @@
 import express from "express";
-import connectDB from "./connectDatabase/connectDB.js"; // นำเข้าไฟล์เชื่อมต่อ MongoDB
+import connectDB from "./config/DB.js"; // นำเข้าไฟล์เชื่อมต่อ MongoDB
 import userRouter from "./Router/userRouter.js"; // นำเข้า userRouter
 
 const app = express();
