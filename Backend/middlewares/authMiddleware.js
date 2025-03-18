@@ -20,3 +20,12 @@ export const authenticate = async (req, res, next) => {
     res.status(401).json({ message: "Unauthorized", error: error.message });
   }
 };
+
+// *************************ROLE ที่สามารถเพิ่มห้องประชุมได้****************************************
+export const isAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Access denied. Admins only." });
+  }
+  next();
+};
+// *************************ROLE ที่สามารถเพิ่มห้องประชุมได้****************************************
