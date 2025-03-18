@@ -16,5 +16,5 @@ app.use("/api/users", userRouter);
 
 // เริ่มต้นเซิร์ฟเวอร์
 app.listen(PORT, () => {
-  console.log(`เซิร์ฟเวอร์กำลังทำงานที่ http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
