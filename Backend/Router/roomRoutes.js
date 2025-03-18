@@ -32,4 +32,21 @@ roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
   }
 });
 
+// API สำหรับดึงข้อมูลห้องประชุมตาม ID
+roomRouter.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // ค้นหาห้องประชุมตาม ID
+    const room = await Room.findById(id);
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    res.status(200).json(room);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching room details", error: error.message });
+  }
+});
+
 export default roomRouter;
