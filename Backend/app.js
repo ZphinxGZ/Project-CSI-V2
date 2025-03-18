@@ -1,29 +1,20 @@
 import express from "express";
-import cors from "cors";
-import morgan from "morgan";
-import connectDB from "./connectDatabase/connectDB.js"; 
+import connectDB from "./connectDatabase/connectDB.js"; // นำเข้าไฟล์เชื่อมต่อ MongoDB
+import userRouter from "./Router/userRouter.js"; // นำเข้า userRouter
 
-//Router
-import userRouter from "./Router/userRouter.js"; 
-
-const port = 3000;
 const app = express();
+const PORT = 3000;
 
-app.use(cors());
+// Middleware สำหรับ parse JSON body
 app.use(express.json());
-app.use(morgan("combined")); // Add morgan middleware for logging
 
-// Connect to MongoDB
-connectDB();
+// เชื่อมต่อ MongoDB
+await connectDB();
 
-// Use userRouter for user-related routes
-app.use("/users", userRouter);
+// ใช้ userRouter สำหรับเส้นทาง /api/users
+app.use("/api/users", userRouter);
 
-// Define a route for the root URL
-app.get("/", (req, res) => {
-  res.send("Happy Birthday, Express!");
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+// เริ่มต้นเซิร์ฟเวอร์
+app.listen(PORT, () => {
+  console.log(`เซิร์ฟเวอร์กำลังทำงานที่ http://localhost:${PORT}`);
 });
