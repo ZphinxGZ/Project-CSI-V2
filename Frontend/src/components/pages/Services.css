@@ -1,118 +1,101 @@
-.booking-history {
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 20px;
-  width: 100%; /* Ensure full width */
-  color: black; /* Set text color to black */
-}
-
-.booking-history h2 {
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.filter-section {
+/* คอนเทนเนอร์หลัก */
+.booking-container {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-direction: column; 
+  align-items: center; /* จัดให้อยู่ตรงกลาง */
+  gap: 15px; /* เพิ่มระยะห่างระหว่างการ์ด */
+  width: 80%; /* กำหนดให้กว้างสุดไม่เกิน 90% */
+  margin: auto; /* จัดให้อยู่กึ่งกลางหน้าจอ */
+  padding: 10px; /* เพิ่ม padding ให้มีพื้นที่ด้านข้าง */
+  margin-top: 10px; /* ระยะห่างด้านบน */
+  
 }
 
-.filter-section label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+/* ปรับขนาดของการ์ด */
+.booking-card {
+ width: 120%;
+  max-width: 1450px; /* กำหนดความกว้างสูงสุดให้พอดีกับ Layout */
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 2fr 1fr 1fr; /* คอลัมน์เท่ากัน */
+  align-items: center;;
+ 
 }
 
-.filter-section select, .filter-section input, .filter-section button {
-  font-size: 1em; /* Increase font size */
-  width: auto; /* Adjust width to fit text */
+.booking-card:hover {
+  transform: scale(1.05);
 }
 
-.filter-section button {
-  background-color: rgb(244, 26, 26);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
+/* ส่วนหัวของการ์ด */
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
 
-table, th, td {
-  border: 1px solid #060505;
-}
-
-th, td {
-  padding: 10px;
-  text-align: left;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-}
-
-.actions button {
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.card {
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 20px;
-  width: 100%; 
-}
-
-.large-table {
+.card-header h3 {
   font-size: 1.2em;
+  color: #333;
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  
 }
 
-.show-select {
+.status {
+  padding: 5px 5px;
+  border-radius: 5px;
+  width: 100px;
+  color: white;
+  margin-left: 50px;
+}
+
+/* สีของสถานะ */
+.green { background-color: #28a745; 
+text-align: center;}
+.red { background-color: #dc3545; 
+text-align: center;}
+.orange { background-color: #fd7e14;
+text-align: center;}
+
+/* เหตุผล */
+.reason {
+  font-size: 0.9em;
+  color: #666;
+  margin: 10px 0;
+}
+
+/* ปุ่ม */
+.btn.blue {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.btn.blue:hover {
+  background-color: #0056b3;
+}
+.page-title {
+  width: 100%;
+  max-width: 1454px; /* ทำให้เท่ากับ .booking-card */
+  margin: auto; /* จัดให้อยู่ตรงกลาง */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px #0000001a;
+  text-align: left; /* จัดให้ตัวหนังสืออยู่ตรงกลาง */
+  margin-top: 20px; /* ระยะห่างด้านบน */
+  
+}
+.card-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.btn.yellow {
-  background-color: #ffc107;
-}
-
-.btn.blue {
-  background-color: #007bff;
-}
-
-.btn.green {
-  background-color: #28a745;
-}
-
-.btn.orange {
-  background-color: #fd7e14;
-}
-
-.filter-nav ul {
-  display: flex;
-  gap: 10px;
-  list-style-type: none;
-  padding: 0;
-  margin-bottom: 20px;
-}
-
-.filter-nav ul li {
-  cursor: pointer;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #f1f1f1;
-}
-
-.filter-nav ul li:hover {
-  background-color: #ddd;
+  margin-top: 10px;
 }
