@@ -1,17 +1,14 @@
-.active {
-    background-color: #1d4ed8;
-}
-
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #0f172a;
+    background-color: #333;
     color: white;
     position: sticky;
     top: 0;
-    padding:1rem;
+    padding: 10px 20px;
     width: 100%;
+    z-index: 1000;
 }
 
 nav .title {
@@ -24,83 +21,114 @@ nav .title {
 
 nav ul {
     display: flex;
+    flex-grow: 1;
+    list-style: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1;
 }
 
 nav ul li {
-   list-style: none; 
+    margin: 0 10px;
 }
 
 nav ul li a {
     display: block;
     text-decoration: none;
     color: white;
-    padding: 0.5rem;
+    padding: 10px 15px;
     margin: 0 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
-nav ul li a:not(.active):hover {
-    background-color:#172554 ;
+nav ul li a:hover {
+    background-color: #575757;
 }
 
 .profile-link {
     margin-left: auto;
 }
 
-nav .menu {
+/* สไตล์สำหรับ Dropdown Menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* ปุ่มกด Dropdown */
+.dropbtn {
+    background-color: transparent;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 6px;
+}
+
+.dropbtn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* กล่องเมนู Dropdown */
+.dropdown-content {
     display: none;
     position: absolute;
-    top: 0.75rem;
-    right: 0.5rem;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 2.25rem;
-    height: 2rem;
+    background-color: white;
+    min-width: 230px; /* กำหนดขนาดเมนู */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px 0;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-nav .menu span {
-    height: 0.4rem;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 0.2rem;
+/* แสดง Dropdown เมื่อกด */
+.dropdown-content.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-@media (max-width: 480px) {
-    nav .menu {
-        display: flex;
+/* รายการภายใน Dropdown */
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-left: 4px solid transparent; /* ให้แถบข้างสีเวลาถูกเลือก */
+}
+
+/* เปลี่ยนสีเมื่อ Hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    border-left: 4px solid #1d4ed8; /* สีแถบซ้ายเมื่อ hover */
+    color: #1d4ed8;
+}
+
+/* เพิ่มเงาให้ Dropdown */
+.dropdown-content {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive สำหรับมือถือ */
+@media (max-width: 768px) {
+    .dropdown-content {
+        min-width: 200px;
+        font-size: 14px;
     }
 
-    nav {
-        flex-direction: column;
-        align-items: flex-start;
+    .dropbtn {
+        font-size: 14px;
+        padding: 8px 12px;
     }
 
-    nav ul {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        margin-bottom: 0.25rem;
-    }
-
-    nav ul.open {
-        display: flex;
-    }
-
-    nav ul li {
-        width: 100%;
-        text-align: center;
-    }
-
-    nav ul li a {
-        margin: 0.2rem 0.5rem;
-    }
-
-    .profile-link {
-        margin-left: 0;
-        width: 100%;
-        text-align: center;
+    .dropdown-content a {
+        padding: 10px;
     }
 }
