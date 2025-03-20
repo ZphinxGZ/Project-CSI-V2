@@ -5,7 +5,7 @@ export const About = () => {
   return (
     <div className="about-container centered-content">
       <div className="title-container">
-        <h2>รายการ ห้อง</h2>
+        <h2>&nbsp;รายการจองห้อง</h2>
       </div>
       <ul className="about-list">
         <li>

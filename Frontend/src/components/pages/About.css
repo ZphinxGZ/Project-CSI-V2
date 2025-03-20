@@ -8,7 +8,7 @@
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px #0000001a;
   margin-bottom: 20px;
   width: auto;
 }
@@ -31,6 +31,7 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
 }
 
 .room-image {
@@ -74,6 +75,9 @@
   background-color: #007bff;
 }
 
-.btn.orange {
+.btn.yellow {
   background-color: #ffc107;
+} 
+.about-list li:hover {
+  transform: scale(1.05);
 }
