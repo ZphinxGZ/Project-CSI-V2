@@ -4,7 +4,7 @@
   flex-direction: column; 
   align-items: center; /* จัดให้อยู่ตรงกลาง */
   gap: 15px; /* เพิ่มระยะห่างระหว่างการ์ด */
-  width: 80%; /* กำหนดให้กว้างสุดไม่เกิน 90% */
+  width: 90%; /* กำหนดให้กว้างสุดไม่เกิน 90% */
   margin: auto; /* จัดให้อยู่กึ่งกลางหน้าจอ */
   padding: 10px; /* เพิ่ม padding ให้มีพื้นที่ด้านข้าง */
   margin-top: 10px; /* ระยะห่างด้านบน */
@@ -13,8 +13,8 @@
 
 /* ปรับขนาดของการ์ด */
 .booking-card {
- width: 120%;
-  max-width: 1450px; /* กำหนดความกว้างสูงสุดให้พอดีกับ Layout */
+ width: 130%;
+  max-width: 1540px; /* กำหนดความกว้างสูงสุดให้พอดีกับ Layout */
   background: white;
   padding: 15px;
   border-radius: 10px;
@@ -23,6 +23,7 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr 2fr 1fr 1fr; /* คอลัมน์เท่ากัน */
   align-items: center;;
+  gap: 10px; /* ระยะห่างระหว่างคอลัมน์ */
  
 }
 
@@ -47,7 +48,7 @@
   border-radius: 5px;
   width: 100px;
   color: white;
-  margin-left: 50px;
+  margin-left: 30px;
 }
 
 /* สีของสถานะ */
@@ -82,20 +83,43 @@ text-align: center;}
   background-color: #0056b3;
 }
 .page-title {
-  width: 100%;
-  max-width: 1454px; /* ทำให้เท่ากับ .booking-card */
-  margin: auto; /* จัดให้อยู่ตรงกลาง */
+  width: 90.2%;
+  max-width: auto; /* ทำให้เท่ากับ .booking-card */
+  margin: auto; /* จัดให้อยู่กึ่งกลาง */
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 2px 4px #0000001a;
-  text-align: left; /* จัดให้ตัวหนังสืออยู่ตรงกลาง */
+  text-align: center; /* จัดให้ตัวหนังสืออยู่ตรงกลาง */
   margin-top: 20px; /* ระยะห่างด้านบน */
   
 }
-.card-body {
+.filter-section {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-top: 10px;
+  gap: 10px;
+  margin: 20px 0;
+  padding-right: 20px;
 }
+
+.filter-section label {
+ 
+  font-size: 19px;
+}
+
+.filter-section select {
+  padding: 10px 14px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+ 
+}
+
+.filter-section select:hover {
+  border-color: #888;
+}
+
