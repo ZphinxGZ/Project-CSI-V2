@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Home.css";
 
@@ -8,7 +7,11 @@ export const Home = () => {
   const [date, setDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(date.getMonth());
   const [currentYear, setCurrentYear] = useState(date.getFullYear() + 543); // แปลงเป็น พ.ศ.
-  const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+  const monthNames = [
+    "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", 
+    "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+  ];
+  
   const meetings = {
     "2568-03-05": "10:00 น.",
     "2568-03-12": "14:00 น.",
@@ -32,6 +35,7 @@ export const Home = () => {
       <div class="day">ศ.</div>
       <div class="day">ส.</div>
     `;
+    
     const firstDay = new Date(currentYear - 543, currentMonth, 1).getDay();
     const lastDate = new Date(currentYear - 543, currentMonth + 1, 0).getDate();
     const prevLastDate = new Date(currentYear - 543, currentMonth, 0).getDate();
@@ -66,24 +70,33 @@ export const Home = () => {
         </div>
         
         <div className="dashboard-grid">
-          <div className="card blue">จองห้อง อนุมัติ </div>
-          <div className="card green">จองห้อง ไม่อนุมัติ </div>
-          <div className="card orange">จองห้อง รอตรวจสอบ</div>
-          <div className="card red">ห้องทั้งหมด </div>
+          <div className=" card green">ห้อง อนุมัติ </div>
+          <div className="card red">ห้อง ไม่อนุมัติ </div>
+          <div className="card orange">ห้อง รอตรวจสอบ</div>
+          <div className=" card blue">ห้องทั้งหมด </div>
         </div>
         
         <div className="calendar">
           <div className="calendar-header">
-            <i className="bi bi-chevron-left" id="prevMonth" onClick={() => {
-              setCurrentMonth((prev) => prev === 0 ? 11 : prev - 1);
-              if (currentMonth === 0) setCurrentYear((prev) => prev - 1);
-            }}></i>
+            <button id="prevMonth" onClick={() => {
+              if (currentMonth === 0) {
+                setCurrentMonth(11);
+                setCurrentYear(prev => prev - 1);
+              } else {
+                setCurrentMonth(prev => prev - 1);
+              }
+            }}>ก่อนหน้า </button>
 
-            <h3 id="calendarTitle"></h3>
-            <i className="bi bi-chevron-right" id="nextMonth" onClick={() => {
-              setCurrentMonth((prev) => prev === 11 ? 0 : prev + 1);
-              if (currentMonth === 11) setCurrentYear((prev) => prev + 1);
-            }}></i>
+            <h3 id="calendarTitle">{monthNames[currentMonth]} {currentYear}</h3>
+
+            <button id="nextMonth" onClick={() => {
+              if (currentMonth === 11) {
+                setCurrentMonth(0);
+                setCurrentYear(prev => prev + 1);
+              } else {
+                setCurrentMonth(prev => prev + 1);
+              }
+            }}>ถัดไป</button>
           </div>
           <div className="calendar-days" id="calendarDays">
             <div className="day">อา.</div>
