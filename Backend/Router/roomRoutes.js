@@ -32,6 +32,21 @@ roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
   }
 });
 
+// API สำหรับดึงข้อมูลห้องประชุมทั้งหมด
+roomRouter.get("/", async (req, res) => {
+  try {
+    // ดึงข้อมูลห้องประชุมทั้งหมดจากฐานข้อมูล
+    const rooms = await Room.find({});
+    if (rooms.length === 0) {
+      return res.status(404).json({ message: "No rooms found" });
+    }
+
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching rooms", error: error.message });
+  }
+});
+
 // API สำหรับดึงข้อมูลห้องประชุมตาม ID
 roomRouter.get("/:id", async (req, res) => {
   try {

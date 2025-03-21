@@ -182,4 +182,27 @@ bookingRouter.delete("/:id", authenticate, async (req, res) => {
   }
 });
 
+// API สำหรับดึงข้อมูลปฏิทินการจองของผู้ใช้ที่ล็อกอิน
+bookingRouter.get("/calendar", authenticate, async (req, res) => {
+  try {
+    // ดึงข้อมูลการจองของผู้ใช้ที่ล็อกอิน
+    const bookings = await Booking.find({ user_id: req.user._id })
+      .populate("room_id", "room_name location");
+
+    // จัดรูปแบบข้อมูลสำหรับปฏิทิน
+    const calendarData = bookings.map((booking) => ({
+      id: booking._id,
+      room: booking.room_id.room_name,
+      location: booking.room_id.location,
+      startTime: booking.start_time,
+      endTime: booking.end_time,
+      status: booking.status,
+    }));
+
+    res.status(200).json(calendarData);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching calendar data", error: error.message });
+  }
+});
+
 export default bookingRouter;
