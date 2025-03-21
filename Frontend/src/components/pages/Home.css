@@ -49,6 +49,18 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+.calendar-header button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.calendar-header button:hover {
+    background-color: #0056b3;
+}
 .calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -57,6 +69,11 @@ body {
 }
 .day, .date {
     padding: 10px;
+    border: 1px solid #ddd; /* Added border for clear separation */
+    box-sizing: border-box; /* Ensure borders don't affect layout */
+}
+.prev-month, .next-month {
+    color: #aaa; /* Dimmed color for non-current month dates */
 }
 .meeting {
     background: #ffcc00;
@@ -71,5 +88,6 @@ body {
     padding: 1px ;
     margin: 1px;
     text-align: center;
+    border: 2px solid #4a90e2; /* Added border to highlight today */
 }
 
