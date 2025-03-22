@@ -36,29 +36,39 @@ function Register() {
     return (
         <div className="register-page">
             <div className="register-container">
-                <h2>Register</h2>
-                <input 
-                    className='register-input' 
-                    type="text" 
-                    placeholder="Username" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Confirm Password" 
-                    value={confirmPassword} 
-                    onChange={(e) => setConfirmPassword(e.target.value)} 
-                />
-                <button onClick={handleRegister}>Register</button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button onClick={() => navigate('/login')}>Back to Login</button>
+                <form className="form">
+                    <p className="form-title">Create your account</p>
+                    <div className="input-container">
+                        <input 
+                            type="text" 
+                            placeholder="Enter username" 
+                            value={username} 
+                            onChange={(e) => setUsername(e.target.value)} 
+                        />
+                    </div>
+                    <div className="input-container">
+                        <input 
+                            type="password" 
+                            placeholder="Enter password" 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                        />
+                    </div>
+                    <div className="input-container">
+                        <input 
+                            type="password" 
+                            placeholder="Confirm password" 
+                            value={confirmPassword} 
+                            onChange={(e) => setConfirmPassword(e.target.value)} 
+                        />
+                    </div>
+                    <button type="button" className="submit" onClick={handleRegister}>Register</button>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    <p className="signup-link">
+                        Already have an account?
+                        <a href="#" onClick={() => navigate('/login')}>Sign in</a>
+                    </p>
+                </form>
             </div>
         </div>
     );

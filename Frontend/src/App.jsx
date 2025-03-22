@@ -21,19 +21,19 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login onLoginSuccess={handleLogin} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Login onLoginSuccess={handleLogin} />} /> {/* Redirect to login if no token */}
+          <Route path="*" element={<Login onLoginSuccess={handleLogin} />} />
         </Routes>
       )}
       {token && (
         <div className="container">
           <Navbar />
-          <button onClick={() => setToken(null)}>Logout</button> {/* ปุ่ม Logout */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
+          <button onClick={() => setToken(null)}>Logout</button> 
         </div>
       )}
     </div>

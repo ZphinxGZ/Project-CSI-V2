@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './llogin.css';
+import './login.css';
 
 function Login({ onLoginSuccess }) {
     const [username, setUsername] = useState('');
@@ -27,23 +27,31 @@ function Login({ onLoginSuccess }) {
     return (
         <div className="login-page">
             <div className="login-container">
-                <h2>Login</h2>
-                <input 
-                    className='login-input' 
-                    type="text" 
-                    placeholder="Username" 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-                <button onClick={handleLogin}>Login</button>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <button onClick={() => navigate('/register')}>Register</button>
+                <form className="form">
+                    <p className="form-title">Sign in to your account</p>
+                    <div className="input-container">
+                        <input 
+                            type="text" 
+                            placeholder="Enter email" 
+                            value={username} 
+                            onChange={(e) => setUsername(e.target.value)} 
+                        />
+                    </div>
+                    <div className="input-container">
+                        <input 
+                            type="password" 
+                            placeholder="Enter password" 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                        />
+                    </div>
+                    <button type="button" className="submit" onClick={handleLogin}>Sign in</button>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    <p className="signup-link">
+                        No account?
+                        <a href="#" onClick={() => navigate('/register')}>Sign up</a>
+                    </p>
+                </form>
             </div>
         </div>
     );
