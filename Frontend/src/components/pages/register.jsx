@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import './Register.css';
+import './register.css';
 
 function Register() {
     const [username, setUsername] = useState('');
@@ -21,11 +21,15 @@ function Register() {
                 password,
                 role: 'user'
             });
+            console.log(response.data); // เพิ่มการดีบัก
             if (response.data.success) {
+                console.log('Registration successful, navigating to login'); // เพิ่มการดีบัก
                 navigate('/login');
+            } else {
+                setError(response.data.message || 'Registration failed');
             }
         } catch (error) {
-            setError('Registration failed');
+            setError(error.response?.data?.message || 'Registration failed');
         }
     };
 

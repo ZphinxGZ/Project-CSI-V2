@@ -9,7 +9,7 @@ export const registerUser = async (req, res) => {
     // Check if the username already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ message: "Username already exists" });
+      return res.status(400).json({ success: false, message: "Username already exists" });
     }
 
     // Hash the password
@@ -26,9 +26,9 @@ export const registerUser = async (req, res) => {
     // Save the user to the database
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ success: true, message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error registering user", error: error.message });
+    res.status(500).json({ success: false, message: "Error registering user", error: error.message });
   }
 };
 
