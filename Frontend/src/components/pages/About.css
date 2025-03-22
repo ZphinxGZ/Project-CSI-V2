@@ -39,8 +39,8 @@
 }
 
 .room-image {
-  width: 210px;
-  height: 170px;
+  width: 250px;
+  height: 180px;
   margin-right: 30px; /* Adjusted spacing */
   border-radius: 10px;
 }
@@ -82,6 +82,34 @@
 .btn.yellow {
   background-color: #ffc107;
 } 
+.btn.orange:hover {
+  background-color: #e36c0a;
+}
+.btn.yellow:hover {
+  background-color: #e3a10a;
+}
+
+.btn.red:hover {
+  background-color: #c82333;
+}
+
+.room-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* สำหรับ responsive */
+  margin-top: 10px;
+}
+
+.left-buttons,
+.right-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.right-buttons {
+  margin-left: auto;
+}
 .about-list li:hover {
   transform: scale(1.05);
 }
@@ -218,4 +246,19 @@
 
 .btn.red:hover {
   background-color: #d02738;
+}
+.about-list li:nth-child(odd) {
+  background-color: #f1f1f1; /* เทาอ่อน */
+}
+
+.about-list li:nth-child(even) {
+  background-color: #ffffff; /* ขาว */
+}
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  margin-top: 0.3rem;
 }
