@@ -4,10 +4,10 @@ import "./App.css";
 import { Navbar } from "./components/Navbar";
 import { About, Contact, Home, Services } from "./components/pages/";
 import Login from "./components/pages/login";
-import Register from "./components/pages/register"; // Import Register component
+import Register from "./components/pages/register";
 
 function App() {
-  const [token, setToken] = useState(null); // Initialize token as null
+  const [token, setToken] = useState('*');
   const navigate = useNavigate();
 
   const handleLogin = (userToken) => {
