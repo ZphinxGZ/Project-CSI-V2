@@ -1,53 +1,24 @@
-body {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f8f9fa;
-}
-.container {
-    width: 90%;
-    margin: auto;
-    padding-top: 20px;
-}
-.header {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background: white;
-    box-shadow: 0 2px 4px #0000001a;
-}
-.header i {
-    margin-right: 10px;
-}
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 20px;
-}
-.card {
-    padding: 15px;
-    border-radius: 8px;
-    color: white;
-    font-size: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.blue { background: #2d5f90; }
-.green { background: #7a8b41; }
-.orange { background: #c89c2d; }
-.red { background: #c32f2f; }
+/* ปรับขนาดให้เต็มหน้าจอ */
 .calendar {
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-.calendar-header {
+    width: 100vw;  /* ความกว้างเต็มหน้าจอ */
+    max-width: 100%;
+    height: 80vh; /* ปรับให้เต็มจอมากขึ้น */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px ; /* ลดระยะห่างจาก nav bar */
+  }
+  
+  /* ปรับส่วนหัวของปฏิทิน */
+  .calendar-header {
+    width: 95%;
+    max-width: 1200px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px; /* ลดระยะห่างด้านล่าง */
+    margin-top: 20px; /* ลดระยะห่างด้านบน */
 }
 .calendar-header button {
     background-color: #007bff;
@@ -78,10 +49,83 @@ body {
 .meeting {
     background: #ffcc00;
     border-radius: 10px;
-    padding: 1px ;
-    margin: 1px;
+    margin-top: 40px; /* ลดระยะห่างด้านบน */
+  }
+  
+  /* ปรับตารางปฏิทิน */
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 คอลัมน์สำหรับ 7 วัน */
+    width: 95%;
+    max-width: 1200px;
     text-align: center;
-}
+    gap: 1px; /* ระยะห่างระหว่างช่อง */
+    padding: 10px;
+    border-collapse: collapse;
+  }
+  
+  /* ปรับขนาดของแต่ละช่อง (วันในปฏิทิน) */
+  .date, .day {
+    width: 100%;
+    padding: 15px;
+    border: 0.5px solid #ddd; /* เส้นขอบของตาราง */
+    border-radius: 5px;
+    font-size: 1.2rem;
+    background: white;
+  }
+  
+  /* เสริมให้เส้นขอบชัดขึ้น */
+  .day {
+    font-weight: bold;
+    background: #f4f4f4; /* สีพื้นหลังของชื่อวัน */
+    border: 1px solid #bbb;
+  }
+  
+  .day:nth-child(2) { /* จ. */
+    color: #007bff; /* Blue for Monday */
+  }
+  .day:nth-child(3) { /* อ. */
+    color: #28a745; /* Green for Tuesday */
+  }
+  .day:nth-child(4) { /* พ. */
+    color: #ffc107; /* Yellow for Wednesday */
+  }
+  .day:nth-child(5) { /* พฤ. */
+    color: #17a2b8; /* Teal for Thursday */
+  }
+  .day:nth-child(6) { /* ศ. */
+    color: #fd7e14; /* Orange for Friday */
+  }
+  
+  /* วันที่มีการประชุม */
+  .meeting {
+    background-color: yellow;
+    color: black;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: auto; /* Push meeting time to the bottom */
+  }
+  
+  /* วันที่ปัจจุบัน */
+  .highlight-today {
+    background-color: #fca37a;
+    color: white;
+    font-weight: bolder;
+  }
+  /* ปรับขนาดตัวเลขของวันที่ */
+.date {
+    font-size: 1.0rem; /* เพิ่มขนาดตัวเลขของวันที่ */
+    font-weight: bold;
+    display: flex;
+    flex-direction: column; /* Stack date and meeting vertically */
+    align-items: center;
+    justify-content: flex-start; /* Align date at the top */
+    height: 80px; /* ปรับความสูงให้สมดุล */
+    min-width: 90px; /* ปรับความกว้าง */
+    position: relative; /* Ensure proper positioning for child elements */
+  }
 .highlight-today {
     background: rgb(199, 203, 248);
     border-radius: 10px;
@@ -90,4 +134,3 @@ body {
     text-align: center;
     border: 2px solid #4a90e2; /* Added border to highlight today */
 }
-
