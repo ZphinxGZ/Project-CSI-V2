@@ -64,12 +64,6 @@ export const Home = () => {
   return (
     <div>
       <div >
-        {/* <div className="header">
-          <i className="bi bi-list"></i>
-          <h2>Dashboard</h2>
-        </div> */}
-        
-        
         <div className="calendar">
           <div className="calendar-header">
             <button id="prevMonth" onClick={() => {

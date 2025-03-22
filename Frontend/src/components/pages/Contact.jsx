@@ -29,10 +29,18 @@ export const Contact = () => {
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
 
+  useEffect(() => {
+    const storedNotification = localStorage.getItem("bookingNotification");
+    if (storedNotification) {
+      setNotifications([storedNotification]);
+      localStorage.removeItem("bookingNotification"); // Clear after displaying
+    }
+  }, []);
+
   return (
     <div className="contact-container">
       <h1><FaBell /> แจ้งเตือน</h1>
-      <p>ระบบจะแจ้งเตือนเมื่อใกล้ถึงเวลาประชุม</p>
+      <p>แจ้งเตือนเมื่อใกล้ถึงเวลาประชุม</p>
       <div className="notifications">
         {notifications.map((note, index) => (
           <div key={index} className="notification">
