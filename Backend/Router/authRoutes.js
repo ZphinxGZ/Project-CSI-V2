@@ -1,7 +1,14 @@
 import express from "express";
+import cors from "cors"; // ✅ เพิ่ม CORS
 import { registerUser, loginUser } from "../controllers/authController.js";
 
 const authRouter = express.Router();
+
+authRouter.use(cors({
+  origin: "*",
+  methods: ["POST"],
+  credentials: true
+}));
 
 // Route for user registration
 authRouter.post("/register", registerUser);
@@ -10,7 +17,6 @@ authRouter.post("/register", registerUser);
 authRouter.post("/login", loginUser);
 
 // Route for user logout
-//ถ้ามีปัญหาเรื่อง logout แล้วไม่เคลียร์ token ดูตรงนี้**
 authRouter.post("/logout", (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 });
