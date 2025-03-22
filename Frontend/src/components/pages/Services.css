@@ -13,7 +13,7 @@
 
 /* ปรับขนาดของการ์ด */
 .booking-card {
- width: 130%;
+ width: 101%;
   max-width: 1540px; /* กำหนดความกว้างสูงสุดให้พอดีกับ Layout */
   background: white;
   padding: 15px;
