@@ -5,30 +5,21 @@ export const About = () => {
   const defaultRooms = [
     {
       id: 1,
-      images: ["../public/Room2.jpg"],
+      image: "../public/Room2.jpg",
       name: "ห้องประชุม 1",
-      description: "ห้องประชุมพร้อมระบบ Video conference",
-      capacity: "20",
-      floor: "ชั้น 2",
-      equipment: "โปรเจคเตอร์, ทีวี"
+      description: "ห้องประชุมพร้อมระบบ Video conference ที่มีผู้เข้าร่วมประชุมรูปตัว U"
     },
     {
       id: 2,
       image: "../public/Room1.jpg",
       name: "ห้องประชุม 2",
-      description: "ห้องประชุมขนาดใหญ่ พร้อมสิ่งอำนวยความสะดวกครบครัน",
-      capacity: "20",
-      floor: "ชั้น 2",
-      equipment: "โปรเจคเตอร์, ทีวี"
+      description: "ห้องประชุมขนาดใหญ่ พร้อมสิ่งอำนวยความสะดวกครบครัน"
     },
     {
       id: 3,
       image: "../public/Room3.jpg",
       name: "ห้องประชุมสาขาเทคโนโลยีสารสนเทศ",
-      description: "ห้องประชุมขนาดใหญ่ (Hall) เหมาะสำหรับการสัมมนาเป็นหมู่คณะ และ จัดเลี้ยง",
-      capacity: "20",
-    floor: "ชั้น 2",
-    equipment: "โปรเจคเตอร์, ทีวี,เวที, ลำโพง"
+      description: "ห้องประชุมขนาดใหญ่ (Hall) เหมาะสำหรับการสัมมนาเป็นหมู่คณะ และ จัดเลี้ยง"
     }
   ];
 
@@ -40,10 +31,7 @@ export const About = () => {
   const [newRoom, setNewRoom] = useState({
     name: "",
     description: "",
-    images: [],
-    capacity: "",
-    floor: "",
-    equipment: ""
+    image: ""
   });
 
   const [showForm, setShowForm] = useState(false);
@@ -62,18 +50,14 @@ export const About = () => {
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    const readers = files.map((file) => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(file);
-      });
-    });
-  
-    Promise.all(readers).then((images) => {
-      setNewRoom((prev) => ({ ...prev, images: [...prev.images, ...images] }));
-    });
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewRoom((prev) => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   // 👉 ใส่ function นี้ด้านบนใน About component ก่อน return
@@ -199,47 +183,24 @@ export const About = () => {
               <button className="btn red" onClick={() => { setShowForm(false); setEditingRoomId(null); }}>❌</button>
             </div>
             <input
-  type="text"
-  name="description"
-  placeholder="รายละเอียดห้อง"
-  value={newRoom.description}
-  onChange={handleChange}
-/>
-<input
-  type="text"
-  name="capacity"
-  placeholder="ความจุ (จำนวนคน)"
-  value={newRoom.capacity}
-  onChange={handleChange}
-/>
-<input
-  type="text"
-  name="floor"
-  placeholder="ชั้น"
-  value={newRoom.floor}
-  onChange={handleChange}
-/>
-<textarea
-  name="equipment"
-  placeholder="อุปกรณ์ (คอมพิวเตอร์, โปรเจคเตอร์ ฯลฯ)"
-  value={newRoom.equipment}
-  onChange={handleChange}
-/>
-<input
-  type="file"
-  accept="image/*"
-  multiple
-  onChange={handleImageChange}
-/>
-
-{/* แสดงรูป preview */}
-{newRoom.images.length > 0 && (
-  <div className="image-gallery">
-    {newRoom.images.map((img, index) => (
-      <img key={index} src={img} alt="Preview" style={{ width: "100%", marginTop: "1rem", borderRadius: "8px" }} />
-    ))}
-  </div>
-)}
+              type="text"
+              name="name"
+              placeholder="ชื่อห้อง"
+              value={newRoom.name}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="description"
+              placeholder="รายละเอียดห้อง"
+              value={newRoom.description}
+              onChange={handleChange}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
             {newRoom.image && (
               <div className="image-preview">
                 <img
@@ -371,74 +332,22 @@ export const About = () => {
       )}
       {/* ✅ Detail Modal */}
       {showDetailModal && detailRoom && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <div className="form-header">
-        <h4>📖 รายละเอียดห้องประชุม</h4>
-        <button className="btn red" onClick={closeDetailModal}>❌</button>
-      </div>
-
-      <div className="image-gallery">
-        {detailRoom.images && detailRoom.images.map((img, idx) => (
-          <img
-            key={idx}
-            src={img}
-            alt={`Room ${idx + 1}`}
-            width="100%"
-            style={{ borderRadius: '8px', marginBottom: '0.5rem' }}
-          />
-        ))}
-      </div>
-
-      <input
-        type="text"
-        value={detailRoom.name}
-        onChange={(e) => setDetailRoom({ ...detailRoom, name: e.target.value })}
-        placeholder="ชื่อห้อง"
-      />
-      <input
-        type="text"
-        value={detailRoom.description}
-        onChange={(e) => setDetailRoom({ ...detailRoom, description: e.target.value })}
-        placeholder="รายละเอียด"
-      />
-      <input
-        type="text"
-        value={detailRoom.capacity || ""}
-        onChange={(e) => setDetailRoom({ ...detailRoom, capacity: e.target.value })}
-        placeholder="ความจุ (จำนวนคน)"
-      />
-      <input
-        type="text"
-        value={detailRoom.floor || ""}
-        onChange={(e) => setDetailRoom({ ...detailRoom, floor: e.target.value })}
-        placeholder="ชั้น"
-      />
-      <textarea
-        rows="2"
-        value={detailRoom.equipment || ""}
-        onChange={(e) => setDetailRoom({ ...detailRoom, equipment: e.target.value })}
-        placeholder="อุปกรณ์ (คอมพิวเตอร์, โปรเจคเตอร์ ฯลฯ)"
-      />
-
-      <button
-        className="btn green"
-        style={{ marginTop: "1rem" }}
-        onClick={() => {
-          const updatedRooms = rooms.map((room) =>
-            room.id === detailRoom.id ? detailRoom : room
-          );
-          setRooms(updatedRooms);
-          localStorage.setItem("rooms", JSON.stringify(updatedRooms));
-          alert("✅ บันทึกข้อมูลห้องเรียบร้อยแล้ว");
-          closeDetailModal();
-        }}
-      >
-        ✔ บันทึกข้อมูล
-      </button>
-    </div>
-  </div>
-)}
+        <div className="modal-overlay">
+          <div className="modal-content" >
+            <div className="form-header">
+              <h4>📖 รายละเอียดห้องประชุม</h4>
+              <button className="btn red" onClick={closeDetailModal}>❌</button>
+            </div>
+            <img width="100%"
+              src={detailRoom.image}
+              alt={detailRoom.name}
+              
+            />
+            <h3 >{detailRoom.name}</h3>
+            <p>{detailRoom.description}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
