@@ -10,7 +10,11 @@
   border-radius: 5px;
   box-shadow: 0 2px 4px #0000001a;
   margin-bottom: 20px;
-  width: auto;
+  max-width: auto;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+  
 }
 
 .about-container h1 {

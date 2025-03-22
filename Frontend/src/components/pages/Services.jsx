@@ -7,14 +7,14 @@ export const Services = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // ข้อมูลตัวอย่าง (เพิ่ม date ให้ครบทุกอัน)
+  // แปลงสถานะให้เป็น "จองสำเร็จ" / "จองไม่สำเร็จ"
   const bookings = [
-    { id: 1, room: "ห้องประชุม 1", date: "2024-03-20", status: "อนุมัติ", reason: "Project discussion", color: "green" },
-    { id: 2, room: "ห้องประชุม 2", date: "2024-03-18", status: "ไม่อนุมัติ", reason: "Training session", color: "red" },
-    { id: 3, room: "ห้องประชุม 3", date: "2024-03-19", status: "รอตรวจสอบ", reason: "Client meeting", color: "orange" },
-    { id: 4, room: "ห้องประชุม 3", date: "2024-03-17", status: "อนุมัติ", reason: "Team meeting", color: "green" },
-    { id: 5, room: "ห้องประชุม 2", date: "2024-03-16", status: "ไม่อนุมัติ", reason: "Product launch", color: "red" },
-    { id: 6, room: "ห้องประชุม 1", date: "2024-03-15", status: "รอตรวจสอบ", reason: "Interview", color: "orange" },
+    { id: 1, room: "ห้องประชุม 1", date: "2024-03-20", status: "จองสำเร็จ", reason: "Project discussion", color: "green" },
+    { id: 2, room: "ห้องประชุม 2", date: "2024-03-18", status: "จองไม่สำเร็จ", reason: "Training session", color: "red" },
+    { id: 3, room: "ห้องประชุม 3", date: "2024-03-19", status: "จองสำเร็จ", reason: "Client meeting", color: "green" },
+    { id: 4, room: "ห้องประชุม 3", date: "2024-03-17", status: "จองสำเร็จ", reason: "Team meeting", color: "green" },
+    { id: 5, room: "ห้องประชุม 2", date: "2024-03-16", status: "จองไม่สำเร็จ", reason: "Product launch", color: "red" },
+    { id: 6, room: "ห้องประชุม 1", date: "2024-03-15", status: "จองไม่สำเร็จ", reason: "Interview", color: "red" },
   ];
 
   useEffect(() => {
@@ -30,28 +30,40 @@ export const Services = () => {
     navigate(`?filter=${newFilter}`);
   };
 
-  // คัดกรองข้อมูล
-  const filteredBookings = filter === "ทั้งหมด"
-    ? bookings
-    : bookings.filter(booking => booking.status === filter);
+  const filteredBookings =
+    filter === "ทั้งหมด"
+      ? bookings
+      : bookings.filter((booking) => booking.status === filter);
 
   return (
     <>
       <div className="page-title">
         <h2>&nbsp;รายการจองของฉัน</h2>
       </div>
-      
-      <div className="booking-container">
-  {filteredBookings.map((booking) => (
-    <div className="booking-card" key={booking.id}>
-      <span className="room-name">{booking.room}</span>
-      <span className="date">📆 วันที่จอง: {new Date(booking.date).toLocaleDateString("th-TH")}</span>
-      <span className="reason">📝 {booking.reason}</span>
-      <button className="btn blue">🔍 ดูรายละเอียด</button>
-      <span className={`status ${booking.color}`}>{booking.status}</span>
-    </div>
-  ))}
+
+      <div className="filter-section">
+  <label htmlFor="filter">กรองสถานะ:</label>
+  <select className="filter"
+    id="filter"
+    value={filter}
+    onChange={(e) => handleFilterChange(e.target.value)}>
+    <option value="ทั้งหมด">ทั้งหมด</option>
+    <option value="จองสำเร็จ">จองสำเร็จ</option>
+    <option value="จองไม่สำเร็จ">จองไม่สำเร็จ</option>
+  </select>
 </div>
+
+      <div className="booking-container">
+        {filteredBookings.map((booking) => (
+          <div className="booking-card" key={booking.id}>
+            <span className="room-name">{booking.room}</span>
+            <span className="date">📆 วันที่จอง: {new Date(booking.date).toLocaleDateString("th-TH")}</span>
+            <span className="reason">📝 {booking.reason}</span>
+            <button className="btn blue">🔍 ดูรายละเอียด</button>
+            <span className={`status ${booking.color}`}>{booking.status}</span>
+          </div>
+        ))}
+      </div>
     </>
   );
 };
