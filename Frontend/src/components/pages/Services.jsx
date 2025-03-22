@@ -42,17 +42,16 @@ export const Services = () => {
       </div>
 
       <div className="filter-section">
-        <label htmlFor="filter">กรองสถานะ:</label>
-        <select
-          id="filter"
-          value={filter}
-          onChange={(e) => handleFilterChange(e.target.value)}
-        >
-          <option value="ทั้งหมด">ทั้งหมด</option>
-          <option value="จองสำเร็จ">จองสำเร็จ</option>
-          <option value="จองไม่สำเร็จ">จองไม่สำเร็จ</option>
-        </select>
-      </div>
+  <label htmlFor="filter">กรองสถานะ:</label>
+  <select className="filter"
+    id="filter"
+    value={filter}
+    onChange={(e) => handleFilterChange(e.target.value)}>
+    <option value="ทั้งหมด">ทั้งหมด</option>
+    <option value="จองสำเร็จ">จองสำเร็จ</option>
+    <option value="จองไม่สำเร็จ">จองไม่สำเร็จ</option>
+  </select>
+</div>
 
       <div className="booking-container">
         {filteredBookings.map((booking) => (
