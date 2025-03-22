@@ -63,19 +63,7 @@ export const Home = () => {
 
   return (
     <div>
-      <div className="container">
-        <div className="header">
-          <i className="bi bi-list"></i>
-          <h2>Dashboard</h2>
-        </div>
-        
-        <div className="dashboard-grid">
-          <div className=" card green">ห้อง อนุมัติ </div>
-          <div className="card red">ห้อง ไม่อนุมัติ </div>
-          <div className="card orange">ห้อง รอตรวจสอบ</div>
-          <div className=" card blue">ห้องทั้งหมด </div>
-        </div>
-        
+      <div >
         <div className="calendar">
           <div className="calendar-header">
             <button id="prevMonth" onClick={() => {
