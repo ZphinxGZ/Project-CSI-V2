@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Home.css";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import icons
 
 export const Home = () => {
   const [date, setDate] = useState(new Date());
@@ -74,6 +75,7 @@ export const Home = () => {
             }
           }}
         >
+          <FaChevronLeft /> {/* Add left icon */}
           ก่อนหน้า
         </button>
 
@@ -90,6 +92,7 @@ export const Home = () => {
           }}
         >
           ถัดไป
+          <FaChevronRight /> {/* Add right icon */}
         </button>
       </div>
 
