@@ -19,7 +19,7 @@ export const Navbar = () => {
   return (
     <nav>
       <Link to="/" className="title">
-        Dashboard
+        Home
       </Link>
 
       {/* Hamburger Menu Button */}
