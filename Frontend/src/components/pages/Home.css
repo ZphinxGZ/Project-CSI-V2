@@ -25,6 +25,9 @@
   font-size: 1em;
   cursor: pointer;
   color: #007aff;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Add spacing between icon and text */
 }
 
 .calendar-days {
@@ -84,6 +87,15 @@
   margin: 0;
 }
 
+.date.highlight-today::before {
+  color: orange; /* Change current date number color to orange */
+}
+
+.date.highlight-today {
+  background: #ffe4b2; /* Light orange background for today */
+  border: 2px solid orange; /* Add an orange border */
+}
+
 .prev-month,
 .next-month {
   color: rgba(0, 0, 0, 0.2);
@@ -130,4 +142,41 @@
   padding: 4px 8px;
   border-radius: 12px;
   font-weight: bold;
+}
+
+/* ไฮไลต์วันที่ปัจจุบัน */
+.highlight-today::before {
+  color: #fd6e2b !important; /* เปลี่ยนสีตัวเลขเป็นส้ม */
+  font-weight: bold;
+}
+
+.date {
+  position: relative;
+  width: 100%;
+  height: 12vh;
+  background: white;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  font-size: 1em;
+  padding: 10px;
+}
+
+.home-button button {
+  background: #007aff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Add spacing between icon and text */
+}
+
+.home-button button:hover {
+  background: #005bb5;
 }
