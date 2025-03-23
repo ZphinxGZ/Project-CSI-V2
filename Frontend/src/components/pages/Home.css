@@ -1,136 +1,105 @@
-/* ปรับขนาดให้เต็มหน้าจอ */
+
+
 .calendar {
-    width: 100vw;  /* ความกว้างเต็มหน้าจอ */
-    max-width: 100%;
-    height: 80vh; /* ปรับให้เต็มจอมากขึ้น */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 20px ; /* ลดระยะห่างจาก nav bar */
-  }
-  
-  /* ปรับส่วนหัวของปฏิทิน */
-  .calendar-header {
-    width: 95%;
-    max-width: 1200px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px; /* ลดระยะห่างด้านล่าง */
-    margin-top: 20px; /* ลดระยะห่างด้านบน */
+  width: 100%; /* ปรับให้กว้างเต็มหน้าจอ */
+  max-width: 900px; /* กำหนดขนาดสูงสุดเพื่อไม่ให้ใหญ่เกินไป */
+  margin: 10px auto; /* เพิ่มระยะห่างจาก navbar */
+  background: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: lighter;
+  padding: 10px;
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
 .calendar-header button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
+  background: none;
+  border: none;
+  font-size: 1em;
+  cursor: pointer;
+  color: #007aff;
 }
-.calendar-header button:hover {
-    background-color: #0056b3;
-}
+
 .calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px; /* ลดช่องว่างให้วันชนกันมากขึ้น */
+  text-align: center;
+  font-weight: normal;
+  margin-top: 10px;
+  padding: 10px;
 }
-.day, .date {
-    padding: 10px;
-    border: 1px solid #ddd; /* Added border for clear separation */
-    box-sizing: border-box; /* Ensure borders don't affect layout */
+
+.day {
+  padding: 10px;
+  background: #e0e0e0;
+  border-radius: 5px;
+  font-size: 0.9em;
 }
-.prev-month, .next-month {
-    color: #aaa; /* Dimmed color for non-current month dates */
+
+.day:nth-child(1) { /* อา. */
+  color: #ff4d4d; /* Red for Sunday */
 }
-.meeting {
-    background: #ffcc00;
-    border-radius: 10px;
-    margin-top: 40px; /* ลดระยะห่างด้านบน */
-  }
-  
-  /* ปรับตารางปฏิทิน */
-  .calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 คอลัมน์สำหรับ 7 วัน */
-    width: 95%;
-    max-width: 1200px;
-    text-align: center;
-    gap: 1px; /* ระยะห่างระหว่างช่อง */
-    padding: 10px;
-    border-collapse: collapse;
-  }
-  
-  /* ปรับขนาดของแต่ละช่อง (วันในปฏิทิน) */
-  .date, .day {
-    width: 100%;
-    padding: 15px;
-    border: 0.5px solid #ddd; /* เส้นขอบของตาราง */
-    border-radius: 5px;
-    font-size: 1.2rem;
-    background: white;
-  }
-  
-  /* เสริมให้เส้นขอบชัดขึ้น */
-  .day {
-    font-weight: bold;
-    background: #f4f4f4; /* สีพื้นหลังของชื่อวัน */
-    border: 1px solid #bbb;
-  }
-  
-  .day:nth-child(2) { /* จ. */
-    color: #007bff; /* Blue for Monday */
-  }
-  .day:nth-child(3) { /* อ. */
-    color: #28a745; /* Green for Tuesday */
-  }
-  .day:nth-child(4) { /* พ. */
-    color: #ffc107; /* Yellow for Wednesday */
-  }
-  .day:nth-child(5) { /* พฤ. */
-    color: #17a2b8; /* Teal for Thursday */
-  }
-  .day:nth-child(6) { /* ศ. */
-    color: #fd7e14; /* Orange for Friday */
-  }
-  
-  /* วันที่มีการประชุม */
-  .meeting {
-    background-color: yellow;
-    color: black;
-    border-radius: 5px;
-    padding: 5px;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: auto; /* Push meeting time to the bottom */
-  }
-  
-  /* วันที่ปัจจุบัน */
-  .highlight-today {
-    background-color: #fca37a;
-    color: white;
-    font-weight: bolder;
-  }
-  /* ปรับขนาดตัวเลขของวันที่ */
+.day:nth-child(2) { /* จ. */
+  color:  #ffc107; /* Blue for Monday */
+}
+.day:nth-child(3) { /* อ. */
+  color: #ff00d9; /* Green for Tuesday */
+}
+.day:nth-child(4) { /* พ. */
+  color: #28a745; /* Yellow for Wednesday */
+}
+.day:nth-child(5) { /* พฤ. */
+  color:  #fd7e14; /* Teal for Thursday */
+}
+.day:nth-child(6) { /* ศ. */
+  color: #17a2b8; /* Orange for Friday */
+}
+.day:nth-child(7) { /* ส. */
+  color: #6f42c1; /* Purple for Saturday */
+}
+
 .date {
-    font-size: 1.0rem; /* เพิ่มขนาดตัวเลขของวันที่ */
-    font-weight: bold;
-    display: flex;
-    flex-direction: column; /* Stack date and meeting vertically */
-    align-items: center;
-    justify-content: flex-start; /* Align date at the top */
-    height: 80px; /* ปรับความสูงให้สมดุล */
-    min-width: 90px; /* ปรับความกว้าง */
-    position: relative; /* Ensure proper positioning for child elements */
-  }
+  width: 100%; /* ปรับให้ขนาดเต็มคอลัมน์ */
+  height: 100px;
+  background: white;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  position: relative;
+}
+
+.date.prev-month, .date.next-month {
+  color: #b0b0b0;
+}
+
 .highlight-today {
-    background: rgb(199, 203, 248);
-    border-radius: 10px;
-    padding: 1px ;
-    margin: 1px;
-    text-align: center;
-    border: 2px solid #4a90e2; /* Added border to highlight today */
+  background-color: #fd6e2b;
+  background: none;
+  color: #fd6e2b;
+  font-weight: bold;
+  border: 1px solid #fd6e2b;
+  border-radius: 5px;
+  padding: 1px 1px;
+}
+
+.meeting {
+  position: absolute;
+  bottom: 15px;
+  font-size: 0.8em;
+  background: red;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 10px;
 }
