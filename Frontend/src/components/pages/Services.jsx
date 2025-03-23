@@ -9,7 +9,7 @@ export const Services = () => {
 
   // แปลงสถานะให้เป็น "จองสำเร็จ" / "จองไม่สำเร็จ"
   const bookings = [
-    { id: 1, room: "ห้องประชุม 1", date: "2024-03-20", status: "จองสำเร็จ", reason: "Project discussion", color: "green" },
+    { id: 1, room: "ห้องประชุม 1", date: "2024-03-20", status: "จองสำเร็จ", reason: "**Room Description**", color: "green" },
     { id: 2, room: "ห้องประชุม 2", date: "2024-03-18", status: "จองไม่สำเร็จ", reason: "Training session", color: "red" },
     { id: 3, room: "ห้องประชุม 3", date: "2024-03-19", status: "จองสำเร็จ", reason: "Client meeting", color: "green" },
     { id: 4, room: "ห้องประชุม 3", date: "2024-03-17", status: "จองสำเร็จ", reason: "Team meeting", color: "green" },
