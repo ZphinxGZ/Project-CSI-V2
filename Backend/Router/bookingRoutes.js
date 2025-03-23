@@ -369,8 +369,11 @@ bookingRouter.get("/calendar", authenticate, async (req, res) => {
     const bookings = await Booking.find({ user_id: req.user._id })
       .populate("room_id", "room_name location");
 
+    // กรองเฉพาะการจองที่มี room_id ที่ถูกต้อง
+    const validBookings = bookings.filter((booking) => booking.room_id);
+
     // จัดรูปแบบข้อมูลสำหรับปฏิทิน
-    const calendarData = bookings.map((booking) => ({
+    const calendarData = validBookings.map((booking) => ({
       id: booking._id,
       room: booking.room_id.room_name,
       location: booking.room_id.location,
