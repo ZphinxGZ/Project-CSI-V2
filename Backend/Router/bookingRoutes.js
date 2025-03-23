@@ -4,6 +4,41 @@ import { authenticate } from "../middlewares/authMiddleware.js";
 
 const bookingRouter = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Bookings
+ *   description: Booking management routes
+ */
+
+/**
+ * @swagger
+ * /api/bookings:
+ *   post:
+ *     summary: Create a new booking
+ *     tags: [Bookings]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               roomId:
+ *                 type: string
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       201:
+ *         description: Booking created successfully
+ *       400:
+ *         description: Room is already booked for the selected time
+ */
+
 // API สำหรับจองห้องประชุม (เฉพาะ user และ admin)
 bookingRouter.post("/", authenticate, async (req, res) => {
   try {

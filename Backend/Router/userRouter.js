@@ -5,6 +5,56 @@ import { authenticate } from "../middlewares/authMiddleware.js";
 
 const userRouter = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management routes
+ */
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of users
+ *       404:
+ *         description: No users found
+ */
+
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: Get the logged-in user's details
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User details
+ *       401:
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /api/users/reports:
+ *   get:
+ *     summary: Get user statistics (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User statistics
+ *       403:
+ *         description: Access denied
+ */
+
 // API สำหรับดึงข้อมูลผู้ใช้ทั้งหมด
 userRouter.get("/", async (req, res) => {
   try {

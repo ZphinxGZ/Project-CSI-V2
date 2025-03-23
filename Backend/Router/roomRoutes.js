@@ -4,6 +4,46 @@ import { authenticate, isAdmin } from "../middlewares/authMiddleware.js";
 
 const roomRouter = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Rooms
+ *   description: Room management routes
+ */
+
+/**
+ * @swagger
+ * /api/rooms:
+ *   get:
+ *     summary: Get all rooms
+ *     tags: [Rooms]
+ *     responses:
+ *       200:
+ *         description: List of rooms
+ *       404:
+ *         description: No rooms found
+ */
+
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   get:
+ *     summary: Get room details by ID
+ *     tags: [Rooms]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room details
+ *       404:
+ *         description: Room not found
+ */
+
 // API สำหรับเพิ่มห้องประชุมใหม่ (เฉพาะ admin)
 roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
   try {
