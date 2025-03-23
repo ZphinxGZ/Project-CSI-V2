@@ -17,6 +17,16 @@ const bookingRouter = express.Router();
  *   post:
  *     summary: Create a new booking
  *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer <your_token>
+ *         description: Bearer token for authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -37,6 +47,10 @@ const bookingRouter = express.Router();
  *         description: Booking created successfully
  *       400:
  *         description: Room is already booked for the selected time
+ *       403:
+ *         description: Access denied
+ *       401:
+ *         description: Unauthorized
  */
 
 /**

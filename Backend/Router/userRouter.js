@@ -48,11 +48,38 @@ const userRouter = express.Router();
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer <your_token>
+ *         description: Bearer token for authentication
  *     responses:
  *       200:
  *         description: User statistics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalUsers:
+ *                   type: integer
+ *                   description: Total number of users
+ *                 mostActiveUser:
+ *                   type: object
+ *                   properties:
+ *                     username:
+ *                       type: string
+ *                       description: Username of the most active user
+ *                     count:
+ *                       type: integer
+ *                       description: Number of bookings by the most active user
  *       403:
  *         description: Access denied
+ *       401:
+ *         description: Unauthorized
  */
 
 /**
