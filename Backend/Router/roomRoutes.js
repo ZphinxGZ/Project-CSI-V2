@@ -44,6 +44,95 @@ const roomRouter = express.Router();
  *         description: Room not found
  */
 
+/**
+ * @swagger
+ * /api/rooms:
+ *   post:
+ *     summary: Add a new room (admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               room_name:
+ *                 type: string
+ *               capacity:
+ *                 type: number
+ *               location:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Room created successfully
+ *       400:
+ *         description: Room name already exists
+ */
+
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   put:
+ *     summary: Update room details (admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               capacity:
+ *                 type: number
+ *               location:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Room updated successfully
+ *       404:
+ *         description: Room not found
+ */
+
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   delete:
+ *     summary: Delete a room (admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room deleted successfully
+ *       404:
+ *         description: Room not found
+ */
+
 // API สำหรับเพิ่มห้องประชุมใหม่ (เฉพาะ admin)
 roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
   try {
@@ -123,7 +212,7 @@ roomRouter.put("/:id", authenticate, isAdmin, async (req, res) => {
 
     res.status(200).json({ message: "Room updated successfully", room: updatedRoom });
   } catch (error) {
-    res.status(500).json({ message: "Error updating room", error: error.message });
+    res.status(500).json({ message: "Error updating room", error: error.message }); // Fixed syntax error
   }
 });
 

@@ -90,4 +90,26 @@ notificationRouter.get("/", authenticate, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/notifications/{id}:
+ *   put:
+ *     summary: Mark a notification as read
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Notification ID
+ *     responses:
+ *       200:
+ *         description: Notification marked as read
+ *       404:
+ *         description: Notification not found
+ */
+
 export default notificationRouter;

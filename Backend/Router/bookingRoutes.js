@@ -39,6 +39,137 @@ const bookingRouter = express.Router();
  *         description: Room is already booked for the selected time
  */
 
+/**
+ * @swagger
+ * /api/bookings/user/{userId}:
+ *   get:
+ *     summary: Get bookings for a specific user
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: List of bookings for the user
+ *       403:
+ *         description: Access denied
+ */
+
+/**
+ * @swagger
+ * /api/bookings/room/{roomId}:
+ *   get:
+ *     summary: Get bookings for a specific room (admin only)
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: roomId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: List of bookings for the room
+ *       404:
+ *         description: No bookings found for this room
+ */
+
+/**
+ * @swagger
+ * /api/bookings/{id}:
+ *   put:
+ *     summary: Update a booking (user only)
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Booking ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Booking updated successfully
+ *       400:
+ *         description: Room is already booked for the selected time
+ *       404:
+ *         description: Booking not found
+ */
+
+/**
+ * @swagger
+ * /api/bookings/{id}:
+ *   delete:
+ *     summary: Cancel a booking (user only)
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Booking ID
+ *     responses:
+ *       200:
+ *         description: Booking canceled successfully
+ *       404:
+ *         description: Booking not found
+ */
+
+/**
+ * @swagger
+ * /api/bookings/calendar:
+ *   get:
+ *     summary: Get calendar data for the logged-in user
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Calendar data
+ */
+
+/**
+ * @swagger
+ * /api/bookings/reports:
+ *   get:
+ *     summary: Get booking statistics (admin only)
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Booking statistics
+ *       403:
+ *         description: Access denied
+ */
+
 // API สำหรับจองห้องประชุม (เฉพาะ user และ admin)
 bookingRouter.post("/", authenticate, async (req, res) => {
   try {

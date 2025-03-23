@@ -68,6 +68,17 @@ authRouter.use(cors({
  *         description: Invalid credentials
  */
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Log out a user
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
+
 // Route for user registration
 authRouter.post("/register", registerUser);
 

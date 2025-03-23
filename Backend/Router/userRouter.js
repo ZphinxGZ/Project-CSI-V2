@@ -55,6 +55,28 @@ const userRouter = express.Router();
  *         description: Access denied
  */
 
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   delete:
+ *     summary: Delete a user (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ */
+
 // API สำหรับดึงข้อมูลผู้ใช้ทั้งหมด
 userRouter.get("/", async (req, res) => {
   try {
