@@ -1,8 +1,14 @@
 import express from "express";
+import cors from "cors"; // Add this line
 import Room from "../models/Room.js";
 import { authenticate, isAdmin } from "../middlewares/authMiddleware.js";
 
 const roomRouter = express.Router();
+roomRouter.use(cors()); // Add this line
+
+// Increase payload size limit
+roomRouter.use(express.json({ limit: '50mb' }));
+roomRouter.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 /**
  * @swagger

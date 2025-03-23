@@ -2,46 +2,35 @@ import React, { useState, useEffect } from "react";
 import './About.css';
 
 export const About = () => {
-  const defaultRooms = [
-    {
-      id: 1,
-      image: "../public/Room2.jpg",
-      name: "ห้องประชุม 1",
-      description: "ห้องประชุมพร้อมระบบ Video conference ที่มีผู้เข้าร่วมประชุมรูปตัว U"
-    },
-    {
-      id: 2,
-      image: "../public/Room1.jpg",
-      name: "ห้องประชุม 2",
-      description: "ห้องประชุมขนาดใหญ่ พร้อมสิ่งอำนวยความสะดวกครบครัน"
-    },
-    {
-      id: 3,
-      image: "../public/Room3.jpg",
-      name: "ห้องประชุมสาขาเทคโนโลยีสารสนเทศ",
-      description: "ห้องประชุมขนาดใหญ่ (Hall) เหมาะสำหรับการสัมมนาเป็นหมู่คณะ และ จัดเลี้ยง"
-    }
-  ];
-
-  const [rooms, setRooms] = useState(() => {
-    const stored = localStorage.getItem("rooms");
-    return stored ? JSON.parse(stored) : defaultRooms;
-  });
-
+  const [rooms, setRooms] = useState([]);
   const [newRoom, setNewRoom] = useState({
-    name: "",
+    room_name: "",
     description: "",
-    image: ""
+    image: "",
+    capacity: "", // Added capacity field
+    location: ""  // Added location field
   });
-
   const [showForm, setShowForm] = useState(false);
   const [editingRoomId, setEditingRoomId] = useState(null);
-
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
-
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [detailRoom, setDetailRoom] = useState(null);
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/rooms");
+      const data = await response.json();
+      setRooms(data);
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+    }
+  };
+
   const handleChange = (e) => {
     setNewRoom({
       ...newRoom,
@@ -60,59 +49,68 @@ export const About = () => {
     }
   };
 
-  // 👉 ใส่ function นี้ด้านบนใน About component ก่อน return
-  const publicHolidays = ["01-01", "04-13", "04-14", "04-15", "12-05", "12-10"]; // ตัวอย่างวันหยุด
+  const publicHolidays = ["01-01", "04-13", "04-14", "04-15", "12-05", "12-10"];
   const getMinutes = (time) => time.split(":")[1];
   const isHoliday = (dateString) => {
     const date = new Date(dateString);
-    const day = date.getDay(); // 0 = Sunday, 6 = Saturday
-    const formatted = date.toISOString().slice(5, 10); // MM-DD
+    const day = date.getDay();
+    const formatted = date.toISOString().slice(5, 10);
     return day === 0 || day === 6 || publicHolidays.includes(formatted);
   };
 
-  const handleAddOrUpdateRoom = () => {
-    if (!newRoom.name || !newRoom.description || !newRoom.image) {
+  const handleAddOrUpdateRoom = async () => {
+    if (!newRoom.room_name || !newRoom.description || !newRoom.image || !newRoom.capacity || !newRoom.location) {
       return alert("กรุณากรอกข้อมูลให้ครบ");
     }
 
-    let updatedRooms;
+    try {
+      const response = await fetch(`http://localhost:3000/api/rooms${editingRoomId ? `/${editingRoomId}` : ''}`, {
+        method: editingRoomId ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newRoom)
+      });
 
-    if (editingRoomId !== null) {
-      updatedRooms = rooms.map(room =>
-        room.id === editingRoomId ? { ...room, ...newRoom } : room
-      );
-    } else {
-      const newRoomData = {
-        id: rooms.length ? Math.max(...rooms.map(r => r.id)) + 1 : 1,
-        ...newRoom
-      };
-      updatedRooms = [...rooms, newRoomData];
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const updatedRoom = await response.json();
+      const updatedRooms = editingRoomId
+        ? rooms.map(room => room._id === editingRoomId ? updatedRoom : room)
+        : [...rooms, updatedRoom];
+
+      setRooms(updatedRooms);
+      setNewRoom({ room_name: "", description: "", image: "", capacity: "", location: "" });
+      setShowForm(false);
+      setEditingRoomId(null);
+    } catch (error) {
+      console.error("Error adding/updating room:", error);
+      alert("เกิดข้อผิดพลาดในการเพิ่ม/แก้ไขห้อง");
     }
-
-    setRooms(updatedRooms);
-    localStorage.setItem("rooms", JSON.stringify(updatedRooms));
-    setNewRoom({ name: "", description: "", image: "" });
-    setShowForm(false);
-    setEditingRoomId(null);
   };
 
   const handleEdit = (room) => {
     setNewRoom({
-      name: room.name,
+      room_name: room.room_name,
       description: room.description,
-      image: room.image
+      image: room.image,
+      capacity: room.capacity, // Added capacity field
+      location: room.location  // Added location field
     });
-    setEditingRoomId(room.id);
+    setEditingRoomId(room._id);
     setShowForm(true);
   };
 
   const handleDelete = (id) => {
     if (window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบห้องนี้?")) {
-      const updatedRooms = rooms.filter(room => room.id !== id);
+      const updatedRooms = rooms.filter(room => room._id !== id);
       setRooms(updatedRooms);
       localStorage.setItem("rooms", JSON.stringify(updatedRooms));
     }
   };
+
   const handleViewDetails = (room) => {
     setDetailRoom(room);
     setShowDetailModal(true);
@@ -122,6 +120,7 @@ export const About = () => {
     setShowDetailModal(false);
     setDetailRoom(null);
   };
+
   const handleBookRoom = (room) => {
     setSelectedRoom(room);
     setShowBookingModal(true);
@@ -140,17 +139,19 @@ export const About = () => {
 
       <ul className="about-list">
         {rooms.map((room) => (
-          <li key={room.id}>
+          <li key={room._id}>
             <img
               src={room.image}
-              alt={room.name}
+              alt={room.room_name}
               className="room-image"
               width="220"
               height="170"
             />
             <div className="room-details">
-              <h2 className="room-title">{room.name}</h2>
+              <h2 className="room-title">{room.room_name}</h2>
               <p>{room.description}</p>
+              <p><strong>ความจุ:</strong> {room.capacity}</p> {/* Display capacity */}
+              <p><strong>สถานที่:</strong> {room.location}</p> {/* Display location */}
 
               <div className="room-buttons">
                 <div className="left-buttons">
@@ -159,7 +160,7 @@ export const About = () => {
                 </div>
                 <div className="right-buttons">
                   <button className="btn orange" onClick={() => handleEdit(room)}>📝 แก้ไข</button>
-                  <button className="btn red" onClick={() => handleDelete(room.id)}>🗑️ ลบ</button>
+                  <button className="btn red" onClick={() => handleDelete(room._id)}>🗑️ ลบ</button>
                 </div>
               </div>
             </div>
@@ -184,9 +185,9 @@ export const About = () => {
             </div>
             <input
               type="text"
-              name="name"
+              name="room_name"
               placeholder="ชื่อห้อง"
-              value={newRoom.name}
+              value={newRoom.room_name}
               onChange={handleChange}
             />
             <input
@@ -194,6 +195,20 @@ export const About = () => {
               name="description"
               placeholder="รายละเอียดห้อง"
               value={newRoom.description}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="capacity"
+              placeholder="ความจุ"
+              value={newRoom.capacity}
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              name="location"
+              placeholder="สถานที่"
+              value={newRoom.location}
               onChange={handleChange}
             />
             <input
@@ -223,14 +238,16 @@ export const About = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="form-header">
-              <h4>📅 จองห้อง: {selectedRoom.name}</h4>
+              <h4>📅 จองห้อง: {selectedRoom.room_name}</h4>
               <button className="btn red" onClick={closeBookingModal}>❌</button>
             </div>
 
             <p><strong>รายละเอียดห้อง:</strong> {selectedRoom.description}</p>
+            <p><strong>ความจุ:</strong> {selectedRoom.capacity}</p> {/* Display capacity */}
+            <p><strong>สถานที่:</strong> {selectedRoom.location}</p> {/* Display location */}
             <img
               src={selectedRoom.image}
-              alt={selectedRoom.name}
+              alt={selectedRoom.room_name}
               width="100%"
               style={{ marginTop: '1rem', borderRadius: '8px' }}
             />
@@ -325,10 +342,7 @@ export const About = () => {
             </button>
 
           </div>
-
-
         </div>
-
       )}
       {/* ✅ Detail Modal */}
       {showDetailModal && detailRoom && (
@@ -340,11 +354,12 @@ export const About = () => {
             </div>
             <img width="100%"
               src={detailRoom.image}
-              alt={detailRoom.name}
-              
+              alt={detailRoom.room_name}
             />
-            <h3 >{detailRoom.name}</h3>
+            <h3 >{detailRoom.room_name}</h3>
             <p>{detailRoom.description}</p>
+            <p><strong>ความจุ:</strong> {detailRoom.capacity}</p> {/* Display capacity */}
+            <p><strong>สถานที่:</strong> {detailRoom.location}</p> {/* Display location */}
           </div>
         </div>
       )}
