@@ -7,13 +7,14 @@ import bookingRouter from "./Router/bookingRoutes.js"; // นำเข้า boo
 import notificationRouter from "./Router/notificationRoutes.js"; // Import notificationRouter
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
+import cors from "cors";
 
 const app = express();
 const PORT = 3000;
 
 // Middleware สำหรับ parse JSON body
 app.use(express.json());
-
+app.use(cors());
 // เชื่อมต่อ MongoDB
 await connectDB();
 
