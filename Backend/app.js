@@ -4,6 +4,7 @@ import userRouter from "./Router/userRouter.js"; // นำเข้า userRoute
 import authRouter from "./Router/authRoutes.js"; // นำเข้า authRouter
 import roomRouter from "./Router/roomRoutes.js"; // นำเข้า roomRouter
 import bookingRouter from "./Router/bookingRoutes.js"; // นำเข้า bookingRouter
+import notificationRouter from "./Router/notificationRoutes.js"; // Import notificationRouter
 
 const app = express();
 const PORT = 3000;
@@ -24,7 +25,9 @@ app.use("/api/auth", authRouter);
 app.use("/api/rooms", roomRouter);
 
 // ใช้ bookingRouter สำหรับเส้นทาง /api/bookings
-app.use("/api/bookings", bookingRouter);
+app.use("/api/bookings", bookingRouter); // Use bookingRouter for bookings and reports
+
+app.use("/api/notifications", notificationRouter); // Use notificationRouter
 
 // เริ่มต้นเซิร์ฟเวอร์
 app.listen(PORT, () => {

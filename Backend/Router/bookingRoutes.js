@@ -205,4 +205,46 @@ bookingRouter.get("/calendar", authenticate, async (req, res) => {
   }
 });
 
+// GET /api/bookings/reports: Fetch booking statistics
+bookingRouter.get("/reports", authenticate, async (req, res) => {
+  try {
+    // ตรวจสอบว่า role ของผู้ใช้เป็น admin เท่านั้น
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+
+    // ดึงข้อมูลการจองทั้งหมด
+    const bookings = await Booking.find({}).populate("room_id", "room_name");
+
+    // กรองเฉพาะการจองที่มี room_id ที่ถูกต้อง
+    const validBookings = bookings.filter((booking) => booking.room_id);
+
+    // สถิติ: จำนวนการจองต่อวัน
+    const bookingsPerDay = validBookings.reduce((acc, booking) => {
+      const date = booking.start_time.toISOString().split("T")[0];
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+
+    // สถิติ: ห้องประชุมที่ถูกจองบ่อยที่สุด
+    const roomBookings = validBookings.reduce((acc, booking) => {
+      const roomName = booking.room_id.room_name;
+      acc[roomName] = (acc[roomName] || 0) + 1;
+      return acc;
+    }, {});
+
+    const mostBookedRoom = Object.entries(roomBookings).reduce(
+      (max, entry) => (entry[1] > max[1] ? entry : max),
+      ["", 0]
+    );
+
+    res.status(200).json({
+      bookingsPerDay,
+      mostBookedRoom: { room: mostBookedRoom[0], count: mostBookedRoom[1] },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching booking reports", error: error.message });
+  }
+});
+
 export default bookingRouter;
