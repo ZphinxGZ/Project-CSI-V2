@@ -4,41 +4,6 @@ import { authenticate } from "../middlewares/authMiddleware.js";
 
 const notificationRouter = express.Router();
 
-/**
- * @swagger
- * tags:
- *   name: Notifications
- *   description: Notification management routes
- */
-
-/**
- * @swagger
- * /api/notifications:
- *   post:
- *     summary: Create a new notification
- *     tags: [Notifications]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               booking_id:
- *                 type: string
- *               room_id:
- *                 type: string
- *               message:
- *                 type: string
- *     responses:
- *       201:
- *         description: Notification created successfully
- *       500:
- *         description: Error creating notification
- */
-
 // POST /api/notifications: Create a new notification
 notificationRouter.post("/", authenticate, async (req, res) => {
   try {
@@ -60,21 +25,6 @@ notificationRouter.post("/", authenticate, async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/notifications:
- *   get:
- *     summary: Get notifications for the logged-in user
- *     tags: [Notifications]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of notifications
- *       404:
- *         description: No notifications found
- */
-
 // GET /api/notifications: Fetch notifications for the logged-in user
 notificationRouter.get("/", authenticate, async (req, res) => {
   try {
@@ -89,27 +39,5 @@ notificationRouter.get("/", authenticate, async (req, res) => {
     res.status(500).json({ message: "Error fetching notifications", error: error.message });
   }
 });
-
-/**
- * @swagger
- * /api/notifications/{id}:
- *   put:
- *     summary: Mark a notification as read
- *     tags: [Notifications]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Notification ID
- *     responses:
- *       200:
- *         description: Notification marked as read
- *       404:
- *         description: Notification not found
- */
 
 export default notificationRouter;
