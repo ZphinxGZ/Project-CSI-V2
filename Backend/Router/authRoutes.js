@@ -12,13 +12,6 @@ authRouter.use(cors({
 
 /**
  * @swagger
- * tags:
- *   name: Auth
- *   description: Authentication routes
- */
-
-/**
- * @swagger
  * /api/auth/register:
  *   post:
  *     summary: Register a new user
@@ -42,13 +35,16 @@ authRouter.use(cors({
  *         description: User registered successfully
  *       400:
  *         description: Username already exists
+ *       500:
+ *         description: Error registering user
  */
+authRouter.post("/register", registerUser);
 
 /**
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Log in a user
+ *     summary: Login a user
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -66,26 +62,21 @@ authRouter.use(cors({
  *         description: Login successful
  *       401:
  *         description: Invalid credentials
+ *       500:
+ *         description: Error logging in
  */
+authRouter.post("/login", loginUser);
 
 /**
  * @swagger
  * /api/auth/logout:
  *   post:
- *     summary: Log out a user
+ *     summary: Logout a user
  *     tags: [Auth]
  *     responses:
  *       200:
  *         description: Logout successful
  */
-
-// Route for user registration
-authRouter.post("/register", registerUser);
-
-// Route for user login
-authRouter.post("/login", loginUser);
-
-// Route for user logout
 authRouter.post("/logout", (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 });

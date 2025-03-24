@@ -12,49 +12,9 @@ roomRouter.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 /**
  * @swagger
- * tags:
- *   name: Rooms
- *   description: Room management routes
- */
-
-/**
- * @swagger
- * /api/rooms:
- *   get:
- *     summary: Get all rooms
- *     tags: [Rooms]
- *     responses:
- *       200:
- *         description: List of rooms
- *       404:
- *         description: No rooms found
- */
-
-/**
- * @swagger
- * /api/rooms/{id}:
- *   get:
- *     summary: Get room details by ID
- *     tags: [Rooms]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Room ID
- *     responses:
- *       200:
- *         description: Room details
- *       404:
- *         description: Room not found
- */
-
-/**
- * @swagger
  * /api/rooms:
  *   post:
- *     summary: Add a new room (admin only)
+ *     summary: Add a new meeting room (Admin only)
  *     tags: [Rooms]
  *     security:
  *       - bearerAuth: []
@@ -78,13 +38,106 @@ roomRouter.use(express.urlencoded({ limit: '50mb', extended: true }));
  *         description: Room created successfully
  *       400:
  *         description: Room name already exists
+ *       500:
+ *         description: Error creating room
  */
+roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
+  try {
+    const { room_name, capacity, location, description } = req.body;
+
+    // ตรวจสอบว่ามีห้องประชุมชื่อเดียวกันอยู่แล้วหรือไม่
+    const existingRoom = await Room.findOne({ room_name });
+    if (existingRoom) {
+      return res.status(400).json({ message: "Room name already exists" });
+    }
+
+    // สร้างห้องประชุมใหม่
+    const newRoom = new Room({
+      room_name,
+      capacity,
+      location,
+      description,
+    });
+
+    // บันทึกห้องประชุมลงฐานข้อมูล
+    await newRoom.save();
+
+    res.status(201).json({ message: "Room created successfully", room: newRoom });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating room", error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /api/rooms:
+ *   get:
+ *     summary: Get all meeting rooms
+ *     tags: [Rooms]
+ *     responses:
+ *       200:
+ *         description: List of all rooms
+ *       404:
+ *         description: No rooms found
+ *       500:
+ *         description: Error fetching rooms
+ */
+roomRouter.get("/", async (req, res) => {
+  try {
+    // ดึงข้อมูลห้องประชุมทั้งหมดจากฐานข้อมูล
+    const rooms = await Room.find({});
+    if (rooms.length === 0) {
+      return res.status(404).json({ message: "No rooms found" });
+    }
+
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching rooms", error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   get:
+ *     summary: Get details of a specific room
+ *     tags: [Rooms]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room details
+ *       404:
+ *         description: Room not found
+ *       500:
+ *         description: Error fetching room details
+ */
+roomRouter.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // ค้นหาห้องประชุมตาม ID
+    const room = await Room.findById(id);
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    res.status(200).json(room);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching room details", error: error.message });
+  }
+});
 
 /**
  * @swagger
  * /api/rooms/{id}:
  *   put:
- *     summary: Update room details (admin only)
+ *     summary: Update a meeting room (Admin only)
  *     tags: [Rooms]
  *     security:
  *       - bearerAuth: []
@@ -115,91 +168,9 @@ roomRouter.use(express.urlencoded({ limit: '50mb', extended: true }));
  *         description: Room updated successfully
  *       404:
  *         description: Room not found
+ *       500:
+ *         description: Error updating room
  */
-
-/**
- * @swagger
- * /api/rooms/{id}:
- *   delete:
- *     summary: Delete a room (admin only)
- *     tags: [Rooms]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Room ID
- *     responses:
- *       200:
- *         description: Room deleted successfully
- *       404:
- *         description: Room not found
- */
-
-// API สำหรับเพิ่มห้องประชุมใหม่ (เฉพาะ admin)
-roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
-  try {
-    const { room_name, capacity, location, description } = req.body;
-
-    // ตรวจสอบว่ามีห้องประชุมชื่อเดียวกันอยู่แล้วหรือไม่
-    const existingRoom = await Room.findOne({ room_name });
-    if (existingRoom) {
-      return res.status(400).json({ message: "Room name already exists" });
-    }
-
-    // สร้างห้องประชุมใหม่
-    const newRoom = new Room({
-      room_name,
-      capacity,
-      location,
-      description,
-    });
-
-    // บันทึกห้องประชุมลงฐานข้อมูล
-    await newRoom.save();
-
-    res.status(201).json({ message: "Room created successfully", room: newRoom });
-  } catch (error) {
-    res.status(500).json({ message: "Error creating room", error: error.message });
-  }
-});
-
-// API สำหรับดึงข้อมูลห้องประชุมทั้งหมด
-roomRouter.get("/", async (req, res) => {
-  try {
-    // ดึงข้อมูลห้องประชุมทั้งหมดจากฐานข้อมูล
-    const rooms = await Room.find({});
-    if (rooms.length === 0) {
-      return res.status(404).json({ message: "No rooms found" });
-    }
-
-    res.status(200).json(rooms);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching rooms", error: error.message });
-  }
-});
-
-// API สำหรับดึงข้อมูลห้องประชุมตาม ID
-roomRouter.get("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    // ค้นหาห้องประชุมตาม ID
-    const room = await Room.findById(id);
-    if (!room) {
-      return res.status(404).json({ message: "Room not found" });
-    }
-
-    res.status(200).json(room);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching room details", error: error.message });
-  }
-});
-
-// API สำหรับอัปเดตข้อมูลห้องประชุม (เฉพาะ admin)
 roomRouter.put("/:id", authenticate, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -222,7 +193,29 @@ roomRouter.put("/:id", authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// API สำหรับลบห้องประชุม (เฉพาะ admin)
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   delete:
+ *     summary: Delete a meeting room (Admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room deleted successfully
+ *       404:
+ *         description: Room not found
+ *       500:
+ *         description: Error deleting room
+ */
 roomRouter.delete("/:id", authenticate, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;

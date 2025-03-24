@@ -7,104 +7,18 @@ const userRouter = express.Router();
 
 /**
  * @swagger
- * tags:
- *   name: Users
- *   description: User management routes
- */
-
-/**
- * @swagger
  * /api/users:
  *   get:
  *     summary: Get all users
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: List of users
+ *         description: List of all users
  *       404:
  *         description: No users found
+ *       500:
+ *         description: Error fetching users
  */
-
-/**
- * @swagger
- * /api/users/me:
- *   get:
- *     summary: Get the logged-in user's details
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: User details
- *       401:
- *         description: Unauthorized
- */
-
-/**
- * @swagger
- * /api/users/reports:
- *   get:
- *     summary: Get user statistics (admin only)
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *           example: Bearer <your_token>
- *         description: Bearer token for authentication
- *     responses:
- *       200:
- *         description: User statistics
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 totalUsers:
- *                   type: integer
- *                   description: Total number of users
- *                 mostActiveUser:
- *                   type: object
- *                   properties:
- *                     username:
- *                       type: string
- *                       description: Username of the most active user
- *                     count:
- *                       type: integer
- *                       description: Number of bookings by the most active user
- *       403:
- *         description: Access denied
- *       401:
- *         description: Unauthorized
- */
-
-/**
- * @swagger
- * /api/users/{id}:
- *   delete:
- *     summary: Delete a user (admin only)
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: User ID
- *     responses:
- *       200:
- *         description: User deleted successfully
- *       404:
- *         description: User not found
- */
-
-// API สำหรับดึงข้อมูลผู้ใช้ทั้งหมด
 userRouter.get("/", async (req, res) => {
   try {
     const users = await User.find({});
@@ -119,12 +33,47 @@ userRouter.get("/", async (req, res) => {
   }
 });
 
-// API สำหรับดึงข้อมูลผู้ใช้ที่เข้าสู่ระบบ
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: Get the logged-in user's details
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Bearer token for authentication (e.g., "Bearer <token>")
+ *     responses:
+ *       200:
+ *         description: User details
+ *       401:
+ *         description: Unauthorized - No token provided
+ */
 userRouter.get("/me", authenticate, (req, res) => {
   res.status(200).json(req.user);
 });
 
-// GET /api/users/reports: Fetch user statistics
+/**
+ * @swagger
+ * /api/users/reports:
+ *   get:
+ *     summary: Get user statistics (Admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User statistics
+ *       403:
+ *         description: Access denied
+ *       500:
+ *         description: Error fetching reports
+ */
 userRouter.get("/reports", authenticate, async (req, res) => {
   try {
     // ตรวจสอบว่า role ของผู้ใช้เป็น admin เท่านั้น

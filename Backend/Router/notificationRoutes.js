@@ -6,13 +6,6 @@ const notificationRouter = express.Router();
 
 /**
  * @swagger
- * tags:
- *   name: Notifications
- *   description: Notification management routes
- */
-
-/**
- * @swagger
  * /api/notifications:
  *   post:
  *     summary: Create a new notification
@@ -38,8 +31,6 @@ const notificationRouter = express.Router();
  *       500:
  *         description: Error creating notification
  */
-
-// POST /api/notifications: Create a new notification
 notificationRouter.post("/", authenticate, async (req, res) => {
   try {
     const { booking_id, room_id, message } = req.body;
@@ -64,7 +55,7 @@ notificationRouter.post("/", authenticate, async (req, res) => {
  * @swagger
  * /api/notifications:
  *   get:
- *     summary: Get notifications for the logged-in user
+ *     summary: Fetch notifications for the logged-in user
  *     tags: [Notifications]
  *     security:
  *       - bearerAuth: []
@@ -73,9 +64,9 @@ notificationRouter.post("/", authenticate, async (req, res) => {
  *         description: List of notifications
  *       404:
  *         description: No notifications found
+ *       500:
+ *         description: Error fetching notifications
  */
-
-// GET /api/notifications: Fetch notifications for the logged-in user
 notificationRouter.get("/", authenticate, async (req, res) => {
   try {
     const notifications = await Notification.find({ user_id: req.user._id }).sort({ created_at: -1 });
@@ -89,27 +80,5 @@ notificationRouter.get("/", authenticate, async (req, res) => {
     res.status(500).json({ message: "Error fetching notifications", error: error.message });
   }
 });
-
-/**
- * @swagger
- * /api/notifications/{id}:
- *   put:
- *     summary: Mark a notification as read
- *     tags: [Notifications]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Notification ID
- *     responses:
- *       200:
- *         description: Notification marked as read
- *       404:
- *         description: Notification not found
- */
 
 export default notificationRouter;
