@@ -1,10 +1,12 @@
 import express from "express";
 import connectDB from "./config/DB.js"; // นำเข้าไฟล์เชื่อมต่อ MongoDB
 import userRouter from "./Router/userRouter.js"; // นำเข้า userRouter
-import authRouter from "./Router/authRoutes.js"; // นำเข้า authRouter
 import roomRouter from "./Router/roomRoutes.js"; // นำเข้า roomRouter
-import bookingRouter from "./Router/bookingRoutes.js"; // นำเข้า bookingRouter
 import notificationRouter from "./Router/notificationRoutes.js"; // Import notificationRouter
+
+import bookingRouter from "./Router/bookingRoutes.js"; // นำเข้า bookingRouter
+import authRouter from "./Router/authRoutes.js"; // นำเข้า authRouter
+
 import cors from "cors";
 import { setupSwagger } from "./swagger.js"; // Import Swagger setup
 
