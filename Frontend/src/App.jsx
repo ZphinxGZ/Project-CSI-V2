@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import { Navbar } from "./components/Navbar";
@@ -7,8 +7,16 @@ import Login from "./components/pages/login";
 import Register from "./components/pages/register";
 
 function App() {
-  const [token, setToken] = useState('*');
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
+  }, [token]);
 
   const handleLogin = (userToken) => {
     setToken(userToken);
