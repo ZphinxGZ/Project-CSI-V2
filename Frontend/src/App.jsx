@@ -7,7 +7,7 @@ import Login from "./components/pages/login";
 import Register from "./components/pages/register";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const [token, setToken] = useState(localStorage.getItem('token') || '*');
   const navigate = useNavigate();
 
   useEffect(() => {
