@@ -15,6 +15,20 @@ const options = {
         description: "Development server",
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT", // Specify that the token is a JWT
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [], // Apply the bearerAuth globally
+      },
+    ],
   },
   apis: ["./Router/*.js"], // Path to the API routes
 };
