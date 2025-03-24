@@ -4,7 +4,37 @@ import { authenticate, isAdmin } from "../middlewares/authMiddleware.js";
 
 const roomRouter = express.Router();
 
-// API สำหรับเพิ่มห้องประชุมใหม่ (เฉพาะ admin)
+/**
+ * @swagger
+ * /api/rooms:
+ *   post:
+ *     summary: Add a new meeting room (Admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               room_name:
+ *                 type: string
+ *               capacity:
+ *                 type: number
+ *               location:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Room created successfully
+ *       400:
+ *         description: Room name already exists
+ *       500:
+ *         description: Error creating room
+ */
 roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
   try {
     const { room_name, capacity, location, description } = req.body;
@@ -32,7 +62,20 @@ roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// API สำหรับดึงข้อมูลห้องประชุมทั้งหมด
+/**
+ * @swagger
+ * /api/rooms:
+ *   get:
+ *     summary: Get all meeting rooms
+ *     tags: [Rooms]
+ *     responses:
+ *       200:
+ *         description: List of all rooms
+ *       404:
+ *         description: No rooms found
+ *       500:
+ *         description: Error fetching rooms
+ */
 roomRouter.get("/", async (req, res) => {
   try {
     // ดึงข้อมูลห้องประชุมทั้งหมดจากฐานข้อมูล
@@ -47,7 +90,27 @@ roomRouter.get("/", async (req, res) => {
   }
 });
 
-// API สำหรับดึงข้อมูลห้องประชุมตาม ID
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   get:
+ *     summary: Get details of a specific room
+ *     tags: [Rooms]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room details
+ *       404:
+ *         description: Room not found
+ *       500:
+ *         description: Error fetching room details
+ */
 roomRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -64,7 +127,44 @@ roomRouter.get("/:id", async (req, res) => {
   }
 });
 
-// API สำหรับอัปเดตข้อมูลห้องประชุม (เฉพาะ admin)
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   put:
+ *     summary: Update a meeting room (Admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               capacity:
+ *                 type: number
+ *               location:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Room updated successfully
+ *       404:
+ *         description: Room not found
+ *       500:
+ *         description: Error updating room
+ */
 roomRouter.put("/:id", authenticate, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -87,7 +187,29 @@ roomRouter.put("/:id", authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// API สำหรับลบห้องประชุม (เฉพาะ admin)
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   delete:
+ *     summary: Delete a meeting room (Admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room deleted successfully
+ *       404:
+ *         description: Room not found
+ *       500:
+ *         description: Error deleting room
+ */
 roomRouter.delete("/:id", authenticate, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;

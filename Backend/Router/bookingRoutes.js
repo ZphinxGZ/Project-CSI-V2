@@ -4,8 +4,37 @@ import { authenticate } from "../middlewares/authMiddleware.js";
 
 const bookingRouter = express.Router();
 
-
-// API สำหรับจองห้องประชุม (เฉพาะ user และ admin)
+/**
+ * @swagger
+ * /api/bookings:
+ *   post:
+ *     summary: Create a new booking
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               roomId:
+ *                 type: string
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       201:
+ *         description: Booking created successfully
+ *       400:
+ *         description: Room is already booked for the selected time
+ *       500:
+ *         description: Error creating booking
+ */
 bookingRouter.post("/", authenticate, async (req, res) => {
   try {
     const { roomId, startTime, endTime } = req.body;
@@ -47,7 +76,22 @@ bookingRouter.post("/", authenticate, async (req, res) => {
   }
 });
 
-// API สำหรับดึงข้อมูลการจองทั้งหมด (เฉพาะ admin)
+/**
+ * @swagger
+ * /api/bookings:
+ *   get:
+ *     summary: Get all bookings (Admin only)
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of all bookings
+ *       403:
+ *         description: Access denied
+ *       500:
+ *         description: Error fetching bookings
+ */
 bookingRouter.get("/", authenticate, async (req, res) => {
   try {
     // ตรวจสอบว่า role ของผู้ใช้เป็น admin เท่านั้น
@@ -66,7 +110,29 @@ bookingRouter.get("/", authenticate, async (req, res) => {
   }
 });
 
-// API สำหรับดึงข้อมูลการจองของผู้ใช้ (เฉพาะ user และ admin)
+/**
+ * @swagger
+ * /api/bookings/user/{userId}:
+ *   get:
+ *     summary: Get bookings for a specific user
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: List of user bookings
+ *       403:
+ *         description: Access denied
+ *       500:
+ *         description: Error fetching user bookings
+ */
 bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
   try {
     const { userId } = req.params;
@@ -82,6 +148,45 @@ bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
     res.status(200).json(bookings);
   } catch (error) {
     res.status(500).json({ message: "Error fetching user bookings", error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /api/bookings/calendar:
+ *   get:
+ *     summary: Get calendar data for the logged-in user
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Calendar data
+ *       500:
+ *         description: Error fetching calendar data
+ */
+bookingRouter.get("/calendar", authenticate, async (req, res) => {
+  try {
+    // ดึงข้อมูลการจองของผู้ใช้ที่ล็อกอิน
+    const bookings = await Booking.find({ user_id: req.user._id })
+      .populate("room_id", "room_name location");
+
+    // กรองเฉพาะการจองที่มี room_id ที่ถูกต้อง
+    const validBookings = bookings.filter((booking) => booking.room_id);
+
+    // จัดรูปแบบข้อมูลสำหรับปฏิทิน
+    const calendarData = validBookings.map((booking) => ({
+      id: booking._id,
+      room: booking.room_id.room_name,
+      location: booking.room_id.location,
+      startTime: booking.start_time,
+      endTime: booking.end_time,
+      status: booking.status,
+    }));
+
+    res.status(200).json(calendarData);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching calendar data", error: error.message });
   }
 });
 
@@ -180,32 +285,6 @@ bookingRouter.delete("/:id", authenticate, async (req, res) => {
     res.status(200).json({ message: "Booking canceled successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error canceling booking", error: error.message });
-  }
-});
-
-// API สำหรับดึงข้อมูลปฏิทินการจองของผู้ใช้ที่ล็อกอิน
-bookingRouter.get("/calendar", authenticate, async (req, res) => {
-  try {
-    // ดึงข้อมูลการจองของผู้ใช้ที่ล็อกอิน
-    const bookings = await Booking.find({ user_id: req.user._id })
-      .populate("room_id", "room_name location");
-
-    // กรองเฉพาะการจองที่มี room_id ที่ถูกต้อง
-    const validBookings = bookings.filter((booking) => booking.room_id);
-
-    // จัดรูปแบบข้อมูลสำหรับปฏิทิน
-    const calendarData = validBookings.map((booking) => ({
-      id: booking._id,
-      room: booking.room_id.room_name,
-      location: booking.room_id.location,
-      startTime: booking.start_time,
-      endTime: booking.end_time,
-      status: booking.status,
-    }));
-
-    res.status(200).json(calendarData);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching calendar data", error: error.message });
   }
 });
 

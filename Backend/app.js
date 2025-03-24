@@ -6,6 +6,7 @@ import roomRouter from "./Router/roomRoutes.js"; // นำเข้า roomRoute
 import bookingRouter from "./Router/bookingRoutes.js"; // นำเข้า bookingRouter
 import notificationRouter from "./Router/notificationRoutes.js"; // Import notificationRouter
 import cors from "cors";
+import { setupSwagger } from "./swagger.js"; // Import Swagger setup
 
 const app = express();
 const PORT = 3000;
@@ -29,6 +30,8 @@ app.use("/api/rooms", roomRouter);
 app.use("/api/bookings", bookingRouter); // Use bookingRouter for bookings and reports
 
 app.use("/api/notifications", notificationRouter); // Use notificationRouter
+
+setupSwagger(app); // Setup Swagger documentation
 
 // เริ่มต้นเซิร์ฟเวอร์
 app.listen(PORT, () => {

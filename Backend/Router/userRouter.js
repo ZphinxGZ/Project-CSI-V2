@@ -5,7 +5,20 @@ import { authenticate } from "../middlewares/authMiddleware.js";
 
 const userRouter = express.Router();
 
-// API สำหรับดึงข้อมูลผู้ใช้ทั้งหมด
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of all users
+ *       404:
+ *         description: No users found
+ *       500:
+ *         description: Error fetching users
+ */
 userRouter.get("/", async (req, res) => {
   try {
     const users = await User.find({});
@@ -20,12 +33,47 @@ userRouter.get("/", async (req, res) => {
   }
 });
 
-// API สำหรับดึงข้อมูลผู้ใช้ที่เข้าสู่ระบบ
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: Get the logged-in user's details
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Bearer token for authentication (e.g., "Bearer <token>")
+ *     responses:
+ *       200:
+ *         description: User details
+ *       401:
+ *         description: Unauthorized - No token provided
+ */
 userRouter.get("/me", authenticate, (req, res) => {
   res.status(200).json(req.user);
 });
 
-// GET /api/users/reports: Fetch user statistics
+/**
+ * @swagger
+ * /api/users/reports:
+ *   get:
+ *     summary: Get user statistics (Admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User statistics
+ *       403:
+ *         description: Access denied
+ *       500:
+ *         description: Error fetching reports
+ */
 userRouter.get("/reports", authenticate, async (req, res) => {
   try {
     // ตรวจสอบว่า role ของผู้ใช้เป็น admin เท่านั้น
