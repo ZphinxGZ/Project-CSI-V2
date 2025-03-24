@@ -3,8 +3,22 @@ import "./Navbar.css";
 import { Link, NavLink } from "react-router-dom";
 import { FaBell } from "react-icons/fa";
 
-export const Navbar = () => {
+export const Navbar = ({ token }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userData, setUserData] = useState({ username: "", role: "" });
+
+  useEffect(() => {
+    if (token) {
+      fetch("http://localhost:3000/api/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setUserData({ username: data.username, role: data.role }))
+        .catch((error) => console.error("Error fetching user data:", error));
+    }
+  }, [token]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -40,7 +54,7 @@ export const Navbar = () => {
           <NavLink to="/contact">แจ้งเตือน <FaBell /></NavLink>
         </li>
         <li className="profile-link">
-          <NavLink to="/profile">Profile</NavLink>
+          <NavLink to="/profile">{userData.username} ({userData.role})</NavLink>
         </li>
         <li>
           {/* <NavLink to="/login">Login</NavLink> */}
