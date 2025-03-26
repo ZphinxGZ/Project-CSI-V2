@@ -11,7 +11,7 @@ import cors from "cors";
 import { setupSwagger } from "./swagger.js"; // Import Swagger setup
 
 const app = express();
-const PORT = 3000;
+const PORT = 3456;
 
 // Middleware สำหรับ parse JSON body
 app.use(express.json());
