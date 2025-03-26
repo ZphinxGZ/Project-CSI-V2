@@ -37,9 +37,9 @@ userRouter.get("/reports", authenticate, async (req, res) => {
 
     // Fetch bookings and calculate statistics
     const [bookings] = await connection.execute(
-      `SELECT u.username, COUNT(b.id) AS bookingCount 
+      `SELECT u.username, COUNT(b.booking_id) AS bookingCount 
        FROM bookings b 
-       JOIN users u ON b.user_id = u.id 
+       JOIN users u ON b.user_id = u.user_id 
        GROUP BY u.username`
     );
 
