@@ -6,28 +6,32 @@ const bookingRouter = express.Router();
 
 bookingRouter.post("/", authenticate, async (req, res) => {
   try {
-    const { roomId, startTime, endTime } = req.body;
+    const { room_id, startTime, endTime } = req.body;
 
     if (req.user.role !== "user" && req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Only users and admins can book rooms." });
     }
 
-    const [overlappingBooking] = await connectDB.query(
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    // ตรวจสอบว่าห้องถูกจองในช่วงเวลาที่เลือกหรือไม่
+    const [overlappingBooking] = await connection.execute(
       `SELECT * FROM bookings WHERE room_id = ? AND (
         (start_time < ? AND start_time >= ?) OR
         (end_time > ? AND end_time <= ?) OR
         (start_time <= ? AND end_time >= ?)
       )`,
-      [roomId, endTime, startTime, startTime, endTime, startTime, endTime]
+      [room_id, endTime, startTime, startTime, endTime, startTime, endTime]
     );
 
     if (overlappingBooking.length > 0) {
       return res.status(400).json({ message: "Room is already booked for the selected time." });
     }
 
-    const [result] = await connectDB.query(
+    // เพิ่มการจองใหม่
+    const [result] = await connection.execute(
       `INSERT INTO bookings (user_id, room_id, start_time, end_time, status) VALUES (?, ?, ?, ?, ?)`,
-      [req.user.user_id, roomId, startTime, endTime, "pending"]
+      [req.user.user_id, room_id, startTime, endTime, "pending"]
     );
 
     res.status(201).json({ message: "Booking created successfully", bookingId: result.insertId });
@@ -42,7 +46,9 @@ bookingRouter.get("/", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    const [bookings] = await connectDB.query(
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    const [bookings] = await connection.execute(
       `SELECT b.*, u.username, r.room_name, r.location 
        FROM bookings b 
        JOIN users u ON b.user_id = u.user_id 
@@ -63,7 +69,9 @@ bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. You can only view your own bookings." });
     }
 
-    const [bookings] = await connectDB.query(
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    const [bookings] = await connection.execute(
       `SELECT b.*, r.room_name, r.location 
        FROM bookings b 
        JOIN rooms r ON b.room_id = r.room_id 
@@ -77,31 +85,6 @@ bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
   }
 });
 
-bookingRouter.get("/calendar", authenticate, async (req, res) => {
-  try {
-    const [bookings] = await connectDB.query(
-      `SELECT b.*, r.room_name, r.location 
-       FROM bookings b 
-       JOIN rooms r ON b.room_id = r.room_id 
-       WHERE b.user_id = ?`,
-      [req.user.user_id]
-    );
-
-    const calendarData = bookings.map((booking) => ({
-      id: booking.booking_id,
-      room: booking.room_name,
-      location: booking.location,
-      startTime: booking.start_time,
-      endTime: booking.end_time,
-      status: booking.status,
-    }));
-
-    res.status(200).json(calendarData);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching calendar data", error: error.message });
-  }
-});
-
 bookingRouter.get("/room/:roomId", authenticate, async (req, res) => {
   try {
     const { roomId } = req.params;
@@ -110,7 +93,9 @@ bookingRouter.get("/room/:roomId", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    const [bookings] = await connectDB.query(
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    const [bookings] = await connection.execute(
       `SELECT b.*, u.username, r.room_name, r.location 
        FROM bookings b 
        JOIN users u ON b.user_id = u.user_id 
@@ -138,7 +123,9 @@ bookingRouter.put("/:id", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. Only users can update bookings." });
     }
 
-    const [booking] = await connectDB.query(`SELECT * FROM bookings WHERE booking_id = ?`, [id]);
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    const [booking] = await connection.execute(`SELECT * FROM bookings WHERE booking_id = ?`, [id]);
     if (booking.length === 0) {
       return res.status(404).json({ message: "Booking not found" });
     }
@@ -147,7 +134,7 @@ bookingRouter.put("/:id", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. You can only update your own bookings." });
     }
 
-    const [overlappingBooking] = await connectDB.query(
+    const [overlappingBooking] = await connection.execute(
       `SELECT * FROM bookings WHERE room_id = ? AND booking_id != ? AND (
         (start_time < ? AND start_time >= ?) OR
         (end_time > ? AND end_time <= ?) OR
@@ -160,7 +147,7 @@ bookingRouter.put("/:id", authenticate, async (req, res) => {
       return res.status(400).json({ message: "Room is already booked for the selected time." });
     }
 
-    await connectDB.query(
+    await connection.execute(
       `UPDATE bookings SET start_time = ?, end_time = ? WHERE booking_id = ?`,
       [startTime, endTime, id]
     );
@@ -175,7 +162,9 @@ bookingRouter.delete("/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [booking] = await connectDB.query(`SELECT * FROM bookings WHERE booking_id = ?`, [id]);
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    const [booking] = await connection.execute(`SELECT * FROM bookings WHERE booking_id = ?`, [id]);
     if (booking.length === 0) {
       return res.status(404).json({ message: "Booking not found" });
     }
@@ -184,7 +173,7 @@ bookingRouter.delete("/:id", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. You can only cancel your own bookings." });
     }
 
-    await connectDB.query(`DELETE FROM bookings WHERE booking_id = ?`, [id]);
+    await connection.execute(`DELETE FROM bookings WHERE booking_id = ?`, [id]);
 
     res.status(200).json({ message: "Booking canceled successfully" });
   } catch (error) {

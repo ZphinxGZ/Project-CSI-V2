@@ -4,7 +4,7 @@ import connectDB from "../config/DB.js";
 
 const reportRouter = express.Router();
 
-reportRouter.get("/reports", authenticate, async (req, res) => {
+reportRouter.get("/", authenticate, async (req, res) => {
   try {
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied. Admins only." });

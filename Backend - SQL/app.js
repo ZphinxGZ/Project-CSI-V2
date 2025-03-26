@@ -5,6 +5,7 @@ import roomRouter from "./Router/roomRoutes.js"; // นำเข้า roomRoute
 import notificationRouter from "./Router/notificationRoutes.js"; // Import notificationRouter
 import bookingRouter from "./Router/bookingRoutes.js"; // นำเข้า bookingRouter
 import reportRouter from "./Router/reportRouter.js"; // เพิ่ม reportRouter
+import calendarRouter from "./Router/calendarRouter.js"; // เพิ่ม calendarRouter
 import authRouter from "./Router/authRoutes.js"; // นำเข้า authRouter
 
 import cors from "cors";
@@ -33,6 +34,9 @@ app.use("/api/bookings", bookingRouter); // Use bookingRouter for bookings and r
 
 // ใช้ reportRouter สำหรับเส้นทาง /api/reports
 app.use("/api/reports", reportRouter);
+
+// ใช้ calendarRouter สำหรับเส้นทาง /api/calendar
+app.use("/api/calendar", calendarRouter);
 
 // ใช้ notificationRouter สำหรับเส้นทาง /api/notifications
 app.use("/api/notifications", notificationRouter);
