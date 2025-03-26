@@ -11,7 +11,7 @@ function Login({ onLoginSuccess }) {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/login', {
+            const response = await axios.post('http://localhost:3456/api/auth/login', {
                 username,
                 password
             });

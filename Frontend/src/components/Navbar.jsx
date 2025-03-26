@@ -9,7 +9,7 @@ export const Navbar = ({ token }) => {
 
   useEffect(() => {
     if (token) {
-      fetch("http://localhost:3000/api/users/me", {
+      fetch("http://localhost:3456/api/users/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

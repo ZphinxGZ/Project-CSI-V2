@@ -16,7 +16,7 @@ function Register() {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/register', {
+            const response = await axios.post('http://localhost:3456/api/auth/register', {
                 username,
                 password,
                 role: 'user'
