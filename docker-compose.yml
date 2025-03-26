@@ -7,7 +7,6 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: meeting_room_booking
       MYSQL_USER: user
       MYSQL_PASSWORD: root
     volumes:

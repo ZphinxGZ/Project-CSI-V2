@@ -1,14 +1,18 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import connectDB from "../config/DB.js";
 
 export const registerUser = async (req, res) => {
   try {
     const { username, password, role } = req.body;
+    const connection = await connectDB();
 
     // Check if the username already exists
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
+    const [existingUser] = await connection.execute(
+      "SELECT * FROM users WHERE username = ?",
+      [username]
+    );
+    if (existingUser.length > 0) {
       return res.status(400).json({ success: false, message: "Username already exists" });
     }
 
@@ -16,15 +20,11 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create a new user
-    const newUser = new User({
-      username,
-      password_hash: hashedPassword,
-      role,
-    });
-
-    // Save the user to the database
-    await newUser.save();
+    // Insert the new user into the database
+    await connection.execute(
+      "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)",
+      [username, hashedPassword, role || "user"]
+    );
 
     res.status(201).json({ success: true, message: "User registered successfully" });
   } catch (error) {
@@ -35,12 +35,18 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
+    const connection = await connectDB();
 
     // Check if the user exists
-    const user = await User.findOne({ username });
-    if (!user) {
+    const [users] = await connection.execute(
+      "SELECT * FROM users WHERE username = ?",
+      [username]
+    );
+    if (users.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    const user = users[0];
 
     // Compare the password
     const isMatch = await bcrypt.compare(password, user.password_hash);
@@ -50,7 +56,7 @@ export const loginUser = async (req, res) => {
 
     // Generate a JWT token
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { id: user.id, role: user.role },
       "your_jwt_secret", // Replace with a secure secret
       { expiresIn: "1h" }
     );

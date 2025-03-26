@@ -1,20 +1,20 @@
-import mongoose from "mongoose";
+import mysql from "mysql2/promise";
 
-// ฟังก์ชันสำหรับเชื่อมต่อ MongoDB
+// ฟังก์ชันสำหรับเชื่อมต่อ MySQL
 const connectDB = async () => {
   try {
-    // URI สำหรับเชื่อมต่อ MongoDB Atlas
-    const uri = "mongodb+srv://Oxygenn:teeraphan200479@cluster0.q2lf0.mongodb.net/MeetingRoomBooking?retryWrites=true&w=majority";
-    
-    // เชื่อมต่อ MongoDB
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+    // การตั้งค่าการเชื่อมต่อ MySQL
+    const connection = await mysql.createConnection({
+      host: "localhost", // เปลี่ยนเป็น host ของคุณ
+      user: "root", // เปลี่ยนเป็น username ของคุณ
+      password: "root", // เปลี่ยนเป็น password ของคุณ
+      database: "MeetingRoomBooking", // ชื่อฐานข้อมูล
     });
 
-    console.log("Connected to MongoDB database");
+    console.log("Connected to MySQL database");
+    return connection; // ส่งคืนการเชื่อมต่อ
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
+    console.error("Error connecting to MySQL:", error);
     process.exit(1); // ออกจากกระบวนการด้วยสถานะผิดพลาด
   }
 };

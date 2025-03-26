@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import connectDB from "../config/DB.js";
 
 export const authenticate = async (req, res, next) => {
   try {
@@ -9,12 +9,19 @@ export const authenticate = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, "your_jwt_secret"); // Replace with your secure secret
-    const user = await User.findById(decoded.id).select("-password_hash");
-    if (!user) {
+    const connection = await connectDB();
+
+    // Query user data from MySQL
+    const [rows] = await connection.execute(
+      "SELECT id, username, role FROM users WHERE id = ?",
+      [decoded.id]
+    );
+
+    if (rows.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    req.user = user; // Attach user to request object
+    req.user = rows[0]; // Attach user to request object
     next();
   } catch (error) {
     res.status(401).json({ message: "Unauthorized", error: error.message });
