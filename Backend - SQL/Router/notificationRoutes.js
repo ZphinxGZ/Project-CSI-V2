@@ -12,7 +12,7 @@ notificationRouter.post("/", authenticate, async (req, res) => {
       INSERT INTO notifications (user_id, booking_id, room_id, message, created_at)
       VALUES (?, ?, ?, ?, NOW())
     `;
-    const values = [req.user._id, booking_id, room_id, message];
+    const values = [req.user.user_id, booking_id, room_id, message];
 
     await connectDB.execute(query, values);
 
@@ -29,7 +29,7 @@ notificationRouter.get("/", authenticate, async (req, res) => {
       WHERE user_id = ?
       ORDER BY created_at DESC
     `;
-    const [notifications] = await connectDB.execute(query, [req.user._id]);
+    const [notifications] = await connectDB.execute(query, [req.user.user_id]);
 
     if (notifications.length === 0) {
       return res.status(404).json({ message: "No notifications found" });

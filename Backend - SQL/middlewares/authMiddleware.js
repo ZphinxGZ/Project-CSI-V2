@@ -13,7 +13,7 @@ export const authenticate = async (req, res, next) => {
 
     // Query user data from MySQL
     const [rows] = await connection.execute(
-      "SELECT id, username, role FROM users WHERE id = ?",
+      "SELECT user_id, username, role FROM users WHERE user_id = ?",
       [decoded.id]
     );
 

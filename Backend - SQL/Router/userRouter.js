@@ -7,7 +7,7 @@ const userRouter = express.Router();
 userRouter.get("/", async (req, res) => {
   try {
     const connection = await connectDB();
-    const [users] = await connection.execute("SELECT id, username, role FROM users");
+    const [users] = await connection.execute("SELECT user_id, username, role FROM users");
 
     if (users.length === 0) {
       return res.status(404).json({ message: "ไม่พบข้อมูลผู้ใช้" });

@@ -27,7 +27,7 @@ bookingRouter.post("/", authenticate, async (req, res) => {
 
     const [result] = await connectDB.query(
       `INSERT INTO bookings (user_id, room_id, start_time, end_time, status) VALUES (?, ?, ?, ?, ?)`,
-      [req.user.id, roomId, startTime, endTime, "pending"]
+      [req.user.user_id, roomId, startTime, endTime, "pending"]
     );
 
     res.status(201).json({ message: "Booking created successfully", bookingId: result.insertId });
@@ -45,8 +45,8 @@ bookingRouter.get("/", authenticate, async (req, res) => {
     const [bookings] = await connectDB.query(
       `SELECT b.*, u.username, r.room_name, r.location 
        FROM bookings b 
-       JOIN users u ON b.user_id = u.id 
-       JOIN rooms r ON b.room_id = r.id`
+       JOIN users u ON b.user_id = u.user_id 
+       JOIN rooms r ON b.room_id = r.room_id`
     );
 
     res.status(200).json(bookings);
@@ -66,7 +66,7 @@ bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
     const [bookings] = await connectDB.query(
       `SELECT b.*, r.room_name, r.location 
        FROM bookings b 
-       JOIN rooms r ON b.room_id = r.id 
+       JOIN rooms r ON b.room_id = r.room_id 
        WHERE b.user_id = ?`,
       [userId]
     );
@@ -82,13 +82,13 @@ bookingRouter.get("/calendar", authenticate, async (req, res) => {
     const [bookings] = await connectDB.query(
       `SELECT b.*, r.room_name, r.location 
        FROM bookings b 
-       JOIN rooms r ON b.room_id = r.id 
+       JOIN rooms r ON b.room_id = r.room_id 
        WHERE b.user_id = ?`,
-      [req.user.id]
+      [req.user.user_id]
     );
 
     const calendarData = bookings.map((booking) => ({
-      id: booking.id,
+      id: booking.booking_id,
       room: booking.room_name,
       location: booking.location,
       startTime: booking.start_time,
@@ -113,8 +113,8 @@ bookingRouter.get("/room/:roomId", authenticate, async (req, res) => {
     const [bookings] = await connectDB.query(
       `SELECT b.*, u.username, r.room_name, r.location 
        FROM bookings b 
-       JOIN users u ON b.user_id = u.id 
-       JOIN rooms r ON b.room_id = r.id 
+       JOIN users u ON b.user_id = u.user_id 
+       JOIN rooms r ON b.room_id = r.room_id 
        WHERE b.room_id = ?`,
       [roomId]
     );
@@ -138,17 +138,17 @@ bookingRouter.put("/:id", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. Only users can update bookings." });
     }
 
-    const [booking] = await connectDB.query(`SELECT * FROM bookings WHERE id = ?`, [id]);
+    const [booking] = await connectDB.query(`SELECT * FROM bookings WHERE booking_id = ?`, [id]);
     if (booking.length === 0) {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    if (booking[0].user_id !== req.user.id) {
+    if (booking[0].user_id !== req.user.user_id) {
       return res.status(403).json({ message: "Access denied. You can only update your own bookings." });
     }
 
     const [overlappingBooking] = await connectDB.query(
-      `SELECT * FROM bookings WHERE room_id = ? AND id != ? AND (
+      `SELECT * FROM bookings WHERE room_id = ? AND booking_id != ? AND (
         (start_time < ? AND start_time >= ?) OR
         (end_time > ? AND end_time <= ?) OR
         (start_time <= ? AND end_time >= ?)
@@ -161,7 +161,7 @@ bookingRouter.put("/:id", authenticate, async (req, res) => {
     }
 
     await connectDB.query(
-      `UPDATE bookings SET start_time = ?, end_time = ? WHERE id = ?`,
+      `UPDATE bookings SET start_time = ?, end_time = ? WHERE booking_id = ?`,
       [startTime, endTime, id]
     );
 
@@ -175,16 +175,16 @@ bookingRouter.delete("/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [booking] = await connectDB.query(`SELECT * FROM bookings WHERE id = ?`, [id]);
+    const [booking] = await connectDB.query(`SELECT * FROM bookings WHERE booking_id = ?`, [id]);
     if (booking.length === 0) {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    if (booking[0].user_id !== req.user.id) {
+    if (booking[0].user_id !== req.user.user_id) {
       return res.status(403).json({ message: "Access denied. You can only cancel your own bookings." });
     }
 
-    await connectDB.query(`DELETE FROM bookings WHERE id = ?`, [id]);
+    await connectDB.query(`DELETE FROM bookings WHERE booking_id = ?`, [id]);
 
     res.status(200).json({ message: "Booking canceled successfully" });
   } catch (error) {
@@ -201,7 +201,7 @@ bookingRouter.get("/reports", authenticate, async (req, res) => {
     const [bookings] = await connectDB.query(
       `SELECT b.*, r.room_name 
        FROM bookings b 
-       JOIN rooms r ON b.room_id = r.id`
+       JOIN rooms r ON b.room_id = r.room_id`
     );
 
     const bookingsPerDay = bookings.reduce((acc, booking) => {
