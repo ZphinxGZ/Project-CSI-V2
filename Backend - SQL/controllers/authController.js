@@ -20,7 +20,6 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Insert the new user into the database
     await connection.execute(
       "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)",
       [username, hashedPassword, role || "user"]
@@ -37,7 +36,6 @@ export const loginUser = async (req, res) => {
     const { username, password } = req.body;
     const connection = await connectDB();
 
-    // Check if the user exists
     const [users] = await connection.execute(
       "SELECT * FROM users WHERE username = ?",
       [username]
@@ -48,16 +46,14 @@ export const loginUser = async (req, res) => {
 
     const user = users[0];
 
-    // Compare the password
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Generate a JWT token
     const token = jwt.sign(
       { user_id: user.user_id, role: user.role },
-      "your_jwt_secret", // Replace with a secure secret
+      "your_jwt_secret",
       { expiresIn: "1h" }
     );
 
