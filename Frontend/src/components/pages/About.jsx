@@ -23,7 +23,7 @@ export const About = () => {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/rooms");
+      const response = await fetch("http://localhost:3456/api/rooms");
       const data = await response.json();
       setRooms(data);
     } catch (error) {
