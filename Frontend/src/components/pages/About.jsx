@@ -23,7 +23,12 @@ export const About = () => {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/rooms");
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      const response = await fetch("http://localhost:3456/api/rooms", {
+        headers: {
+          Authorization: `Bearer ${token}` // Add token to headers
+        }
+      });
       const data = await response.json();
       setRooms(data);
     } catch (error) {
@@ -36,17 +41,6 @@ export const About = () => {
       ...newRoom,
       [e.target.name]: e.target.value
     });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewRoom((prev) => ({ ...prev, image: reader.result }));
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const publicHolidays = ["01-01", "04-13", "04-14", "04-15", "12-05", "12-10"];
@@ -64,24 +58,32 @@ export const About = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/rooms${editingRoomId ? `/${editingRoomId}` : ''}`, {
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      const roomData = {
+        room_id: editingRoomId || undefined, // Include room_id if editing
+        room_name: newRoom.room_name,
+        capacity: newRoom.capacity,
+        location: newRoom.location,
+        description: newRoom.description,
+        image_url: newRoom.image // Use `image_url` for the image
+      };
+
+      const response = await fetch(`http://localhost:3456/api/rooms${editingRoomId ? `/${editingRoomId}` : ''}`, {
         method: editingRoomId ? 'PUT' : 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}` // Add token to headers
         },
-        body: JSON.stringify(newRoom)
+        body: JSON.stringify(roomData)
       });
 
       if (!response.ok) {
+        const errorData = await response.json(); // Parse error response
+        console.error("Server error response:", errorData); // Log server error
         throw new Error('Network response was not ok');
       }
 
-      const updatedRoom = await response.json();
-      const updatedRooms = editingRoomId
-        ? rooms.map(room => room._id === editingRoomId ? updatedRoom : room)
-        : [...rooms, updatedRoom];
-
-      setRooms(updatedRooms);
+      await fetchRooms(); // Fetch updated room list
       setNewRoom({ room_name: "", description: "", image: "", capacity: "", location: "" });
       setShowForm(false);
       setEditingRoomId(null);
@@ -95,11 +97,11 @@ export const About = () => {
     setNewRoom({
       room_name: room.room_name,
       description: room.description,
-      image: room.image,
-      capacity: room.capacity, // Added capacity field
-      location: room.location  // Added location field
+      image: room.image_url, // Ensure image_url is used for editing
+      capacity: room.capacity,
+      location: room.location
     });
-    setEditingRoomId(room._id);
+    setEditingRoomId(room.room_id); // Use room.room_id for editingRoomId
     setShowForm(true);
   };
 
@@ -139,9 +141,9 @@ export const About = () => {
 
       <ul className="about-list">
         {rooms.map((room) => (
-          <li key={room._id}>
+          <li key={room.room_id}>
             <img
-              src={room.image}
+              src={room.image_url} // Updated to use room.image_url 
               alt={room.room_name}
               className="room-image"
               width="220"
@@ -212,14 +214,16 @@ export const About = () => {
               onChange={handleChange}
             />
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
+              type="text"
+              name="image"
+              placeholder="URL รูปภาพ"
+              value={newRoom.image} // Ensure this uses newRoom.image
+              onChange={handleChange}
             />
             {newRoom.image && (
               <div className="image-preview">
                 <img
-                  src={newRoom.image}
+                  src={newRoom.image} // Ensure the preview uses newRoom.image
                   alt="Preview"
                   width="100%"
                   style={{ marginTop: '1rem', borderRadius: '8px' }}
