@@ -83,12 +83,7 @@ export const About = () => {
         throw new Error('Network response was not ok');
       }
 
-      const updatedRoom = await response.json();
-      const updatedRooms = editingRoomId
-        ? rooms.map(room => room.room_id === editingRoomId ? updatedRoom : room)
-        : [...rooms, updatedRoom];
-
-      setRooms(updatedRooms);
+      await fetchRooms(); // Fetch updated room list
       setNewRoom({ room_name: "", description: "", image: "", capacity: "", location: "" });
       setShowForm(false);
       setEditingRoomId(null);
@@ -102,11 +97,11 @@ export const About = () => {
     setNewRoom({
       room_name: room.room_name,
       description: room.description,
-      image: room.image,
-      capacity: room.capacity, // Added capacity field
-      location: room.location  // Added location field
+      image: room.image_url, // Ensure image_url is used for editing
+      capacity: room.capacity,
+      location: room.location
     });
-    setEditingRoomId(room._id);
+    setEditingRoomId(room.room_id); // Use room.room_id for editingRoomId
     setShowForm(true);
   };
 
@@ -222,13 +217,13 @@ export const About = () => {
               type="text"
               name="image"
               placeholder="URL รูปภาพ"
-              value={newRoom.image}
+              value={newRoom.image} // Ensure this uses newRoom.image
               onChange={handleChange}
             />
             {newRoom.image && (
               <div className="image-preview">
                 <img
-                  src={newRoom.image}
+                  src={newRoom.image} // Ensure the preview uses newRoom.image
                   alt="Preview"
                   width="100%"
                   style={{ marginTop: '1rem', borderRadius: '8px' }}
