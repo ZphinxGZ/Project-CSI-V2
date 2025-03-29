@@ -7,6 +7,7 @@ import bookingRouter from "./Router/bookingRoutes.js"; // นำเข้า boo
 import reportRouter from "./Router/reportRouter.js"; // เพิ่ม reportRouter
 import calendarRouter from "./Router/calendarRouter.js"; // เพิ่ม calendarRouter
 import authRouter from "./Router/authRoutes.js"; // นำเข้า authRouter
+import morgan from "morgan";
 
 import cors from "cors";
 
@@ -16,6 +17,11 @@ const PORT = 3456;
 // Middleware สำหรับ parse JSON body
 app.use(express.json());
 app.use(cors());
+
+// Middleware สำหรับ log IP ของผู้ใช้
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms - IP: :remote-addr")
+);
 
 // เชื่อมต่อ MySQL
 await connectDB();
