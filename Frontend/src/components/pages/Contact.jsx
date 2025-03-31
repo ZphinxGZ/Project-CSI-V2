@@ -1,53 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { FaBell } from "react-icons/fa"; // Import the icon
-import "./Contact.css"; // Import the CSS file
+import "./Contact.css";
 
 export const Contact = () => {
   const [notifications, setNotifications] = useState([]);
-  const meetings = [
-    { date: "2023-03-05T10:00:00", title: "ประชุมทีม" },
-    { date: "2023-03-12T14:00:00", title: "ประชุมแผนก" },
-    { date: "2023-03-20T09:00:00", title: "ประชุมผู้บริหาร" },
-  ];
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
   useEffect(() => {
-    const checkMeetings = () => {
-      const now = new Date();
-      meetings.forEach((meeting) => {
-        const meetingTime = new Date(meeting.date);
-        const diff = meetingTime - now;
-        if (diff > 0 && diff <= 15 * 60 * 1000) { // Notify 15 minutes before
-          setNotifications((prev) => [
-            ...prev,
-            `ใกล้ถึงเวลาประชุม: ${meeting.title} เวลา ${meetingTime.toLocaleTimeString()}`,
-          ]);
-        }
-      });
-    };
-
-    const interval = setInterval(checkMeetings, 60 * 1000); // Check every minute
-    return () => clearInterval(interval); // Cleanup on component unmount
+    // ตั้งค่าการแจ้งเตือนทันทีเมื่อโหลดหน้าเว็บ
+    setNotifications([
+      {
+        text: "⏰ ถึงเวลาประชุม: ประชุมทีม เวลา 10:00 น. ชั้น 2 ห้อง A",
+      },
+      {
+        text: "⏰ ถึงเวลาประชุม: ประชุมแผนก เวลา 14:00 น. ชั้น 3 ห้อง B",
+      },
+    ]);
   }, []);
 
-  useEffect(() => {
-    const storedNotification = localStorage.getItem("bookingNotification");
-    if (storedNotification) {
-      setNotifications([storedNotification]);
-      localStorage.removeItem("bookingNotification"); // Clear after displaying
-    }
-  }, []);
+  const handleNotificationClick = (notification) => {
+    setSelectedNotification(notification);
+  };
+
+  const closeModal = () => {
+    setSelectedNotification(null);
+  };
 
   return (
     <div className="contact-container">
-      <h1><FaBell /> แจ้งเตือน</h1>
-      <p>แจ้งเตือนเมื่อใกล้ถึงเวลาประชุม</p>
-      <div className="notifications">
-        {notifications.map((note, index) => (
-          <div key={index} className="notification">
-            {note}
+
+      {/* แสดงข้อความเตือนเมื่อมีการประชุม */}
+      {notifications.length > 0 && (
+        <div className="notifications">
+          {notifications.map((note, index) => (
+            <div
+              key={index}
+              className="notification"
+              onClick={() => handleNotificationClick(note)} // เปิด modal เมื่อคลิก
+              style={{ cursor: "pointer" }}
+            >
+              {note.text}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Modal สำหรับแสดงรายละเอียด */}
+      {selectedNotification && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <p>{selectedNotification.text}</p>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

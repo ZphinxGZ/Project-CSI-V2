@@ -2,7 +2,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #333;
+    background: radial-gradient(circle, #1a1e1b, #000000); /* เปลี่ยนพื้นหลังเป็นไล่ระดับ */
     color: white;
     position: sticky;
     top: 0;
@@ -15,7 +15,7 @@ nav .title {
     font-size: 1.5rem;
     font-weight: bold;
     text-decoration: none;
-    color: white;
+    color: rgb(56, 56, 236); /* เปลี่ยนสีฟอนต์เป็นสีน้ำเงิน */
     margin-right: 1rem;
 }
 
@@ -34,7 +34,7 @@ nav ul li {
 nav ul li a {
     display: block;
     text-decoration: none;
-    color: white;
+    color: blue; /* เปลี่ยนสีฟอนต์เป็นสีน้ำเงิน */
     padding: 10px 15px;
     margin: 0 0.5rem;
     border-radius: 5px;
@@ -58,7 +58,7 @@ nav ul li a:hover {
 /* ปุ่มกด Dropdown */
 .dropbtn {
     background-color: transparent;
-    color: white;
+    color: blue; /* เปลี่ยนสีฟอนต์เป็นสีน้ำเงิน */
     padding: 10px 15px;
     font-size: 16px;
     border: none;
@@ -95,7 +95,7 @@ nav ul li a:hover {
 
 /* รายการภายใน Dropdown */
 .dropdown-content a {
-    color: #333;
+    color: blue; /* เปลี่ยนสีฟอนต์เป็นสีน้ำเงิน */
     padding: 12px 16px;
     text-decoration: none;
     display: block;
