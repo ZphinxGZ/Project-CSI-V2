@@ -33,7 +33,7 @@ export const Navbar = ({ token }) => {
   return (
     <nav>
       <Link to="/" className="title">
-        Home
+        หน้าหลัก 
       </Link>
 
       {/* Hamburger Menu Button */}

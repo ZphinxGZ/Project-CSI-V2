@@ -1,21 +1,40 @@
+/* Contact.css */
 .contact-container {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
+  text-align: center;
+  padding: 20px;
 }
 
 .notifications {
-    margin-top: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  border: none; /* Removed border */
+  border-radius: 5px;
+  background: none; /* Removed background */
+  display: inline-block;
+  width: 100%; /* Expand to full width */
 }
 
 .notification {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #f5c6cb;
-    border-radius: 5px;
-    font-size: 14px;
+  padding: 20px;
+  background: #f4f4f4;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Expand to full width */
+}
+
+.notification button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
