@@ -85,6 +85,29 @@ bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
   }
 });
 
+bookingRouter.get("/user", authenticate, async (req, res) => {
+  try {
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    const query = `
+      SELECT bookings.*, rooms.room_name
+      FROM bookings
+      INNER JOIN rooms ON bookings.room_id = rooms.room_id
+      WHERE bookings.user_id = ?
+      ORDER BY bookings.created_at DESC
+    `;
+    const [bookings] = await connection.execute(query, [req.user.user_id]);
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: "No booking history found" });
+    }
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching booking history", error: error.message });
+  }
+});
+
 bookingRouter.get("/room/:roomId", authenticate, async (req, res) => {
   try {
     const { roomId } = req.params;
