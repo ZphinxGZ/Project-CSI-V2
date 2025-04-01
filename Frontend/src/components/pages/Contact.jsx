@@ -33,9 +33,9 @@ export const Contact = () => {
     setNotifications((prev) => prev.filter((note) => note.id !== id));
   };
 
-  const closeModal = () => {
-    setSelectedNotification(null);
-  };
+  if (loading) {
+    return <div>Loading....</div>;
+  }
 
   return (
     <div className="contact-container">
@@ -56,15 +56,13 @@ export const Contact = () => {
                 alignItems: "center", // จัดให้อยู่ตรงกลางในแนวตั้ง
               }}
             >
-              <span
-                style={{
-                  marginRight: "5px", // ลดระยะห่างระหว่างไอคอนกับข้อความ
-                  color: note.read ? "green" : "red", // เปลี่ยนสีไอคอน ✔️ เป็นสีเขียว
-                }}
-              >
-                {note.read ? "✅" : "❌"} {/* ไอคอนแสดงสถานะ */}
-              </span>
-              <span>{note.text}</span> {/* ข้อความชิดกับไอคอน */}
+              <span style={{ marginRight: "10px" }}>📌</span>
+              <div>
+                <p><strong>Messages:</strong> {note.message}</p>
+                <p><strong>Room:</strong> {note.roomName}</p>
+                <p><strong>Start Time:</strong> {formatDateTime(note.startTime)}</p>
+                <p><strong>End Time:</strong> {formatDateTime(note.endTime)}</p>
+              </div>
               <span
                 className="delete-icon"
                 onClick={(e) => {
