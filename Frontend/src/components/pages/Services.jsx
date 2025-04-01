@@ -46,10 +46,10 @@ export const Services = () => {
     }
   }, [location]);
 
-  const handleFilterChange = (newFilter) => {
-    setFilter(newFilter);
-    navigate(`?filter=${newFilter}`);
-  };
+  // const handleFilterChange = (newFilter) => {
+  //   setFilter(newFilter);
+  //   navigate(`?filter=${newFilter}`);
+  // };
 
   const filteredBookings =
     filter === "ทั้งหมด"
@@ -70,7 +70,7 @@ export const Services = () => {
         <h2>&nbsp;รายการจองของฉัน</h2>
       </div>
 
-      <div className="filter-section">
+      {/* <div className="filter-section">
         <label htmlFor="filter">กรองสถานะ:</label>
         <select
           className="filter"
@@ -82,7 +82,7 @@ export const Services = () => {
           <option value="จองสำเร็จ">จองสำเร็จ</option>
           <option value="จองไม่สำเร็จ">จองไม่สำเร็จ</option>
         </select>
-      </div>
+      </div> */}
 
       <div className="booking-container">
         {filteredBookings.map((booking) => (
