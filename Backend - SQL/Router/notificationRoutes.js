@@ -16,7 +16,7 @@ notificationRouter.post("/", authenticate, async (req, res) => {
     `;
     const values = [req.user.user_id, booking_id, room_id, message, false]; // เพิ่ม is_read เป็น false
 
-    await connection.execute(query, values); // ใช้ connection.execute แทน connectDB.execute
+    await connection.execute(query, values); // ใช้ connection.execute แทน connectDB.execute s
 
     res.status(201).json({ message: "Notification created successfully" });
   } catch (error) {
