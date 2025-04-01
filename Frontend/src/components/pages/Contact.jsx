@@ -3,132 +3,34 @@ import "./Contact.css";
 
 export const Contact = () => {
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const formatDateTime = (dateTime) => {
-    const options = { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" };
-    return new Date(dateTime).toLocaleString("th-TH", options);
-  };
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3456/api/notifications", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch notifications");
-        }
-
-        const notificationsData = await response.json();
-
-        const enrichedNotifications = await Promise.all(
-          notificationsData.map(async (notification) => {
-            const bookingResponse = await fetch(
-              `http://localhost:3456/api/bookings/user`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-
-            if (!bookingResponse.ok) {
-              throw new Error("Failed to fetch booking details");
-            }
-
-            const bookings = await bookingResponse.json();
-            const booking = bookings.find(
-              (b) => b.booking_id === notification.booking_id
-            );
-
-            const roomResponse = await fetch(
-              `http://localhost:3456/api/rooms/${notification.room_id}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-
-            if (!roomResponse.ok) {
-              throw new Error("Failed to fetch room details");
-            }
-
-            const room = await roomResponse.json();
-
-            return {
-              ...notification,
-              roomName: room.room_name,
-              startTime: booking?.start_time,
-              endTime: booking?.end_time,
-            };
-          })
-        );
-
-        setNotifications(enrichedNotifications);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNotifications();
+    // ตั้งค่าการแจ้งเตือนทันทีเมื่อโหลดหน้าเว็บ
+    setNotifications([
+      {
+        id: 1,
+        text: " ถึงเวลาประชุม: ประชุมทีม เวลา 10:00 น. ชั้น 2 ห้อง A",
+        read: false,
+      },
+      {
+        id: 2,
+        text: " ถึงเวลาประชุม: ประชุมแผนก เวลา 14:00 น. ชั้น 3 ห้อง B",
+        read: false,
+      },
+    ]);
   }, []);
 
-  const handleNotificationClick = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:3456/api/notifications/${id}/read`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to mark notification as read");
-      }
-
-      setNotifications((prev) =>
-        prev.map((note) =>
-          note.notification_id === id ? { ...note, is_read: true } : note
-        )
-      );
-    } catch (error) {
-      console.error("Error marking notification as read:", error);
-    }
+  const handleNotificationClick = (id) => {
+    setNotifications((prev) =>
+      prev.map((note) =>
+        note.id === id ? { ...note, read: true } : note
+      )
+    );
   };
 
-  const handleDeleteNotification = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:3456/api/notifications/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete notification");
-      }
-
-      setNotifications((prev) => prev.filter((note) => note.notification_id !== id));
-    } catch (error) {
-      console.error("Error deleting notification:", error);
-    }
+  const handleDeleteNotification = (id) => {
+    setNotifications((prev) => prev.filter((note) => note.id !== id));
   };
 
   if (loading) {
@@ -137,17 +39,21 @@ export const Contact = () => {
 
   return (
     <div className="contact-container">
+
+      {/* แสดงข้อความเตือนเมื่อมีการประชุม */}
       {notifications.length > 0 ? (
         <div className="notifications">
           {notifications.map((note) => (
             <div
-              key={note.notification_id}
-              className={`notification ${note.is_read ? "read" : "unread"}`}
-              onClick={() => handleNotificationClick(note.notification_id)}
+              key={note.id}
+              className="notification"
+              onClick={() => handleNotificationClick(note.id)} // เปิด modal เมื่อคลิก
               style={{
-                display: "flex",
-                alignItems: "center",
                 cursor: "pointer",
+                fontWeight: note.read ? "normal" : "bold",
+                color: note.read ? "#ffffff" : "#ffffff", // ยังไม่ได้อ่านเป็นสีขาว
+                display: "flex", // จัดข้อความและไอคอนในแนวนอน
+                alignItems: "center", // จัดให้อยู่ตรงกลางในแนวตั้ง
               }}
             >
               <span style={{ marginRight: "10px" }}>📌</span>
@@ -160,11 +66,11 @@ export const Contact = () => {
               <span
                 className="delete-icon"
                 onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteNotification(note.notification_id);
+                  e.stopPropagation(); // ป้องกันการคลิกซ้อน
+                  handleDeleteNotification(note.id);
                 }}
                 style={{
-                  marginLeft: "auto",
+                  marginLeft: "auto", // ดันถังขยะไปฝั่งขวา
                   color: "red",
                   cursor: "pointer",
                 }}
@@ -177,7 +83,19 @@ export const Contact = () => {
       ) : (
         <div className="no-notifications" style={{ textAlign: "center", color: "#888" }}>
           <span style={{ fontSize: "24px", marginRight: "10px" }}>🔔</span>
-          <span>No notifications available</span>
+          <span>แจ้งเตือน</span>
+        </div>
+      )}
+
+      {/* Modal สำหรับแสดงรายละเอียด */}
+      {selectedNotification && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <p>{selectedNotification.text}</p>
+          </div>
         </div>
       )}
     </div>
