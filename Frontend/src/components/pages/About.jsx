@@ -159,14 +159,17 @@ export const About = () => {
   };
 
   const confirmBooking = async () => {
-    const { bookedBy, bookingDate, startTime, endTime, bookingNote } = selectedRoom;
+    const { bookingDate, startTime, endTime } = selectedRoom;
 
-    if (!bookedBy || !bookingDate || !startTime || !endTime) {
+    if (!bookingDate || !startTime || !endTime) {
       return alert("กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น");
     }
 
     try {
       const token = localStorage.getItem("token");
+      const formattedStartTime = `${bookingDate} ${startTime}:00`;
+      const formattedEndTime = `${bookingDate} ${endTime}:00`;
+
       const response = await fetch("http://localhost:3456/api/bookings", {
         method: "POST",
         headers: {
@@ -175,9 +178,8 @@ export const About = () => {
         },
         body: JSON.stringify({
           room_id: selectedRoom.room_id,
-          startTime,
-          endTime,
-          note: bookingNote
+          startTime: formattedStartTime,
+          endTime: formattedEndTime
         })
       });
 
@@ -219,13 +221,21 @@ export const About = () => {
                 <p><strong>สถานที่:</strong> {room.location}</p> {/* Display location */}
 
                 <div className="room-buttons">
-                  <div className="left-buttons">
-                    <button className="btn blue" onClick={() => handleBookRoom(room)}>จองห้อง</button>
-                    <button className="btn yellow" onClick={() => handleViewDetails(room)}>รายละเอียด</button>
+                  <div className="button-group">
+                    <button className="btn blue" onClick={() => handleBookRoom(room)}>
+                      📅 จองห้อง
+                    </button>
+                    <button className="btn yellow" onClick={() => handleViewDetails(room)}>
+                      📖 รายละเอียด
+                    </button>
                   </div>
-                  <div className="right-buttons">
-                    <button className="btn orange" onClick={() => handleEdit(room)}>📝 แก้ไข</button>
-                    <button className="btn red" onClick={() => handleDelete(room.room_id)}>🗑️ ลบ</button>
+                  <div className="button-group">
+                    <button className="btn orange" onClick={() => handleEdit(room)}>
+                      📝 แก้ไข
+                    </button>
+                    <button className="btn red" onClick={() => handleDelete(room.room_id)}>
+                      🗑️ ลบ
+                    </button>
                   </div>
                 </div>
               </div>
@@ -321,16 +331,6 @@ export const About = () => {
               width="100%"
               style={{ marginTop: '1rem', borderRadius: '8px' }}
             />
-
-            <div style={{ marginTop: '1rem' }}>
-              <label>👤 ชื่อผู้จอง:</label>
-              <input
-                type="text"
-                value={selectedRoom.bookedBy || ""}
-                onChange={(e) => setSelectedRoom({ ...selectedRoom, bookedBy: e.target.value })}
-                placeholder="กรอกชื่อผู้จอง"
-              />
-            </div>
 
             <div style={{ marginTop: '0.5rem' }}>
               <label>📌 วันที่จอง:</label>
