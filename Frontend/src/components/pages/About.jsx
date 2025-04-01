@@ -7,8 +7,8 @@ export const About = () => {
     room_name: "",
     description: "",
     image: "",
-    capacity: "", // Added capacity field
-    location: ""  // Added location field
+    capacity: "",
+    location: ""
   });
   const [showForm, setShowForm] = useState(false);
   const [editingRoomId, setEditingRoomId] = useState(null);
@@ -105,11 +105,28 @@ export const About = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบห้องนี้?")) {
-      const updatedRooms = rooms.filter(room => room._id !== id);
-      setRooms(updatedRooms);
-      localStorage.setItem("rooms", JSON.stringify(updatedRooms));
+      try {
+        const token = localStorage.getItem("token"); // Retrieve token from localStorage
+        const response = await fetch(`http://localhost:3456/api/rooms/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}` // Include token in headers
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json(); // Parse error response
+          console.error("Server error response:", errorData); // Log server error
+          throw new Error("Network response was not ok");
+        }
+
+        await fetchRooms(); // Refresh the room list after deletion
+      } catch (error) {
+        console.error("Error deleting room:", error);
+        alert("เกิดข้อผิดพลาดในการลบห้อง");
+      }
     }
   };
 
@@ -123,7 +140,7 @@ export const About = () => {
     setDetailRoom(null);
   };
 
-  const handleBookRoom = (room) => {
+  const handleBookRoom = async (room) => {
     setSelectedRoom(room);
     setShowBookingModal(true);
   };
@@ -131,6 +148,43 @@ export const About = () => {
   const closeBookingModal = () => {
     setShowBookingModal(false);
     setSelectedRoom(null);
+  };
+
+  const confirmBooking = async () => {
+    const { bookedBy, bookingDate, startTime, endTime, bookingNote } = selectedRoom;
+
+    if (!bookedBy || !bookingDate || !startTime || !endTime) {
+      return alert("กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น");
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:3456/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          room_id: selectedRoom.room_id,
+          startTime,
+          endTime,
+          note: bookingNote
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error response:", errorData);
+        throw new Error("Network response was not ok");
+      }
+
+      alert("✅ จองสำเร็จ!");
+      closeBookingModal();
+    } catch (error) {
+      console.error("Error booking room:", error);
+      alert("เกิดข้อผิดพลาดในการจองห้อง");
+    }
   };
 
   return (
@@ -162,7 +216,7 @@ export const About = () => {
                 </div>
                 <div className="right-buttons">
                   <button className="btn orange" onClick={() => handleEdit(room)}>📝 แก้ไข</button>
-                  <button className="btn red" onClick={() => handleDelete(room._id)}>🗑️ ลบ</button>
+                  <button className="btn red" onClick={() => handleDelete(room.room_id)}>🗑️ ลบ</button>
                 </div>
               </div>
             </div>
@@ -312,35 +366,7 @@ export const About = () => {
             <button
               className="btn green"
               style={{ marginTop: '1rem' }}
-              onClick={() => {
-                const { bookedBy, bookingDate, startTime, endTime } = selectedRoom;
-
-                if (!bookedBy || !bookingDate || !startTime || !endTime) {
-                  return alert("กรุณากรอกข้อมูลให้ครบทุกช่องที่จำเป็น");
-                }
-
-                if (isHoliday(bookingDate)) {
-                  return alert("ไม่สามารถจองในวันหยุด เสาร์-อาทิตย์ หรือวันหยุดนักขัตฤกษ์ได้ครับ");
-                }
-
-                if (getMinutes(startTime) !== "00" || getMinutes(endTime) !== "00") {
-                  return alert("เวลาจองต้องเป็นแบบเต็มชั่วโมง เช่น 08:00 - 09:00 เท่านั้น");
-                }
-
-                if (startTime >= endTime) {
-                  return alert("เวลาเริ่มต้องน้อยกว่าเวลาสิ้นสุด");
-                }
-
-                if (startTime < "08:00" || endTime > "19:00") {
-                  return alert("เวลาจองต้องอยู่ในช่วง 08:00 ถึง 19:00 เท่านั้น");
-                }
-
-                alert(
-                  `✅ จองสำเร็จ!\nชื่อผู้จอง: ${bookedBy}\nวันที่: ${bookingDate}\nเวลา: ${startTime} ถึง ${endTime}\nหมายเหตุ: ${selectedRoom.bookingNote || "-"}`
-                );
-
-                closeBookingModal();
-              }}
+              onClick={confirmBooking}
             >
               ✔ ยืนยันการจอง
             </button>
@@ -357,7 +383,7 @@ export const About = () => {
               <button className="btn red" onClick={closeDetailModal}>❌</button>
             </div>
             <img width="100%"
-              src={detailRoom.image}
+              src={detailRoom.image_url} // เปลี่ยนจาก detailRoom.image เป็น detailRoom.image_url
               alt={detailRoom.room_name}
             />
             <h3 >{detailRoom.room_name}</h3>
