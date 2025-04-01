@@ -67,4 +67,27 @@ notificationRouter.delete("/:id", authenticate, async (req, res) => {
   }
 });
 
+notificationRouter.put("/:id/read", authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    const query = `
+      UPDATE notifications
+      SET is_read = 1
+      WHERE notification_id = ? AND user_id = ?
+    `;
+    const [result] = await connection.execute(query, [id, req.user.user_id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Notification not found or not authorized to update" });
+    }
+
+    res.status(200).json({ message: "Notification status updated to true successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating notification status", error: error.message });
+  }
+});
+
 export default notificationRouter;
