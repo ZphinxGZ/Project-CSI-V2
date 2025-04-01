@@ -189,6 +189,23 @@ export const About = () => {
         throw new Error("Network response was not ok");
       }
 
+      const bookingResponse = await response.json(); // Parse booking response
+      const bookingId = bookingResponse.booking_id; // Extract booking_id from response
+
+      // Call notifications API
+      await fetch("http://localhost:3456/api/notifications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          booking_id: bookingId,
+          room_id: selectedRoom.room_id,
+          message: "Your booking has been approved."
+        })
+      });
+
       alert("✅ จองสำเร็จ!");
       closeBookingModal();
     } catch (error) {
