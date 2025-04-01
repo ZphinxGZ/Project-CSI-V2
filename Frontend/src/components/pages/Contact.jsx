@@ -152,7 +152,7 @@ export const Contact = () => {
             >
               <span style={{ marginRight: "10px" }}>📌</span>
               <div>
-                <p><strong>Message:</strong> {note.message}</p>
+                <p><strong>Messages:</strong> {note.message}</p>
                 <p><strong>Room:</strong> {note.roomName}</p>
                 <p><strong>Start Time:</strong> {formatDateTime(note.startTime)}</p>
                 <p><strong>End Time:</strong> {formatDateTime(note.endTime)}</p>
