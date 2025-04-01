@@ -1,6 +1,5 @@
 /* Contact.css */
 .contact-container {
-  background: linear-gradient(180deg, #001f3f, #000000); /* สีน้ำเงิน-ดำ */
   color: #ffffff; /* สีข้อความเป็นสีขาวเพื่อความชัดเจน */
   min-height: 100vh; /* ให้ครอบคลุมทั้งหน้าจอ */
   padding: 20px;
@@ -32,15 +31,15 @@
 }
 
 .notification.unread {
-  color: #575353; /* สีข้อความสำหรับการแจ้งเตือนที่ยังไม่ได้อ่าน */
+  color: #000000; /* สีข้อความสำหรับการแจ้งเตือนที่ยังไม่ได้อ่าน */
   background-color: #ffffff;
-  border: 1px solid #007bff;
+  border: 1px solid #020202;
 }
 
 .notification.read {
-  background-color: #e0e0e0;
-  border: 1px solid #ccc;
-  color: #888;
+  background-color: #b3b3b3;
+  border: 1px solid #000000;
+  color: #414141;
 }
 
 .notification button {

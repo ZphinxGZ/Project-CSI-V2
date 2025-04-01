@@ -1,134 +1,60 @@
 nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: radial-gradient(circle, #1a1e1b, #000000); /* เปลี่ยนพื้นหลังเป็นไล่ระดับ */
-    color: white;
-    position: sticky;
-    top: 0;
-    padding: 10px 20px;
-    width: 100%;
-    z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 nav .title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: rgb(56, 56, 236); /* เปลี่ยนสีฟอนต์เป็นสีน้ำเงิน */
-    margin-right: 1rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #111;
 }
 
 nav ul {
-    display: flex;
-    flex-grow: 1;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-nav ul li {
-    margin: 0 10px;
+  display: flex;
+  gap: 20px;
 }
 
 nav ul li a {
-    display: block;
-    text-decoration: none;
-    color: blue; /* เปลี่ยนสีฟอนต์เป็นสีน้ำเงิน */
-    padding: 10px 15px;
-    margin: 0 0.5rem;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+  font-size: 1rem;
+  color: #111;
+  padding: 5px 10px;
+  transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
-    background-color: #575757;
+  color: #555;
 }
 
-.profile-link {
-    margin-left: auto;
+.menu {
+  display: none;
 }
 
-/* สไตล์สำหรับ Dropdown Menu */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* ปุ่มกด Dropdown */
-.dropbtn {
-    background-color: transparent;
-    color: blue; /* เปลี่ยนสีฟอนต์เป็นสีน้ำเงิน */
-    padding: 10px 15px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border-radius: 6px;
-}
-
-.dropbtn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* กล่องเมนู Dropdown */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    min-width: 230px; /* กำหนดขนาดเมนู */
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 10px 0;
-    z-index: 1000;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-/* แสดง Dropdown เมื่อกด */
-.dropdown-content.show {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* รายการภายใน Dropdown */
-.dropdown-content a {
-    color: blue; /* เปลี่ยนสีฟอนต์เป็นสีน้ำเงิน */
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    border-left: 4px solid transparent; /* ให้แถบข้างสีเวลาถูกเลือก */
-}
-
-/* เปลี่ยนสีเมื่อ Hover */
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-    border-left: 4px solid #1d4ed8; /* สีแถบซ้ายเมื่อ hover */
-    color: #1d4ed8;
-}
-
-/* เพิ่มเงาให้ Dropdown */
-.dropdown-content {
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Responsive สำหรับมือถือ */
 @media (max-width: 768px) {
-    .dropdown-content {
-        min-width: 200px;
-        font-size: 14px;
-    }
+  .menu {
+    display: block;
+    cursor: pointer;
+  }
 
-    .dropbtn {
-        font-size: 14px;
-        padding: 8px 12px;
-    }
+  nav ul {
+    display: none;
+    flex-direction: column;
+    background-color: #fff;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+  }
 
-    .dropdown-content a {
-        padding: 10px;
-    }
+  nav ul.open {
+    display: flex;
+  }
 }

@@ -33,10 +33,9 @@ export const Navbar = ({ token }) => {
   return (
     <nav>
       <Link to="/" className="title">
-        หน้าหลัก 
+        HOME
       </Link>
 
-      {/* Hamburger Menu Button */}
       <div className="menu" onClick={() => setMenuOpen(!menuOpen)}>
         <span></span>
         <span></span>
@@ -45,19 +44,16 @@ export const Navbar = ({ token }) => {
 
       <ul className={menuOpen ? "open" : ""}>
         <li>
-          <NavLink to="/about" activeclassname="active">จองห้อง</NavLink>
+          <NavLink to="/about">Booking</NavLink>
         </li>
         <li>
-          <NavLink to="/services">ดูประวัติการจอง</NavLink>
+          <NavLink to="/services">History</NavLink>
         </li>
         <li>
-          <NavLink to="/contact">แจ้งเตือน <FaBell /></NavLink>
+          <NavLink to="/contact">Notifications</NavLink>
         </li>
         <li className="profile-link">
-          <NavLink to="/profile">{userData.username} ({userData.role})</NavLink>
-        </li>
-        <li>
-          {/* <NavLink to="/login">Login</NavLink> */}
+          <NavLink to="/profile">{userData.username || "Guest"}</NavLink>
         </li>
       </ul>
     </nav>

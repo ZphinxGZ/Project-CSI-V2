@@ -45,9 +45,9 @@ function Login({ onLoginSuccess }) {
                             onChange={(e) => setPassword(e.target.value)} 
                         />
                     </div>
-                    <button type="button" className="submit" onClick={handleLogin}>Sign in</button>
+                    <button type="button" className="submit1" onClick={handleLogin}>Sign in</button>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
-                    <p className="signup-link">
+                    <p className="signup-link"> 
                         No account?
                         <a href="#" onClick={() => navigate('/register')}>Sign up</a>
                     </p>

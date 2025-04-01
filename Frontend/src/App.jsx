@@ -33,14 +33,16 @@ function App() {
         </Routes>
       )}
       {token && (
-        <div className="container">
+        <div className="App">
           <Navbar token={token} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
+          <div className="container">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </div>
           <button onClick={() => setToken(null)}>Logout</button> 
         </div>
       )}

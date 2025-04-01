@@ -2,7 +2,7 @@
   width: 85vw;  /* ปรับให้กว้าง 85% ของหน้าจอ */
   max-width: none; /* ไม่จำกัดขนาดสูงสุด */
   margin: 10px auto;
-  background: #f8f8f8;
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -12,8 +12,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.2em;
-  font-weight: lighter;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #111;
   padding: 10px;
   background: #f0f0f0;
   border-radius: 10px;
@@ -33,10 +34,10 @@
 .calendar-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 1px;
+  gap: 10px;
   text-align: center;
   font-weight: normal;
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 10px;
 }
 
@@ -56,33 +57,20 @@
 .day:nth-child(6) { color: #17a2b8; } /* ศ. */
 .day:nth-child(7) { color: #6f42c1; } /* ส. */
 
-.date {
-  position: relative;
-  width: 100%;
-  height: 12vh;  /* ใช้ vh เพื่อให้ปรับตามจอ */
-  background: white;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column; /* Adjust layout for multiple items */
-  align-items: flex-start;
-  justify-content: flex-start;
-  font-size: 1em;
-  padding: 10px;
-}
 
 .date:hover {
-  background: #f1f1f1;
+  background-color: #e0e0e0;
 }
 
 .date::before {
   content: attr(data-date);
   position: absolute;
-  top: 4px;  /* จัดให้ชิดขอบบน */
-  right: 8px;  /* จัดให้ชิดขอบขวา */
-  font-size: 1.1em;  /* ปรับขนาดตัวเลขให้ชัด */
+  top: 5px; /* ระยะห่างจากขอบบน */
+  left: 8px; /* ระยะห่างจากขอบซ้าย */
+  font-size: 1.1em; /* ปรับขนาดตัวเลข */
   font-weight: bold;
   color: black;
-  background: none;  /* เอาพื้นหลังออก */
+  background: none;
   padding: 0;
   margin: 0;
 }
@@ -154,14 +142,16 @@
   position: relative;
   width: 100%;
   height: 12vh;
-  background: white;
+  background-color: #f5f5f5;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: flex-start; /* จัดให้อยู่ด้านซ้าย */
+  justify-content: flex-start; /* จัดให้อยู่ด้านบน */
   font-size: 1em;
   padding: 10px;
+  text-align: left; /* จัดข้อความให้อยู่ด้านซ้าย */
+  transition: background-color 0.3s ease;
 }
 
 .home-button button {
