@@ -8,13 +8,15 @@
 
 .notifications {
   margin-top: 20px;
-  padding: 16px;
+  padding: 15px;
   border: none; /* Removed border */
   border-radius: 10px;
   display: inline-block;
   width: 100%; /* Expand to full width */
 }
 
+/* สไตล์สําหรับการแจ้งเตือน -------------------------------------------------------
+ */
 .notification {
   padding: 10px;
   background: rgba(255, 255, 255, 0.1); /* โปร่งใสเล็กน้อย */
@@ -26,10 +28,19 @@
   width: 100%; /* Expand to full width */
   border: 1px solid #ffffff;
   color: #ffffff; /* สีข้อความเริ่มต้นสำหรับการแจ้งเตือนที่อ่านแล้ว */
+  transition: background-color 0.3s ease;
 }
 
 .notification.unread {
   color: #ffffff; /* สีข้อความสำหรับการแจ้งเตือนที่ยังไม่ได้อ่าน */
+  background-color: #f9f9f9;
+  border: 1px solid #007bff;
+}
+
+.notification.read {
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  color: #888;
 }
 
 .notification button {
