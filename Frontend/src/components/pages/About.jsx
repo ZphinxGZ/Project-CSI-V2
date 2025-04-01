@@ -189,6 +189,45 @@ export const About = () => {
         throw new Error("Network response was not ok");
       }
 
+      const bookingData = await response.json(); // Parse the booking response
+      console.log("Booking API response:", bookingData); // Log the response for debugging
+
+      const { bookingId } = bookingData; // Extract bookingId from the response
+      if (!bookingId) {
+        console.error("Booking ID is undefined. Response:", bookingData);
+        throw new Error("Booking ID is missing from the API response");
+      }
+
+      // Validate parameters before sending notification
+      if (!bookingId || !selectedRoom.room_id) {
+        console.error("Missing required parameters for notification:", { bookingId, room_id: selectedRoom.room_id });
+        throw new Error("Notification parameters are undefined");
+      }
+
+      // Send notification
+      try {
+        const notificationResponse = await fetch("http://localhost:3456/api/notifications", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            booking_id: bookingId, // Use bookingId here
+            room_id: selectedRoom.room_id,
+            message: "Your booking has been approved."
+          })
+        });
+
+        if (!notificationResponse.ok) {
+          const notificationError = await notificationResponse.json();
+          console.error("Notification error response:", notificationError);
+          throw new Error("Failed to send notification");
+        }
+      } catch (notificationError) {
+        console.error("Error sending notification:", notificationError);
+      }
+
       alert("✅ จองสำเร็จ!");
       closeBookingModal();
     } catch (error) {
