@@ -81,6 +81,33 @@ export const Contact = () => {
     fetchNotifications();
   }, []);
 
+  const handleNotificationClick = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:3456/api/notifications/${id}/read`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to mark notification as read");
+      }
+
+      setNotifications((prev) =>
+        prev.map((note) =>
+          note.notification_id === id ? { ...note, is_read: true } : note
+        )
+      );
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
+
   const handleDeleteNotification = async (id) => {
     try {
       const token = localStorage.getItem("token");
@@ -115,7 +142,8 @@ export const Contact = () => {
           {notifications.map((note) => (
             <div
               key={note.notification_id}
-              className="notification"
+              className={`notification ${note.is_read ? "read" : "unread"}`}
+              onClick={() => handleNotificationClick(note.notification_id)}
               style={{
                 display: "flex",
                 alignItems: "center",
