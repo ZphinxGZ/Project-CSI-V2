@@ -180,3 +180,23 @@
 .home-button button:hover {
   background: #005bb5;
 }
+
+.event {
+  margin-top: 5px;
+  padding: 5px;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  font-size: 0.8em;
+  text-align: left;
+}
+
+.event .time {
+  font-weight: bold;
+}
+
+.event .room,
+.event .location {
+  display: block;
+  font-size: 0.75em;
+}

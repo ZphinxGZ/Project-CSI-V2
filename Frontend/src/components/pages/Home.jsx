@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"; // Import axios for API calls
 import "./Home.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import icons
 
@@ -7,22 +8,32 @@ export const Home = () => {
   const [currentMonth, setCurrentMonth] = useState(date.getMonth());
   const [currentYear, setCurrentYear] = useState(date.getFullYear() + 543); // แปลงเป็น พ.ศ.
   const [days, setDays] = useState([]);
+  const [calendarData, setCalendarData] = useState([]); // State for API data
 
   const monthNames = [
     "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
     "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
   ];
 
-  const meetings = {
-    "2568-03-05": { time: "10:00 น.", room: "ห้องประชุม A", location: "ชั้น 1" },
-    "2568-03-12": { time: "14:00 น.", room: "ห้องประชุม B", location: "ชั้น 2" },
-    "2568-03-20": { time: "09:00 น.", room: "ห้องประชุม C", location: "ชั้น 3" },
-    "2568-04-01": { time: "13:00 น.", room: "ห้องประชุม D", location: "ชั้น 4" }
-  };
+  useEffect(() => {
+    fetchCalendarData(); // Fetch API data on component mount
+  }, []);
 
   useEffect(() => {
     renderDates();
-  }, [currentMonth, currentYear]);
+  }, [currentMonth, currentYear, calendarData]);
+
+  const fetchCalendarData = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      const response = await axios.get("http://localhost:3456/api/calendar", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCalendarData(response.data); // Store API data in state
+    } catch (error) {
+      console.error("Error fetching calendar data:", error);
+    }
+  };
 
   const renderDates = () => {
     const firstDay = new Date(currentYear - 543, currentMonth, 1).getDay();
@@ -41,12 +52,13 @@ export const Home = () => {
 
     // วันในเดือนนี้
     for (let i = 1; i <= lastDate; i++) {
-      let dateKey = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+      const dateKey = `${currentYear - 543}-${(currentMonth + 1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+      const events = calendarData.filter(event => event.startTime.startsWith(dateKey));
       newDays.push({
         day: i,
         type: "current-month",
         isToday: new Date().getDate() === i && new Date().getMonth() === currentMonth && new Date().getFullYear() + 543 === currentYear,
-        meeting: meetings[dateKey] || null
+        events: events.length > 0 ? events : null
       });
     }
 
@@ -111,13 +123,13 @@ export const Home = () => {
             className={`date ${d.type} ${d.isToday ? "highlight-today" : ""}`}
           >
             {d.day}
-            {d.meeting && (
-              <div className="meeting">
-                <span className="time">{d.meeting.time}</span>
-                <span className="room">{d.meeting.room}</span>
-                <span className="location">{d.meeting.location}</span>
+            {d.events && d.events.map((event, idx) => (
+              <div key={idx} className="event">
+                <span className="time">{new Date(event.startTime).toLocaleTimeString()}</span>
+                <span className="room">{event.room}</span>
+                <span className="location">{event.location}</span>
               </div>
-            )}
+            ))}
           </div>
         ))}
       </div>
