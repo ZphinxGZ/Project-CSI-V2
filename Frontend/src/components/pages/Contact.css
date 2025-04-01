@@ -32,8 +32,8 @@
 }
 
 .notification.unread {
-  color: #ffffff; /* สีข้อความสำหรับการแจ้งเตือนที่ยังไม่ได้อ่าน */
-  background-color: #f9f9f9;
+  color: #575353; /* สีข้อความสำหรับการแจ้งเตือนที่ยังไม่ได้อ่าน */
+  background-color: #ffffff;
   border: 1px solid #007bff;
 }
 
