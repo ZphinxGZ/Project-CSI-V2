@@ -45,4 +45,26 @@ notificationRouter.get("/", authenticate, async (req, res) => {
   }
 });
 
+notificationRouter.delete("/:id", authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+
+    const query = `
+      DELETE FROM notifications
+      WHERE notification_id = ? AND user_id = ?
+    `; // แก้ไข id เป็น notification_id
+    const [result] = await connection.execute(query, [id, req.user.user_id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Notification not found or not authorized to delete" });
+    }
+
+    res.status(200).json({ message: "Notification deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting notification", error: error.message });
+  }
+});
+
 export default notificationRouter;
