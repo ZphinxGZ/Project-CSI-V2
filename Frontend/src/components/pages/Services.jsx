@@ -27,6 +27,7 @@ export const Services = () => {
           startTime: booking.start_time,
           endTime: booking.end_time,
           status: "จองสำเร็จ", // Set default status to "จองสำเร็จ"
+          reason: booking.note || "ไม่มีเหตุผล",
           color: "green", // Default color for "จองสำเร็จ"
         }));
         setBookings(formattedBookings);
@@ -91,7 +92,7 @@ export const Services = () => {
             <span className="date">
               📆 วันที่จอง: {new Date(booking.date).toLocaleDateString("th-TH")}
             </span>
-            <span className="reason">{booking.reason}</span>
+            <span className="reason">📝 {booking.reason}</span>
             <button className="btn blue" onClick={() => handleViewDetails(booking)}>
               🔍 ดูรายละเอียด
             </button>
@@ -111,6 +112,7 @@ export const Services = () => {
               <p>
                 <FaClock /> <strong>เวลา:</strong> {new Date(selectedBooking.startTime).toLocaleTimeString("th-TH")} - {new Date(selectedBooking.endTime).toLocaleTimeString("th-TH")}
               </p>
+              <p><FaStickyNote /> <strong>หมายเหตุ:</strong> {selectedBooking.reason}</p>
               <p><strong>สถานะ:</strong> <span className={`status ${selectedBooking.color}`}>{selectedBooking.status}</span></p>
             </div>
             <button className="btn red" onClick={closeDetailsModal}>ปิด</button>
