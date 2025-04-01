@@ -9,16 +9,28 @@ export const Contact = () => {
     // ตั้งค่าการแจ้งเตือนทันทีเมื่อโหลดหน้าเว็บ
     setNotifications([
       {
-        text: "⏰ ถึงเวลาประชุม: ประชุมทีม เวลา 10:00 น. ชั้น 2 ห้อง A",
+        id: 1,
+        text: " ถึงเวลาประชุม: ประชุมทีม เวลา 10:00 น. ชั้น 2 ห้อง A",
+        read: false,
       },
       {
-        text: "⏰ ถึงเวลาประชุม: ประชุมแผนก เวลา 14:00 น. ชั้น 3 ห้อง B",
+        id: 2,
+        text: " ถึงเวลาประชุม: ประชุมแผนก เวลา 14:00 น. ชั้น 3 ห้อง B",
+        read: false,
       },
     ]);
   }, []);
 
-  const handleNotificationClick = (notification) => {
-    setSelectedNotification(notification);
+  const handleNotificationClick = (id) => {
+    setNotifications((prev) =>
+      prev.map((note) =>
+        note.id === id ? { ...note, read: true } : note
+      )
+    );
+  };
+
+  const handleDeleteNotification = (id) => {
+    setNotifications((prev) => prev.filter((note) => note.id !== id));
   };
 
   const closeModal = () => {
@@ -29,18 +41,51 @@ export const Contact = () => {
     <div className="contact-container">
 
       {/* แสดงข้อความเตือนเมื่อมีการประชุม */}
-      {notifications.length > 0 && (
+      {notifications.length > 0 ? (
         <div className="notifications">
-          {notifications.map((note, index) => (
+          {notifications.map((note) => (
             <div
-              key={index}
+              key={note.id}
               className="notification"
-              onClick={() => handleNotificationClick(note)} // เปิด modal เมื่อคลิก
-              style={{ cursor: "pointer" }}
+              onClick={() => handleNotificationClick(note.id)} // เปิด modal เมื่อคลิก
+              style={{
+                cursor: "pointer",
+                fontWeight: note.read ? "normal" : "bold",
+                color: note.read ? "#ffffff" : "#ffffff", // ยังไม่ได้อ่านเป็นสีขาว
+                display: "flex", // จัดข้อความและไอคอนในแนวนอน
+                alignItems: "center", // จัดให้อยู่ตรงกลางในแนวตั้ง
+              }}
             >
-              {note.text}
+              <span
+                style={{
+                  marginRight: "5px", // ลดระยะห่างระหว่างไอคอนกับข้อความ
+                  color: note.read ? "green" : "red", // เปลี่ยนสีไอคอน ✔️ เป็นสีเขียว
+                }}
+              >
+                {note.read ? "✅" : "❌"} {/* ไอคอนแสดงสถานะ */}
+              </span>
+              <span>{note.text}</span> {/* ข้อความชิดกับไอคอน */}
+              <span
+                className="delete-icon"
+                onClick={(e) => {
+                  e.stopPropagation(); // ป้องกันการคลิกซ้อน
+                  handleDeleteNotification(note.id);
+                }}
+                style={{
+                  marginLeft: "auto", // ดันถังขยะไปฝั่งขวา
+                  color: "red",
+                  cursor: "pointer",
+                }}
+              >
+                🗑️
+              </span>
             </div>
           ))}
+        </div>
+      ) : (
+        <div className="no-notifications" style={{ textAlign: "center", color: "#888" }}>
+          <span style={{ fontSize: "24px", marginRight: "10px" }}>🔔</span>
+          <span>แจ้งเตือน</span>
         </div>
       )}
 
