@@ -29,10 +29,18 @@ export const About = () => {
           Authorization: `Bearer ${token}` // Add token to headers
         }
       });
+
+      if (response.status === 404) {
+        console.warn("No rooms found (404).");
+        setRooms([]); // Set rooms to an empty array if no data is found
+        return;
+      }
+
       const data = await response.json();
-      setRooms(data);
+      setRooms(Array.isArray(data) ? data : []); // Ensure data is an array
     } catch (error) {
       console.error("Error fetching rooms:", error);
+      setRooms([]); // Set rooms to an empty array on error
     }
   };
 
@@ -194,34 +202,38 @@ export const About = () => {
       </div>
 
       <ul className="about-list">
-        {rooms.map((room) => (
-          <li key={room.room_id}>
-            <img
-              src={room.image_url} // Updated to use room.image_url 
-              alt={room.room_name}
-              className="room-image"
-              width="220"
-              height="170"
-            />
-            <div className="room-details">
-              <h2 className="room-title">{room.room_name}</h2>
-              <p>{room.description}</p>
-              <p><strong>ความจุ:</strong> {room.capacity}</p> {/* Display capacity */}
-              <p><strong>สถานที่:</strong> {room.location}</p> {/* Display location */}
+        {rooms.length > 0 ? (
+          rooms.map((room) => (
+            <li key={room.room_id}>
+              <img
+                src={room.image_url} // Updated to use room.image_url 
+                alt={room.room_name}
+                className="room-image"
+                width="220"
+                height="170"
+              />
+              <div className="room-details">
+                <h2 className="room-title">{room.room_name}</h2>
+                <p>{room.description}</p>
+                <p><strong>ความจุ:</strong> {room.capacity}</p> {/* Display capacity */}
+                <p><strong>สถานที่:</strong> {room.location}</p> {/* Display location */}
 
-              <div className="room-buttons">
-                <div className="left-buttons">
-                  <button className="btn blue" onClick={() => handleBookRoom(room)}>จองห้อง</button>
-                  <button className="btn yellow" onClick={() => handleViewDetails(room)}>รายละเอียด</button>
-                </div>
-                <div className="right-buttons">
-                  <button className="btn orange" onClick={() => handleEdit(room)}>📝 แก้ไข</button>
-                  <button className="btn red" onClick={() => handleDelete(room.room_id)}>🗑️ ลบ</button>
+                <div className="room-buttons">
+                  <div className="left-buttons">
+                    <button className="btn blue" onClick={() => handleBookRoom(room)}>จองห้อง</button>
+                    <button className="btn yellow" onClick={() => handleViewDetails(room)}>รายละเอียด</button>
+                  </div>
+                  <div className="right-buttons">
+                    <button className="btn orange" onClick={() => handleEdit(room)}>📝 แก้ไข</button>
+                    <button className="btn red" onClick={() => handleDelete(room.room_id)}>🗑️ ลบ</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          ))
+        ) : (
+          <p>ไม่มีห้องที่จะแสดง</p> // Display a message when no rooms are available
+        )}
       </ul>
 
       {!showForm && (
