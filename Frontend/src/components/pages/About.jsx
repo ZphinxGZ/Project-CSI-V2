@@ -297,8 +297,8 @@ export const About = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="form-header">
-              <h4>{editingRoomId ? "📝 แก้ไขห้อง" : "➕ เพิ่มห้องใหม่"}</h4>
-              <button className="btn red" onClick={() => { setShowForm(false); setEditingRoomId(null); }}>❌</button>
+              <h4 className="name-dd">{editingRoomId ? "📝 แก้ไขห้อง" : "➕ เพิ่มห้องใหม่"}</h4>
+              <button className="btn red dd" onClick={() => { setShowForm(false); setEditingRoomId(null); }}>✖</button>
             </div>
             <input
               type="text"
@@ -357,8 +357,8 @@ export const About = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="form-header">
-              <h4>📅 จองห้อง: {selectedRoom.room_name}</h4>
-              <button className="btn red" onClick={closeBookingModal}>❌</button>
+              <h4 className="name-dd">📅 จองห้อง: {selectedRoom.room_name}</h4>
+              <button className="btn red dd" onClick={closeBookingModal}>✖</button>
             </div>
 
             <p><strong>รายละเอียดห้อง:</strong> {selectedRoom.description}</p>
@@ -430,8 +430,8 @@ export const About = () => {
         <div className="modal-overlay">
           <div className="modal-content" >
             <div className="form-header">
-              <h4>📖 รายละเอียดห้องประชุม</h4>
-              <button className="btn red" onClick={closeDetailModal}>❌</button>
+              <h4 className="name-dd">📖 รายละเอียดห้องประชุม</h4>
+              <button className="btn red dd" onClick={closeDetailModal}>✖</button>
             </div>
             <img width="100%"
               src={detailRoom.image_url} // เปลี่ยนจาก detailRoom.image เป็น detailRoom.image_url
