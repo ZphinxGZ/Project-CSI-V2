@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors"; // ✅ เพิ่ม CORS
-import { registerUser, loginUser } from "../controllers/authController.js";
+import { registerUser, loginUser, changePassword, deleteAccount } from "../controllers/authController.js";
 
 const authRouter = express.Router();
 
@@ -17,5 +17,9 @@ authRouter.post("/login", loginUser);
 authRouter.post("/logout", (req, res) => {
   res.status(200).json({ message: "Logout successful" });
 });
+
+authRouter.post("/change-password", changePassword);
+
+authRouter.delete("/delete-account", deleteAccount);
 
 export default authRouter;
