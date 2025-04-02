@@ -7,7 +7,7 @@ import Login from "./components/pages/login";
 import Register from "./components/pages/register";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem('token') || '*');
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ function App() {
       )}
       {token && (
         <div className="App">
-          <Navbar token={token} />
+          <Navbar token={token} setToken={setToken} />
           <div className="container">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -43,7 +43,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
             </Routes>
           </div>
-          <button onClick={() => setToken(null)}>Logout</button> 
+          {/* <button onClick={() => setToken(null)}>Logout</button>  */}
         </div>
       )}
     </div>

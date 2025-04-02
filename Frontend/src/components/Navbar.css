@@ -1,3 +1,4 @@
+/* General Navbar Styling */
 nav {
   display: flex;
   justify-content: space-between;
@@ -8,34 +9,89 @@ nav {
   position: sticky;
   top: 0;
   z-index: 1000;
+  border-bottom: 1px solid #ddd;
+  height: 60px; /* Ensure consistent height */
 }
 
 nav .title {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #111;
+  text-decoration: none;
+  line-height: 60px; /* Align vertically */
 }
 
 nav ul {
   display: flex;
   gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center; /* Align items vertically */
+}
+
+nav ul li {
+  position: relative;
 }
 
 nav ul li a {
   font-size: 1rem;
-  color: #111;
+  text-decoration: none;
   padding: 5px 10px;
-  transition: color 0.3s ease;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  line-height: 60px; /* Align vertically */
 }
 
 nav ul li a:hover {
-  color: #555;
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: scale(1.05);
 }
 
-.menu {
-  display: none;
+/* Profile Button Styling */
+.profile-link .dropdown-toggle {
+  font-size: 1rem;
+  padding: 0; /* Set padding to 0 */
+  margin: 0; /* Set margin to 0 */
+  border: none; /* Remove border */
+  border-radius: 20px;
+  cursor: pointer;
+  color: #000; /* Set font color to black */
+  background: none; /* Remove background */
+  box-sizing: border-box; /* Ensure box-sizing is border-box */
+  text-decoration: none; /* Remove underline */
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  line-height: 60px; /* Align vertically */
 }
 
+.profile-link .dropdown-toggle:hover {
+  box-shadow: none; /* Remove hover shadow */
+  transform: scale(1.05);
+}
+
+.profile-link .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 5px;
+  padding: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  min-width: 150px;
+}
+
+.profile-link .dropdown-menu .dropdown-item {
+  padding: 8px 15px;
+  font-size: 0.9rem;
+  text-align: left;
+  transition: background-color 0.3s ease;
+}
+
+.profile-link .dropdown-menu .dropdown-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .menu {
     display: block;
@@ -52,9 +108,14 @@ nav ul li a:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     padding: 10px;
+    width: 200px;
   }
 
   nav ul.open {
     display: flex;
+  }
+
+  nav ul li {
+    margin: 10px 0;
   }
 }
