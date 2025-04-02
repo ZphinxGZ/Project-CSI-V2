@@ -1,7 +1,15 @@
+.calendar-container {
+  width: 100%;
+  max-width: 1200px; /* Limit the maximum width of the container */
+  margin: 0 auto; /* Center the container horizontally */
+  padding: 20px; /* Add padding around the container */
+  box-sizing: border-box; /* Include padding in the width/height calculation */
+}
+
 .calendar {
-  width: 85vw;  /* ปรับให้กว้าง 85% ของหน้าจอ */
-  max-width: none; /* ไม่จำกัดขนาดสูงสุด */
-  margin: 10px auto;
+  width: 100%; /* Adjust to fit the container */
+  max-width: none; /* Remove any maximum width restriction */
+  margin: 10px 0; /* Adjust margin for better spacing */
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
