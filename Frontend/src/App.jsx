@@ -42,7 +42,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/settings" element={<Settings token={token} />} />
             </Routes>
           </div>
         </div>
