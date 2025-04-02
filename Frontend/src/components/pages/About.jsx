@@ -16,9 +16,11 @@ export const About = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [detailRoom, setDetailRoom] = useState(null);
+  const [userRole, setUserRole] = useState(null); // Add state for user role
 
   useEffect(() => {
     fetchRooms();
+    fetchUserRole(); // Fetch user role on component mount
   }, []);
 
   const fetchRooms = async () => {
@@ -41,6 +43,26 @@ export const About = () => {
     } catch (error) {
       console.error("Error fetching rooms:", error);
       setRooms([]); // Set rooms to an empty array on error
+    }
+  };
+
+  const fetchUserRole = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:3456/api/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUserRole(data.role); // Set the user's role
+      } else {
+        console.error("Failed to fetch user role");
+      }
+    } catch (error) {
+      console.error("Error fetching user role:", error);
     }
   };
 
@@ -268,14 +290,16 @@ export const About = () => {
                       📖 รายละเอียด
                     </button>
                   </div>
-                  <div className="button-group">
-                    <button className="btn orange" onClick={() => handleEdit(room)}>
-                      📝 แก้ไข
-                    </button>
-                    <button className="btn red" onClick={() => handleDelete(room.room_id)}>
-                      🗑️ ลบ
-                    </button>
-                  </div>
+                  {userRole === "admin" && ( // Conditionally render edit and delete buttons for admin
+                    <div className="button-group">
+                      <button className="btn orange" onClick={() => handleEdit(room)}>
+                        📝 แก้ไข
+                      </button>
+                      <button className="btn red" onClick={() => handleDelete(room.room_id)}>
+                        🗑️ ลบ
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </li>
@@ -285,7 +309,7 @@ export const About = () => {
         )}
       </ul>
 
-      {!showForm && (
+      {!showForm && userRole === "admin" && ( // Conditionally render "เพิ่มห้องใหม่" button for admin
         <div className="text-center my-4">
           <button className="btn green" onClick={() => setShowForm(true)}>
             ➕ เพิ่มห้องใหม่
