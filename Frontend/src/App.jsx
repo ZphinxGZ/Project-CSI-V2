@@ -5,6 +5,7 @@ import { Navbar } from "./components/Navbar";
 import { About, Contact, Home, Services } from "./components/pages/";
 import Login from "./components/pages/login";
 import Register from "./components/pages/register";
+import Settings from "./components/pages/Settings";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -41,9 +42,9 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/settings" element={<Settings />} />
             </Routes>
           </div>
-          {/* <button onClick={() => setToken(null)}>Logout</button>  */}
         </div>
       )}
     </div>

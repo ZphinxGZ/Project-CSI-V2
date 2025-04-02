@@ -78,12 +78,20 @@ export const Navbar = ({ token, setToken }) => {
                 <li>
                   <button
                     className="dropdown-item"
+                    onClick={() => (window.location.href = "/settings")}
+                  >
+                    Settings
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="dropdown-item"
                     onClick={handleLogout}
                   >
                     Logout
                   </button>
                 </li>
-              </>
+              </> 
             ) : (
               <li>
                 <button
