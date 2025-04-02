@@ -31,11 +31,9 @@ userRouter.get("/reports", authenticate, async (req, res) => {
 
     const connection = await connectDB();
 
-    // Fetch total users
     const [users] = await connection.execute("SELECT COUNT(*) AS totalUsers FROM users");
     const totalUsers = users[0].totalUsers;
 
-    // Fetch bookings and calculate statistics
     const [bookings] = await connection.execute(
       `SELECT u.username, COUNT(b.booking_id) AS bookingCount 
        FROM bookings b 

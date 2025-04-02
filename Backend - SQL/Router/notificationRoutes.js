@@ -8,7 +8,7 @@ notificationRouter.post("/", authenticate, async (req, res) => {
   try {
     const { booking_id, room_id, message } = req.body;
 
-    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+    const connection = await connectDB();
 
     const query = `
       INSERT INTO notifications (user_id, booking_id, room_id, message, is_read, created_at)
@@ -26,7 +26,7 @@ notificationRouter.post("/", authenticate, async (req, res) => {
 
 notificationRouter.get("/", authenticate, async (req, res) => {
   try {
-    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+    const connection = await connectDB();
 
     const query = `
       SELECT * FROM notifications
@@ -54,7 +54,7 @@ notificationRouter.delete("/:id", authenticate, async (req, res) => {
     const query = `
       DELETE FROM notifications
       WHERE notification_id = ? AND user_id = ?
-    `; // แก้ไข id เป็น notification_id
+    `;
     const [result] = await connection.execute(query, [id, req.user.user_id]);
 
     if (result.affectedRows === 0) {

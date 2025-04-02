@@ -7,7 +7,6 @@ export const registerUser = async (req, res) => {
     const { username, password, role } = req.body;
     const connection = await connectDB();
 
-    // Check if the username already exists
     const [existingUser] = await connection.execute(
       "SELECT * FROM users WHERE username = ?",
       [username]

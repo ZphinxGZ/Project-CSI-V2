@@ -46,7 +46,7 @@ bookingRouter.get("/", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+    const connection = await connectDB();
 
     const [bookings] = await connection.execute(
       `SELECT b.*, u.username, r.room_name, r.location 
@@ -69,7 +69,7 @@ bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. You can only view your own bookings." });
     }
 
-    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+    const connection = await connectDB();
 
     const [bookings] = await connection.execute(
       `SELECT b.*, r.room_name, r.location 
@@ -87,7 +87,7 @@ bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
 
 bookingRouter.get("/user", authenticate, async (req, res) => {
   try {
-    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+    const connection = await connectDB(); 
 
     const query = `
       SELECT bookings.*, rooms.room_name
@@ -116,7 +116,7 @@ bookingRouter.get("/room/:roomId", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
 
-    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+    const connection = await connectDB();
 
     const [bookings] = await connection.execute(
       `SELECT b.*, u.username, r.room_name, r.location 
@@ -146,7 +146,7 @@ bookingRouter.put("/:id", authenticate, async (req, res) => {
       return res.status(403).json({ message: "Access denied. Only users can update bookings." });
     }
 
-    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+    const connection = await connectDB();
 
     const [booking] = await connection.execute(`SELECT * FROM bookings WHERE booking_id = ?`, [id]);
     if (booking.length === 0) {
@@ -185,7 +185,7 @@ bookingRouter.delete("/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
 
-    const connection = await connectDB(); // สร้างการเชื่อมต่อ MySQL
+    const connection = await connectDB(); 
 
     const [booking] = await connection.execute(`SELECT * FROM bookings WHERE booking_id = ?`, [id]);
     if (booking.length === 0) {

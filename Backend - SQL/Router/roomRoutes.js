@@ -14,7 +14,6 @@ roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
 
     const connection = await connectDB();
 
-    // Check if a room with the same name already exists
     const [existingRoom] = await connection.execute(
       "SELECT * FROM rooms WHERE room_name = ?",
       [room_name]
@@ -23,7 +22,6 @@ roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
       return res.status(400).json({ message: "Room name already exists" });
     }
 
-    // Create a new room
     await connection.execute(
       "INSERT INTO rooms (room_name, capacity, location, description, image_url) VALUES (?, ?, ?, ?, ?)",
       [room_name, capacity, location, description, image_url]
@@ -39,7 +37,6 @@ roomRouter.get("/", async (req, res) => {
   try {
     const connection = await connectDB();
 
-    // Fetch all rooms from the database
     const [rooms] = await connection.execute("SELECT * FROM rooms");
     if (rooms.length === 0) {
       return res.status(404).json({ message: "No rooms found" });
@@ -56,7 +53,6 @@ roomRouter.get("/:id", async (req, res) => {
     const { id } = req.params;
     const connection = await connectDB();
 
-    // Find a room by ID
     const [room] = await connection.execute("SELECT * FROM rooms WHERE room_id = ?", [id]);
     if (room.length === 0) {
       return res.status(404).json({ message: "Room not found" });
@@ -74,7 +70,6 @@ roomRouter.put("/:id", authenticate, isAdmin, async (req, res) => {
     const { room_name, capacity, location, description, image_url } = req.body;
     const connection = await connectDB();
 
-    // Update the room
     const [result] = await connection.execute(
       "UPDATE rooms SET room_name = ?, capacity = ?, location = ?, description = ?, image_url = ? WHERE room_id = ?",
       [room_name, capacity, location, description, image_url, id]
@@ -95,7 +90,6 @@ roomRouter.delete("/:id", authenticate, isAdmin, async (req, res) => {
     const { id } = req.params;
     const connection = await connectDB();
 
-    // Delete the room by ID
     const [result] = await connection.execute("DELETE FROM rooms WHERE room_id = ?", [id]);
 
     if (result.affectedRows === 0) {

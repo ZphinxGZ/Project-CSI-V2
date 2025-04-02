@@ -12,7 +12,6 @@ reportRouter.get("/", authenticate, async (req, res) => {
 
     const connection = await connectDB();
 
-    // Fetch all bookings and group by date
     const [bookings] = await connection.query(
       `SELECT b.*, r.room_name 
        FROM bookings b 
