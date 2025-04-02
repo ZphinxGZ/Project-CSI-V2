@@ -72,17 +72,21 @@ export const Navbar = ({ token, setToken }) => {
           <ul className="dropdown-menu" aria-labelledby="profileDropdown">
             {token ? (
               <>
-                <li>
-                  <span className="dropdown-item-text">Role: {userData.role}</span>
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => (window.location.href = "/settings")}
-                  >
-                    Settings
-                  </button>
-                </li>
+                {userData.role && (
+                  <li>
+                    <span className="dropdown-item-text">Role: {userData.role}</span>
+                  </li>
+                )}
+                {userData.role && (
+                  <li>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => (window.location.href = "/settings")}
+                    >
+                      Settings
+                    </button>
+                  </li>
+                )}
                 <li>
                   <button
                     className="dropdown-item"
