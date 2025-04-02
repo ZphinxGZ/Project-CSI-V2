@@ -34,7 +34,7 @@ function App() {
       )}
       {token && (
         <div className="App">
-          <Navbar token={token} />
+          <Navbar token={token} setToken={setToken} />
           <div className="container">
             <Routes>
               <Route path="/" element={<Home />} />
