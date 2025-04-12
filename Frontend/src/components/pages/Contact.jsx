@@ -4,6 +4,9 @@ import "./Contact.css";
 export const Contact = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [popupMessage, setPopupMessage] = useState(""); // State for popup message
+  const [confirmDelete, setConfirmDelete] = useState(null); // State for delete confirmation
+  const [confirmRead, setConfirmRead] = useState(null); // State for read confirmation
 
   const formatDateTime = (dateTime) => {
     const options = { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" };
@@ -81,7 +84,7 @@ export const Contact = () => {
     fetchNotifications();
   }, []);
 
-  const handleNotificationClick = async (id) => {
+  const handleConfirmRead = async (id) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
@@ -103,8 +106,14 @@ export const Contact = () => {
           note.notification_id === id ? { ...note, is_read: true } : note
         )
       );
+
+      // Show popup message
+      setPopupMessage("Notification marked as read!");
+      setTimeout(() => setPopupMessage(""), 3000); // Hide popup after 3 seconds
     } catch (error) {
       console.error("Error marking notification as read:", error);
+    } finally {
+      setConfirmRead(null); // Close confirmation popup
     }
   };
 
@@ -126,8 +135,22 @@ export const Contact = () => {
       }
 
       setNotifications((prev) => prev.filter((note) => note.notification_id !== id));
+      setPopupMessage("Notification deleted successfully!");
+      setTimeout(() => setPopupMessage(""), 3000); // Hide popup after 3 seconds
     } catch (error) {
       console.error("Error deleting notification:", error);
+    } finally {
+      setConfirmDelete(null); // Close confirmation popup
+    }
+  };
+
+  const handleNotificationClick = (id, isRead) => {
+    if (isRead) {
+      // Show popup message if already read
+      setPopupMessage("This notification has already been marked as read.");
+      setTimeout(() => setPopupMessage(""), 3000); // Hide popup after 3 seconds
+    } else {
+      setConfirmRead(id); // Open confirmation popup
     }
   };
 
@@ -137,13 +160,56 @@ export const Contact = () => {
 
   return (
     <div className="contact-container">
+      {popupMessage && (
+        <div className="popup-message">
+          {popupMessage}
+        </div>
+      )}
+      {confirmRead && (
+        <div className="confirmation-popup">
+          <p>Are you sure you want to mark this notification as read?</p>
+          <div className="confirmation-buttons">
+            <button
+              className="btn confirm"
+              onClick={() => handleConfirmRead(confirmRead)}
+            >
+              Confirm
+            </button>
+            <button
+              className="btn cancel"
+              onClick={() => setConfirmRead(null)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+      {confirmDelete && (
+        <div className="confirmation-popup">
+          <p>Are you sure you want to delete this notification?</p>
+          <div className="confirmation-buttons">
+            <button
+              className="btn confirm"
+              onClick={() => handleDeleteNotification(confirmDelete)}
+            >
+              Confirm
+            </button>
+            <button
+              className="btn cancel"
+              onClick={() => setConfirmDelete(null)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
       {notifications.length > 0 ? (
         <div className="notifications">
           {notifications.map((note) => (
             <div
               key={note.notification_id}
               className={`notification ${note.is_read ? "read" : "unread"}`}
-              onClick={() => handleNotificationClick(note.notification_id)}
+              onClick={() => handleNotificationClick(note.notification_id, note.is_read)} // Check if already read
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -161,7 +227,7 @@ export const Contact = () => {
                 className="delete-icon"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDeleteNotification(note.notification_id);
+                  setConfirmDelete(note.notification_id); // Open confirmation popup
                 }}
                 style={{
                   marginLeft: "auto",
