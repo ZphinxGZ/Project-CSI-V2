@@ -26,6 +26,12 @@ function Login({ onLoginSuccess }) {
 
     return (
         <div className="login-page">
+            <button
+                onClick={() => navigate("/")}
+                className="back-to-home-btn"
+            >
+                ย้อนกลับ
+            </button>
             <div className="login-container">
                 <form className="form">
                     <p className="form-title">Sign in to your account</p>

@@ -26,27 +26,27 @@ function App() {
 
   return (
     <div className="App">
-      {!token && (
+      {window.location.pathname !== "/login" && window.location.pathname !== "/register" && (
+        <Navbar token={token} setToken={setToken} />
+      )}
+      <div className="container">
         <Routes>
-          <Route path="/login" element={<Login onLoginSuccess={handleLogin} />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/settings" element={token ? <Settings token={token} /> : <Login onLoginSuccess={handleLogin} />} />
+          <Route
+            path="/login"
+            element={
+              <div>
+                <Login onLoginSuccess={handleLogin} />
+              </div>
+            }
+          />
           <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Login onLoginSuccess={handleLogin} />} />
         </Routes>
-      )}
-      {token && (
-        <div className="App">
-          <Navbar token={token} setToken={setToken} />
-          <div className="container">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/settings" element={<Settings token={token} />} />
-            </Routes>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

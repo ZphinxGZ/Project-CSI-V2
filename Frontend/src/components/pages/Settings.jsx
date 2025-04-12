@@ -47,6 +47,7 @@ export const Settings = ({ token }) => {
       if (response.ok) {
         alert("Account deleted successfully!");
         setIsDeleteModalOpen(false);
+        localStorage.removeItem("token"); // Clear token from local storage
         navigate("/"); // Redirect to home page
         window.location.reload(); // Refresh the page
       } else {
