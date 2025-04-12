@@ -166,42 +166,48 @@ export const Contact = () => {
         </div>
       )}
       {confirmRead && (
-        <div className="confirmation-popup">
-          <p>Are you sure you want to mark this notification as read?</p>
-          <div className="confirmation-buttons">
-            <button
-              className="btn confirm"
-              onClick={() => handleConfirmRead(confirmRead)}
-            >
-              Confirm
-            </button>
-            <button
-              className="btn cancel"
-              onClick={() => setConfirmRead(null)}
-            >
-              Cancel
-            </button>
+        <>
+          <div className="confirmation-popup-overlay"></div>
+          <div className="confirmation-popup">
+            <p>Are you sure you want to mark this notification as read?</p>
+            <div className="confirmation-buttons">
+              <button
+                className="btn confirm"
+                onClick={() => handleConfirmRead(confirmRead)}
+              >
+                Confirm
+              </button>
+              <button
+                className="btn cancel"
+                onClick={() => setConfirmRead(null)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
+        </>
       )}
       {confirmDelete && (
-        <div className="confirmation-popup">
-          <p>Are you sure you want to delete this notification?</p>
-          <div className="confirmation-buttons">
-            <button
-              className="btn confirm"
-              onClick={() => handleDeleteNotification(confirmDelete)}
-            >
-              Confirm
-            </button>
-            <button
-              className="btn cancel"
-              onClick={() => setConfirmDelete(null)}
-            >
-              Cancel
-            </button>
+        <>
+          <div className="confirmation-popup-overlay"></div>
+          <div className="confirmation-popup">
+            <p>Are you sure you want to delete this notification?</p>
+            <div className="confirmation-buttons">
+              <button
+                className="btn confirm"
+                onClick={() => handleDeleteNotification(confirmDelete)}
+              >
+                Confirm
+              </button>
+              <button
+                className="btn cancel"
+                onClick={() => setConfirmDelete(null)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        </div>
+        </>
       )}
       {notifications.length > 0 ? (
         <div className="notifications">

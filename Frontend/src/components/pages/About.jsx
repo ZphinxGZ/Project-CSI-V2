@@ -17,6 +17,7 @@ export const About = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [detailRoom, setDetailRoom] = useState(null);
   const [userRole, setUserRole] = useState(null); // Add state for user role
+  const [confirmDelete, setConfirmDelete] = useState(null); // State for delete confirmation
 
   useEffect(() => {
     fetchRooms();
@@ -136,27 +137,26 @@ export const About = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("คุณแน่ใจหรือไม่ว่าต้องการลบห้องนี้?")) {
-      try {
-        const token = localStorage.getItem("token"); // Retrieve token from localStorage
-        const response = await fetch(`http://localhost:3456/api/rooms/${id}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}` // Include token in headers
-          }
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json(); // Parse error response
-          console.error("Server error response:", errorData); // Log server error
-          throw new Error("Network response was not ok");
+    try {
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      const response = await fetch(`http://localhost:3456/api/rooms/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}` // Include token in headers
         }
+      });
 
-        await fetchRooms(); // Refresh the room list after deletion
-      } catch (error) {
-        console.error("Error deleting room:", error);
-        alert("เกิดข้อผิดพลาดในการลบห้อง");
+      if (!response.ok) {
+        const errorData = await response.json(); // Parse error response
+        console.error("Server error response:", errorData); // Log server error
+        throw new Error("Network response was not ok");
       }
+
+      await fetchRooms(); // Refresh the room list after deletion
+      setConfirmDelete(null); // Close confirmation popup
+    } catch (error) {
+      console.error("Error deleting room:", error);
+      alert("เกิดข้อผิดพลาดในการลบห้อง");
     }
   };
 
@@ -295,7 +295,10 @@ export const About = () => {
                       <button className="btn orange" onClick={() => handleEdit(room)}>
                         📝 แก้ไข
                       </button>
-                      <button className="btn red" onClick={() => handleDelete(room.room_id)}>
+                      <button
+                        className="btn red"
+                        onClick={() => setConfirmDelete(room.room_id)} // Open confirmation popup
+                      >
                         🗑️ ลบ
                       </button>
                     </div>
@@ -308,6 +311,30 @@ export const About = () => {
           <p>ไม่มีห้องที่จะแสดง</p> // Display a message when no rooms are available
         )}
       </ul>
+
+      {/* Confirmation Popup */}
+      {confirmDelete && (
+        <>
+          <div className="confirmation-popup-overlay"></div>
+          <div className="confirmation-popup">
+            <p>คุณแน่ใจหรือไม่ว่าต้องการลบห้องนี้?</p>
+            <div className="confirmation-buttons">
+              <button
+                className="btn confirm"
+                onClick={() => handleDelete(confirmDelete)}
+              >
+                ยืนยัน
+              </button>
+              <button
+                className="btn cancel"
+                onClick={() => setConfirmDelete(null)} // Close confirmation popup
+              >
+                ยกเลิก
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {!showForm && userRole === "admin" && ( // Conditionally render "เพิ่มห้องใหม่" button for admin
         <div className="text-center my-4">
