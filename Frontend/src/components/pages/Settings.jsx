@@ -48,6 +48,7 @@ export const Settings = ({ token }) => {
         alert("Account deleted successfully!");
         setIsDeleteModalOpen(false);
         navigate("/"); // Redirect to home page
+        window.location.reload(); // Refresh the page
       } else {
         alert("Failed to delete account. Please try again.");
       }
