@@ -89,8 +89,8 @@
   color: white;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: 8rem; /* Adjusted width to make buttons wider */
-  text-align: center; /* Ensure text is centered */
+  width: 8rem;
+  text-align: center;
 }
 
 .btn:hover {
