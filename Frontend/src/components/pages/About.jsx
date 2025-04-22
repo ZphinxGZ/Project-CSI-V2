@@ -269,7 +269,7 @@ export const About = () => {
           rooms.map((room) => (
             <li key={room.room_id}>
               <img
-                src={room.image_url} // Updated to use room.image_url 
+                src={`http://localhost:3456${room.image_url}`} // Prepend base URL to image_url
                 alt={room.room_name}
                 className="room-image"
                 width="220"
@@ -416,7 +416,7 @@ export const About = () => {
             <p><strong>ความจุ:</strong> {selectedRoom.capacity}</p> {/* Display capacity */}
             <p><strong>สถานที่:</strong> {selectedRoom.location}</p> {/* Display location */}
             <img
-              src={selectedRoom.image}
+              src={`http://localhost:3456${selectedRoom.image_url}`} // Prepend base URL to image_url
               alt={selectedRoom.room_name}
               width="100%"
               style={{ marginTop: '1rem', borderRadius: '8px' }}
@@ -485,7 +485,7 @@ export const About = () => {
               <button className="btn red dd" onClick={closeDetailModal}>✖</button>
             </div>
             <img width="100%"
-              src={detailRoom.image_url} // เปลี่ยนจาก detailRoom.image เป็น detailRoom.image_url
+              src={`http://localhost:3456${detailRoom.image_url}`} // Prepend base URL to image_url
               alt={detailRoom.room_name}
             />
             <h3 >{detailRoom.room_name}</h3>
