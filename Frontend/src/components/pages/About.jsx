@@ -18,6 +18,7 @@ export const About = () => {
   const [detailRoom, setDetailRoom] = useState(null);
   const [userRole, setUserRole] = useState(null); // Add state for user role
   const [confirmDelete, setConfirmDelete] = useState(null); // State for delete confirmation
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // State for success modal
 
   useEffect(() => {
     fetchRooms();
@@ -256,7 +257,7 @@ export const About = () => {
         console.error("Error sending notification:", notificationError);
       }
 
-      alert("✅ จองสำเร็จ!");
+      setShowSuccessModal(true); // Show success modal instead of alert
       closeBookingModal();
     } catch (error) {
       console.error("Error booking room:", error);
@@ -497,6 +498,17 @@ export const About = () => {
             <p>{detailRoom.description}</p>
             <p><strong>ความจุ:</strong> {detailRoom.capacity}</p> {/* Display capacity */}
             <p><strong>สถานที่:</strong> {detailRoom.location}</p> {/* Display location */}
+          </div>
+        </div>
+      )}
+      {showSuccessModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="form-header">
+              <h4 className="name-dd">✅ การจองสำเร็จ</h4>
+              <button className="btn red dd" onClick={() => setShowSuccessModal(false)}>✖</button>
+            </div>
+            <p>การจองของคุณสำเร็จเรียบร้อยแล้ว!</p>
           </div>
         </div>
       )}
