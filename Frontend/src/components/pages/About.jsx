@@ -422,7 +422,7 @@ export const About = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeBookingModal}>ยกเลิก</Button>
-          <Button variant="success" onClick={confirmBooking}>✔ ยืนยันการจอง</Button>
+          <Button variant="success" onClick={confirmBooking}>✔ ยืนยัน</Button>
         </Modal.Footer>
       </Modal>
       <Modal show={showDetailModal} onHide={closeDetailModal}>
