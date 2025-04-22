@@ -210,7 +210,12 @@ textarea {
   background-color: #501c20;
 }
 .name-dd {
- width: 500rem
+ width: 30rem;
+  margin-right: 1rem;
+  font-size: 1.2rem;
+  color: #000000;
+  font-weight: bold;
+  text-align: center;
 }
 .dd {
   align-items: center;
