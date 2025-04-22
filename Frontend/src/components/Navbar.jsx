@@ -8,6 +8,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Import Bootstrap JS
 export const Navbar = ({ token, setToken }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userData, setUserData] = useState({ username: "", role: "" });
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // State for logout modal
 
   useEffect(() => {
     if (token) {
@@ -35,6 +36,7 @@ export const Navbar = ({ token, setToken }) => {
   const handleLogout = () => {
     setToken(null); // Clear the token
     setUserData({ username: "", role: "" }); // Reset user data
+    window.location.href = "/login"; // Redirect to login page
   };
 
   return (
@@ -90,7 +92,7 @@ export const Navbar = ({ token, setToken }) => {
                 <li>
                   <button
                     className="dropdown-item"
-                    onClick={handleLogout}
+                    onClick={() => setIsLogoutModalOpen(true)} // Open logout modal
                   >
                     Logout
                   </button>
@@ -109,6 +111,26 @@ export const Navbar = ({ token, setToken }) => {
           </ul>
         </li>
       </ul>
+
+      {/* Logout Confirmation Modal */}
+      {isLogoutModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <p>Are you sure you want to logout?</p>
+            <div className="modal-buttons">
+              <button className="btn confirm" onClick={handleLogout}>
+                Confirm
+              </button>
+              <button
+                className="btn cancel"
+                onClick={() => setIsLogoutModalOpen(false)} // Close modal
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
