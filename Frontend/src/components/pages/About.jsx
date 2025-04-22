@@ -353,7 +353,7 @@ export const About = () => {
       )}
 
       <Modal show={showForm} onHide={() => { setShowForm(false); setEditingRoomId(null); }}>
-        <Modal.Header closeButton>
+        <Modal.Header >
           <Modal.Title>{editingRoomId ? "📝 แก้ไขห้อง" : "➕ เพิ่มห้องใหม่"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -379,7 +379,7 @@ export const About = () => {
       </Modal>
 
       <Modal show={showBookingModal} onHide={closeBookingModal}>
-        <Modal.Header closeButton>
+        <Modal.Header >
           <Modal.Title>📅 จองห้อง: {selectedRoom?.room_name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -426,7 +426,7 @@ export const About = () => {
         </Modal.Footer>
       </Modal>
       <Modal show={showDetailModal} onHide={closeDetailModal}>
-        <Modal.Header closeButton>
+        <Modal.Header >
           <Modal.Title>📖 รายละเอียดห้องประชุม</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -441,7 +441,7 @@ export const About = () => {
         </Modal.Footer>
       </Modal>
       <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header >
           <Modal.Title>✅ การจองสำเร็จ</Modal.Title>
         </Modal.Header>
         <Modal.Body>การจองของคุณสำเร็จเรียบร้อยแล้ว!</Modal.Body>
