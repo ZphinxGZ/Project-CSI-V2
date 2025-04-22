@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './About.css';
+import { Modal, Button } from "react-bootstrap";
 
 export const About = () => {
   const [rooms, setRooms] = useState([]);
@@ -351,167 +352,103 @@ export const About = () => {
         </div>
       )}
 
-      {showForm && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="form-header">
-              <h4 className="name-dd">{editingRoomId ? "📝 แก้ไขห้อง" : "➕ เพิ่มห้องใหม่"}</h4>
-              <button className="btn red dd" onClick={() => { setShowForm(false); setEditingRoomId(null); }}>✖</button>
+      <Modal show={showForm} onHide={() => { setShowForm(false); setEditingRoomId(null); }}>
+        <Modal.Header closeButton>
+          <Modal.Title>{editingRoomId ? "📝 แก้ไขห้อง" : "➕ เพิ่มห้องใหม่"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <input type="text" name="room_name" placeholder="ชื่อห้อง" value={newRoom.room_name} onChange={handleChange} />
+          <input type="text" name="description" placeholder="รายละเอียดห้อง" value={newRoom.description} onChange={handleChange} />
+          <input type="text" name="capacity" placeholder="ความจุ" value={newRoom.capacity} onChange={handleChange} />
+          <input type="text" name="location" placeholder="สถานที่" value={newRoom.location} onChange={handleChange} />
+          <input type="file" name="image" accept="image/*" onChange={handleFileChange} />
+          {newRoom.image && newRoom.image instanceof File && (
+            <div className="image-preview">
+              <img
+                src={URL.createObjectURL(newRoom.image)} // Preview the selected file
+                alt="Preview" 
+                style={{ maxWidth: '100%', height: 'auto', marginTop: '1rem', borderRadius: '8px', display: 'block' , marginLeft: 'auto', marginRight: 'auto' }}
+              />
             </div>
-            <input
-              type="text"
-              name="room_name"
-              placeholder="ชื่อห้อง"
-              value={newRoom.room_name}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="description"
-              placeholder="รายละเอียดห้อง"
-              value={newRoom.description}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="capacity"
-              placeholder="ความจุ"
-              value={newRoom.capacity}
-              onChange={handleChange}
-            />
-            <input
-              type="text"
-              name="location"
-              placeholder="สถานที่"
-              value={newRoom.location}
-              onChange={handleChange}
-            />
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleFileChange} // Handle file input
-            />
-            {newRoom.image && newRoom.image instanceof File && (
-              <div className="image-preview">
-                <img
-                  src={URL.createObjectURL(newRoom.image)} // Preview the selected file
-                  alt="Preview"
-                  width="100%"
-                  style={{ marginTop: '1rem', borderRadius: '8px' }}
-                />
-              </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => { setShowForm(false); setEditingRoomId(null); }}>ปิด</Button>
+          <Button    variant="success" onClick={handleAddOrUpdateRoom}>{editingRoomId ? "✔ บันทึก" : "✔ เพิ่มห้อง"}</Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showBookingModal} onHide={closeBookingModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>📅 จองห้อง: {selectedRoom?.room_name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p><strong>รายละเอียดห้อง:</strong> {selectedRoom?.description}</p>
+          <p><strong>ความจุ:</strong> {selectedRoom?.capacity}</p>
+          <p><strong>สถานที่:</strong> {selectedRoom?.location}</p>
+          <img
+            src={`http://localhost:3456${selectedRoom?.image_url}`}
+            alt={selectedRoom?.room_name}
+            style={{
+              display: 'block',
+              maxWidth: '100%',
+              height: 'auto',
+              margin: '1rem auto 0',
+              borderRadius: '8px',
+              objectFit: 'contain'
+            }}
+          />
+          <div style={{ marginTop: '0.5rem' }}>
+            <label>📌 วันที่จอง:</label>
+            <input type="date" value={selectedRoom?.bookingDate || ""} onChange={(e) => setSelectedRoom({ ...selectedRoom, bookingDate: e.target.value })} />
+            {selectedRoom?.bookingDate && isHoliday(selectedRoom.bookingDate) && (
+              <p style={{ color: 'red', fontWeight: 'bold', marginTop: '0.3rem' }}>
+                🚫 ไม่สามารถจองในวันหยุด เสาร์-อาทิตย์ หรือวันนักขัตฤกษ์ได้
+              </p>
             )}
-            <button className="btn green" onClick={handleAddOrUpdateRoom}>
-              {editingRoomId ? "✔ บันทึกการแก้ไข" : "✔ เพิ่มห้อง"}
-            </button>
           </div>
-        </div>
-      )}
-
-      {/* ✅ Booking Modal */}
-      {showBookingModal && selectedRoom && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="form-header">
-              <h4 className="name-dd">📅 จองห้อง: {selectedRoom.room_name}</h4>
-              <button className="btn red dd" onClick={closeBookingModal}>✖</button>
+          <div style={{ marginTop: '0.5rem' }}>
+            <label>🕐 เวลาจอง:</label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input type="time" step="3600" value={selectedRoom?.startTime || ""} onChange={(e) => setSelectedRoom({ ...selectedRoom, startTime: e.target.value })} />
+              <span style={{ alignSelf: 'center' }}>ถึง</span>
+              <input type="time" step="3600" value={selectedRoom?.endTime || ""} onChange={(e) => setSelectedRoom({ ...selectedRoom, endTime: e.target.value })} />
             </div>
-
-            <p><strong>รายละเอียดห้อง:</strong> {selectedRoom.description}</p>
-            <p><strong>ความจุ:</strong> {selectedRoom.capacity}</p> {/* Display capacity */}
-            <p><strong>สถานที่:</strong> {selectedRoom.location}</p> {/* Display location */}
-            <img
-              src={`http://localhost:3456${selectedRoom.image_url}`} // Prepend base URL to image_url
-              alt={selectedRoom.room_name}
-              width="100%"
-              style={{ marginTop: '1rem', borderRadius: '8px' }}
-            />
-
-            <div style={{ marginTop: '0.5rem' }}>
-              <label>📌 วันที่จอง:</label>
-              <input
-                type="date"
-                value={selectedRoom.bookingDate || ""}
-                onChange={(e) => setSelectedRoom({ ...selectedRoom, bookingDate: e.target.value })}
-              />
-              {selectedRoom.bookingDate && isHoliday(selectedRoom.bookingDate) && (
-                <p style={{ color: 'red', fontWeight: 'bold', marginTop: '0.3rem' }}>
-                  🚫 ไม่สามารถจองในวันหยุด เสาร์-อาทิตย์ หรือวันนักขัตฤกษ์ได้
-                </p>
-              )}
-            </div>
-
-            <div style={{ marginTop: '0.5rem' }}>
-              <label>🕐 เวลาจอง:</label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <input
-                  type="time"
-                  step="3600"
-                  value={selectedRoom.startTime || ""}
-                  onChange={(e) => setSelectedRoom({ ...selectedRoom, startTime: e.target.value })}
-                />
-                <span style={{ alignSelf: 'center' }}>ถึง</span>
-                <input
-                  type="time"
-                  step="3600"
-                  value={selectedRoom.endTime || ""}
-                  onChange={(e) => setSelectedRoom({ ...selectedRoom, endTime: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div style={{ marginTop: '0.5rem' }}>
-              <label>📝 รายละเอียดเพิ่มเติม:</label>
-              <textarea
-                rows="3"
-                placeholder="ระบุวัตถุประสงค์หรือหมายเหตุ"
-                value={selectedRoom.bookingNote || ""}
-                onChange={(e) => setSelectedRoom({ ...selectedRoom, bookingNote: e.target.value })}
-              />
-            </div>
-
-            <button
-              className="btn green"
-              style={{ marginTop: '1rem' }}
-              onClick={confirmBooking}
-            >
-              ✔ ยืนยันการจอง
-            </button>
-
           </div>
-        </div>
-      )}
-      {/* ✅ Detail Modal */}
-      {showDetailModal && detailRoom && (
-        <div className="modal-overlay">
-          <div className="modal-content" >
-            <div className="form-header">
-              <h4 className="name-dd">📖 รายละเอียดห้องประชุม</h4>
-              <button className="btn red dd" onClick={closeDetailModal}>✖</button>
-            </div>
-            <img width="100%"
-              src={`http://localhost:3456${detailRoom.image_url}`} // Prepend base URL to image_url
-              alt={detailRoom.room_name}
-            />
-            <h3 >{detailRoom.room_name}</h3>
-            <p>{detailRoom.description}</p>
-            <p><strong>ความจุ:</strong> {detailRoom.capacity}</p> {/* Display capacity */}
-            <p><strong>สถานที่:</strong> {detailRoom.location}</p> {/* Display location */}
+          <div style={{ marginTop: '0.5rem' }}>
+            <label>📝 รายละเอียดเพิ่มเติม:</label>
+            <textarea rows="3" placeholder="ระบุวัตถุประสงค์หรือหมายเหตุ" value={selectedRoom?.bookingNote || ""} onChange={(e) => setSelectedRoom({ ...selectedRoom, bookingNote: e.target.value })} />
           </div>
-        </div>
-      )}
-      {showSuccessModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="form-header">
-              <h4 className="name-dd">✅ การจองสำเร็จ</h4>
-              <button className="btn red dd" onClick={() => setShowSuccessModal(false)}>✖</button>
-            </div>
-            <p>การจองของคุณสำเร็จเรียบร้อยแล้ว!</p>
-          </div>
-        </div>
-      )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeBookingModal}>ยกเลิก</Button>
+          <Button variant="success" onClick={confirmBooking}>✔ ยืนยันการจอง</Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showDetailModal} onHide={closeDetailModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>📖 รายละเอียดห้องประชุม</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <img src={`http://localhost:3456${detailRoom?.image_url}`} alt={detailRoom?.room_name} width="100%" />
+          <h3>{detailRoom?.room_name}</h3>
+          <p>{detailRoom?.description}</p>
+          <p><strong>ความจุ:</strong> {detailRoom?.capacity}</p>
+          <p><strong>สถานที่:</strong> {detailRoom?.location}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeDetailModal}>ปิด</Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>✅ การจองสำเร็จ</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>การจองของคุณสำเร็จเรียบร้อยแล้ว!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowSuccessModal(false)}>ปิด</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
