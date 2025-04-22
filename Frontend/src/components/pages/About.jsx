@@ -74,6 +74,13 @@ export const About = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    setNewRoom({
+      ...newRoom,
+      image: e.target.files[0] // Set the selected file
+    });
+  };
+
   const publicHolidays = ["01-01", "04-13", "04-14", "04-15", "12-05", "12-10"];
   const getMinutes = (time) => time.split(":")[1];
   const isHoliday = (dateString) => {
@@ -90,22 +97,21 @@ export const About = () => {
 
     try {
       const token = localStorage.getItem("token"); // Retrieve token from localStorage
-      const roomData = {
-        room_id: editingRoomId || undefined, // Include room_id if editing
-        room_name: newRoom.room_name,
-        capacity: newRoom.capacity,
-        location: newRoom.location,
-        description: newRoom.description,
-        image_url: newRoom.image // Use `image_url` for the image
-      };
+      const formData = new FormData();
+      formData.append("room_name", newRoom.room_name);
+      formData.append("capacity", newRoom.capacity);
+      formData.append("location", newRoom.location);
+      formData.append("description", newRoom.description);
+      if (newRoom.image instanceof File) {
+        formData.append("image", newRoom.image); // Append the file if it's a File object
+      }
 
       const response = await fetch(`http://localhost:3456/api/rooms${editingRoomId ? `/${editingRoomId}` : ''}`, {
         method: editingRoomId ? 'PUT' : 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}` // Add token to headers
         },
-        body: JSON.stringify(roomData)
+        body: formData // Use FormData for file upload
       });
 
       if (!response.ok) {
@@ -380,16 +386,15 @@ export const About = () => {
               onChange={handleChange}
             />
             <input
-              type="text"
+              type="file"
               name="image"
-              placeholder="URL รูปภาพ"
-              value={newRoom.image} // Ensure this uses newRoom.image
-              onChange={handleChange}
+              accept="image/*"
+              onChange={handleFileChange} // Handle file input
             />
-            {newRoom.image && (
+            {newRoom.image && newRoom.image instanceof File && (
               <div className="image-preview">
                 <img
-                  src={newRoom.image} // Ensure the preview uses newRoom.image
+                  src={URL.createObjectURL(newRoom.image)} // Preview the selected file
                   alt="Preview"
                   width="100%"
                   style={{ marginTop: '1rem', borderRadius: '8px' }}
