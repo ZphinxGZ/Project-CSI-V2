@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import multer from "multer"; // Import multer for file uploads
+import path from "path";
 import connectDB from "../config/DB.js";
 import { authenticate, isAdmin } from "../middlewares/authMiddleware.js";
 
@@ -8,9 +10,21 @@ roomRouter.use(cors());
 roomRouter.use(express.json({ limit: "50mb" }));
 roomRouter.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-roomRouter.post("/", authenticate, isAdmin, async (req, res) => {
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Directory to store uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+const upload = multer({ storage });
+
+roomRouter.post("/", authenticate, isAdmin, upload.single("image"), async (req, res) => {
   try {
-    const { room_name, capacity, location, description, image_url } = req.body;
+    const { room_name, capacity, location, description } = req.body;
+    const image_url = req.file ? `/uploads/${req.file.filename}` : null; // Save file path
 
     const connection = await connectDB();
 
@@ -64,14 +78,21 @@ roomRouter.get("/:id", async (req, res) => {
   }
 });
 
-roomRouter.put("/:id", authenticate, isAdmin, async (req, res) => { 
+roomRouter.put("/:id", authenticate, isAdmin, upload.single("image"), async (req, res) => {
   try {
     const { id } = req.params;
-    const { room_name, capacity, location, description, image_url } = req.body;
+    const { room_name, capacity, location, description } = req.body;
+    const image_url = req.file ? `/uploads/${req.file.filename}` : null; // Save file path
+
     const connection = await connectDB();
 
+    const [existingRoom] = await connection.execute("SELECT * FROM rooms WHERE room_id = ?", [id]);
+    if (existingRoom.length === 0) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
     const [result] = await connection.execute(
-      "UPDATE rooms SET room_name = ?, capacity = ?, location = ?, description = ?, image_url = ? WHERE room_id = ?",
+      "UPDATE rooms SET room_name = ?, capacity = ?, location = ?, description = ?, image_url = COALESCE(?, image_url) WHERE room_id = ?",
       [room_name, capacity, location, description, image_url, id]
     );
 

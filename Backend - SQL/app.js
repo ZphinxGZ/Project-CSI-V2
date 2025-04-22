@@ -8,15 +8,25 @@ import reportRouter from "./Router/reportRouter.js"; // เพิ่ม reportRo
 import calendarRouter from "./Router/calendarRouter.js"; // เพิ่ม calendarRouter
 import authRouter from "./Router/authRoutes.js"; // นำเข้า authRouter
 import morgan from "morgan";
-
 import cors from "cors";
+import fs from "fs"; // Import fs module
+import path from "path";
 
 const app = express();
 const PORT = 3456;
 
+// Ensure the uploads directory exists
+const uploadsDir = path.join(path.resolve(), "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 // Middleware สำหรับ parse JSON body
 app.use(express.json());
 app.use(cors());
+
+// Serve static files from the uploads directory
+app.use("/uploads", express.static(uploadsDir));
 
 // Middleware สำหรับ log IP ของผู้ใช้
 app.use(
