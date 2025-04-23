@@ -21,6 +21,37 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+/**
+ * @swagger
+ * /api/rooms:
+ *   post:
+ *     summary: Create a new room
+ *     tags: [Rooms]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               room_name:
+ *                 type: string
+ *               capacity:
+ *                 type: integer
+ *               location:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Room created successfully
+ *       400:
+ *         description: Room name already exists
+ */
+
 roomRouter.post("/", authenticate, isAdmin, upload.single("image"), async (req, res) => {
   try {
     const { room_name, capacity, location, description } = req.body;
@@ -47,6 +78,19 @@ roomRouter.post("/", authenticate, isAdmin, upload.single("image"), async (req, 
   }
 });
 
+/**
+ * @swagger
+ * /api/rooms:
+ *   get:
+ *     summary: Get all rooms
+ *     tags: [Rooms]
+ *     responses:
+ *       200:
+ *         description: List of rooms
+ *       404:
+ *         description: No rooms found
+ */
+
 roomRouter.get("/", async (req, res) => {
   try {
     const connection = await connectDB();
@@ -61,6 +105,26 @@ roomRouter.get("/", async (req, res) => {
     res.status(500).json({ message: "Error fetching rooms", error: error.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   get:
+ *     summary: Get room details by ID
+ *     tags: [Rooms]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room details
+ *       404:
+ *         description: Room not found
+ */
 
 roomRouter.get("/:id", async (req, res) => {
   try {
@@ -77,6 +141,44 @@ roomRouter.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Error fetching room details", error: error.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   put:
+ *     summary: Update a room
+ *     tags: [Rooms]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               room_name:
+ *                 type: string
+ *               capacity:
+ *                 type: integer
+ *               location:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Room updated successfully
+ *       404:
+ *         description: Room not found
+ */
 
 roomRouter.put("/:id", authenticate, isAdmin, upload.single("image"), async (req, res) => {
   try {
@@ -105,6 +207,26 @@ roomRouter.put("/:id", authenticate, isAdmin, upload.single("image"), async (req
     res.status(500).json({ message: "Error updating room", error: error.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   delete:
+ *     summary: Delete a room
+ *     tags: [Rooms]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room deleted successfully
+ *       404:
+ *         description: Room not found
+ */
 
 roomRouter.delete("/:id", authenticate, isAdmin, async (req, res) => {
   try {

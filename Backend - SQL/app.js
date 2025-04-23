@@ -11,6 +11,8 @@ import morgan from "morgan";
 import cors from "cors";
 import fs from "fs"; // Import fs module
 import path from "path";
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsDoc from 'swagger-jsdoc';
 
 const app = express();
 const PORT = 3456;
@@ -35,6 +37,25 @@ app.use(
 
 // เชื่อมต่อ MySQL
 await connectDB();
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: 'Meeting Room Booking API',
+      version: '1.0.0',
+      description: 'API documentation for the Meeting Room Booking system',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3456',
+      },
+    ],
+  },
+  apis: ['./Router/*.js', './controllers/*.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // ใช้ userRouter สำหรับเส้นทาง /api/users
 app.use("/api/users", userRouter);

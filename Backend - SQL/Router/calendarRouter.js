@@ -4,6 +4,19 @@ import connectDB from "../config/DB.js";
 
 const calendarRouter = express.Router();
 
+/**
+ * @swagger
+ * /api/calendar:
+ *   get:
+ *     summary: Get calendar data for the user
+ *     tags: [Calendar]
+ *     responses:
+ *       200:
+ *         description: Calendar data fetched successfully
+ *       500:
+ *         description: Error fetching calendar data
+ */
+
 calendarRouter.get("/", authenticate, async (req, res) => {
   try {
     const connection = await connectDB();

@@ -4,6 +4,34 @@ import connectDB from "../config/DB.js";
 
 const bookingRouter = express.Router();
 
+/**
+ * @swagger
+ * /api/bookings:
+ *   post:
+ *     summary: Create a new booking
+ *     tags: [Bookings]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               room_id:
+ *                 type: string
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       201:
+ *         description: Booking created successfully
+ *       400:
+ *         description: Room is already booked for the selected time
+ */
+
 bookingRouter.post("/", authenticate, async (req, res) => {
   try {
     const { room_id, startTime, endTime } = req.body;
@@ -40,6 +68,19 @@ bookingRouter.post("/", authenticate, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/bookings:
+ *   get:
+ *     summary: Get all bookings (Admin only)
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: List of bookings
+ *       403:
+ *         description: Access denied
+ */
+
 bookingRouter.get("/", authenticate, async (req, res) => {
   try {
     if (req.user.role !== "admin") {
@@ -60,6 +101,26 @@ bookingRouter.get("/", authenticate, async (req, res) => {
     res.status(500).json({ message: "Error fetching bookings", error: error.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/bookings/user/{userId}:
+ *   get:
+ *     summary: Get all bookings for a specific user
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: List of bookings for the user
+ *       404:
+ *         description: No bookings found for the user
+ */
 
 bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
   try {
@@ -85,6 +146,19 @@ bookingRouter.get("/user/:userId", authenticate, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/bookings/user:
+ *   get:
+ *     summary: Get all bookings for the current user
+ *     tags: [Bookings]
+ *     responses:
+ *       200:
+ *         description: List of bookings for the current user
+ *       404:
+ *         description: No bookings found for the current user
+ */
+
 bookingRouter.get("/user", authenticate, async (req, res) => {
   try {
     const connection = await connectDB(); 
@@ -107,6 +181,26 @@ bookingRouter.get("/user", authenticate, async (req, res) => {
     res.status(500).json({ message: "Error fetching booking history", error: error.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/bookings/room/{roomId}:
+ *   get:
+ *     summary: Get all bookings for a specific room
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: roomId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: List of bookings for the room
+ *       404:
+ *         description: No bookings found for the room
+ */
 
 bookingRouter.get("/room/:roomId", authenticate, async (req, res) => {
   try {
@@ -136,6 +230,41 @@ bookingRouter.get("/room/:roomId", authenticate, async (req, res) => {
     res.status(500).json({ message: "Error fetching room bookings", error: error.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/bookings/{id}:
+ *   put:
+ *     summary: Update a booking
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Booking ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Booking updated successfully
+ *       400:
+ *         description: Room is already booked for the selected time
+ *       404:
+ *         description: Booking not found
+ */
 
 bookingRouter.put("/:id", authenticate, async (req, res) => {
   try {
@@ -180,6 +309,26 @@ bookingRouter.put("/:id", authenticate, async (req, res) => {
     res.status(500).json({ message: "Error updating booking", error: error.message });
   }
 });
+
+/**
+ * @swagger
+ * /api/bookings/{id}:
+ *   delete:
+ *     summary: Delete a booking
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Booking ID
+ *     responses:
+ *       200:
+ *         description: Booking deleted successfully
+ *       404:
+ *         description: Booking not found
+ */
 
 bookingRouter.delete("/:id", authenticate, async (req, res) => {
   try {

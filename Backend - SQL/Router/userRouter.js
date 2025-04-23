@@ -4,6 +4,18 @@ import { authenticate } from "../middlewares/authMiddleware.js";
 
 const userRouter = express.Router();
 
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of users
+ *       404:
+ *         description: No users found
+ */
 userRouter.get("/", async (req, res) => {
   try {
     const connection = await connectDB();
@@ -19,10 +31,34 @@ userRouter.get("/", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: Get current user details
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: User details
+ */
 userRouter.get("/me", authenticate, (req, res) => {
   res.status(200).json(req.user);
 });
 
+/**
+ * @swagger
+ * /api/users/reports:
+ *   get:
+ *     summary: Get user reports (Admin only)
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: User reports fetched successfully
+ *       403:
+ *         description: Access denied. Admins only.
+ *       500:
+ *         description: Error fetching user reports
+ */
 userRouter.get("/reports", authenticate, async (req, res) => {
   try {
     if (req.user.role !== "admin") {
