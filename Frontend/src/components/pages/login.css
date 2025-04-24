@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: #f0f4f8; /* Light blue-gray background */
 }
 
 .login-container {
@@ -43,8 +44,8 @@
 .submit1 {
   width: 100%;
   padding: 0.75rem;
-  background-color: #000000;
-  color: #ffffff;
+  background-color: #34495e; /* Dark blue-gray */
+  color: #ecf0f1; /* Light gray text */
   font-size: 1rem;
   font-weight: bold;
   border-radius: 5px;
@@ -53,7 +54,7 @@
 }
 
 .submit1:hover {
-  background-color: #646464;
+  background-color: #2c3e50; /* Slightly darker blue-gray */
 }
 
 .signup-link {

@@ -42,7 +42,7 @@ export const Navbar = ({ token, setToken }) => {
   return (
     <nav>
       <Link to="/" className="title">
-        HOME
+      <i class="bi bi-calendar3"></i>
       </Link>
 
       <div className="menu" onClick={() => setMenuOpen(!menuOpen)}>
@@ -63,7 +63,7 @@ export const Navbar = ({ token, setToken }) => {
         </li>
         <li className="profile-link dropdown">
           <button
-            className="btn btn-link dropdown-toggle"
+            className="btn btn-link dropdown-toggle profile-button"
             type="button"
             id="profileDropdown"
             data-bs-toggle="dropdown"

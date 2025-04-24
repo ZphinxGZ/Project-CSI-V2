@@ -6,6 +6,7 @@ import { About, Contact, Home, Services } from "./components/pages/";
 import Login from "./components/pages/login";
 import Register from "./components/pages/register";
 import Settings from "./components/pages/Settings";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');

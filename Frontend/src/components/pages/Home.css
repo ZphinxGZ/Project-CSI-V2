@@ -10,7 +10,8 @@
   width: 100%; /* Adjust to fit the container */
   max-width: none; /* Remove any maximum width restriction */
   margin: 10px 0; /* Adjust margin for better spacing */
-  background-color: #fff;
+  background-color: #ffffff; /* White background for clarity */
+  color: #2c3e50; /* Dark slate gray for text */
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -98,8 +99,8 @@
 }
 
 .date.highlight-today {
-  background: #ffe4b2; /* Light orange background for today */
-  border: 2px solid orange; /* Add an orange border */
+  background: #f39c12; /* Formal orange for today */
+  border: 2px solid #e67e22; /* Slightly darker orange border */
 }
 
 .prev-month,
@@ -192,8 +193,8 @@
 .event {
   margin-top: 5px;
   padding: 5px;
-  background: #007bff;
-  color: white;
+  background: #34495e; /* Dark blue-gray */
+  color: #ecf0f1; /* Light gray text */
   border-radius: 5px;
   font-size: 0.8em;
   text-align: left;
