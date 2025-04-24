@@ -15,6 +15,30 @@ export const Settings = ({ token }) => {
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await fetch("http://localhost:3456/api/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setIsAdmin(data.role === "admin"); // Set isAdmin based on the role
+        } else {
+          setIsAdmin(false);
+        }
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+        setIsAdmin(false);
+      }
+    };
+
+    fetchUserRole();
+  }, [token]);
+
+  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch("http://localhost:3456/api/users", {
@@ -26,9 +50,6 @@ export const Settings = ({ token }) => {
         if (response.ok) {
           const data = await response.json();
           setUsers(data);
-          setIsAdmin(true); // Assume admin role if users are fetched successfully
-        } else {
-          setIsAdmin(false);
         }
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -223,7 +244,7 @@ export const Settings = ({ token }) => {
         </div>
       )}
 
-      {isAdmin && token && users.some((user) => user.role === "admin") && (
+      {isAdmin && token && (
         <div className="user-table-section">
           <h2>จัดการรายชื่อผู้ใช้ </h2>
           <table className="table table-bordered">
