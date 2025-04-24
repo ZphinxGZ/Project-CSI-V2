@@ -2,6 +2,98 @@ import express from "express";
 import connectDB from "../config/DB.js";
 import { authenticate } from "../middlewares/authMiddleware.js";
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management and authentication
+ */
+
+/**
+ * @swagger
+ * /api/users/:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: List of users
+ *       404:
+ *         description: No users found
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: Get current user details
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User details
+ *       401:
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /api/users/reports:
+ *   get:
+ *     summary: Get user reports (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User reports
+ *       403:
+ *         description: Access denied
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}/role:
+ *   put:
+ *     summary: Update user role (admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [user, admin]
+ *     responses:
+ *       200:
+ *         description: Role updated successfully
+ *       400:
+ *         description: Invalid role
+ *       403:
+ *         description: Access denied
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
+
 const userRouter = express.Router();
 
 userRouter.get("/", async (req, res) => {

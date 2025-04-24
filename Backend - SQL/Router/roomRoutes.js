@@ -5,6 +5,13 @@ import path from "path";
 import connectDB from "../config/DB.js";
 import { authenticate, isAdmin } from "../middlewares/authMiddleware.js";
 
+/**
+ * @swagger
+ * tags:
+ *   name: Rooms
+ *   description: Room management
+ */
+
 const roomRouter = express.Router();
 roomRouter.use(cors());
 roomRouter.use(express.json({ limit: "50mb" }));
@@ -21,7 +28,106 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+/**
+ * @swagger
+ * /api/rooms/:
+ *   get:
+ *     summary: Get all rooms
+ *     tags: [Rooms]
+ *     responses:
+ *       200:
+ *         description: List of rooms
+ *       404:
+ *         description: No rooms found
+ *       500:
+ *         description: Server error
+ */
+roomRouter.get("/", async (req, res) => {
+  try {
+    const connection = await connectDB();
 
+    const [rooms] = await connection.execute("SELECT * FROM rooms");
+    if (rooms.length === 0) {
+      return res.status(404).json({ message: "No rooms found" });
+    }
+
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching rooms", error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   get:
+ *     summary: Get room details by ID
+ *     tags: [Rooms]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room details
+ *       404:
+ *         description: Room not found
+ *       500:
+ *         description: Server error
+ */
+roomRouter.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const connection = await connectDB();
+
+    const [room] = await connection.execute("SELECT * FROM rooms WHERE room_id = ?", [id]);
+    if (room.length === 0) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    res.status(200).json(room[0]);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching room details", error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /api/rooms/:
+ *   post:
+ *     summary: Create a new room (admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               room_name:
+ *                 type: string
+ *               capacity:
+ *                 type: integer
+ *               location:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Room created successfully
+ *       400:
+ *         description: Room name already exists
+ *       500:
+ *         description: Server error
+ */
 roomRouter.post("/", authenticate, isAdmin, upload.single("image"), async (req, res) => {
   try {
     const { room_name, capacity, location, description } = req.body;
@@ -48,37 +154,47 @@ roomRouter.post("/", authenticate, isAdmin, upload.single("image"), async (req, 
   }
 });
 
-roomRouter.get("/", async (req, res) => {
-  try {
-    const connection = await connectDB();
-
-    const [rooms] = await connection.execute("SELECT * FROM rooms");
-    if (rooms.length === 0) {
-      return res.status(404).json({ message: "No rooms found" });
-    }
-
-    res.status(200).json(rooms);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching rooms", error: error.message });
-  }
-});
-
-roomRouter.get("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const connection = await connectDB();
-
-    const [room] = await connection.execute("SELECT * FROM rooms WHERE room_id = ?", [id]);
-    if (room.length === 0) {
-      return res.status(404).json({ message: "Room not found" });
-    }
-
-    res.status(200).json(room[0]);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching room details", error: error.message });
-  }
-});
-
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   put:
+ *     summary: Update room details (admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Room ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               room_name:
+ *                 type: string
+ *               capacity:
+ *                 type: integer
+ *               location:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Room updated successfully
+ *       404:
+ *         description: Room not found
+ *       500:
+ *         description: Server error
+ */
 roomRouter.put("/:id", authenticate, isAdmin, upload.single("image"), async (req, res) => {
   try {
     const { id } = req.params;
@@ -107,6 +223,29 @@ roomRouter.put("/:id", authenticate, isAdmin, upload.single("image"), async (req
   }
 });
 
+/**
+ * @swagger
+ * /api/rooms/{id}:
+ *   delete:
+ *     summary: Delete a room (admin only)
+ *     tags: [Rooms]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Room ID
+ *     responses:
+ *       200:
+ *         description: Room deleted successfully
+ *       404:
+ *         description: Room not found
+ *       500:
+ *         description: Server error
+ */
 roomRouter.delete("/:id", authenticate, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;

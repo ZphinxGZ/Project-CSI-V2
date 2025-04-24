@@ -2,7 +2,29 @@ import express from "express";
 import { authenticate } from "../middlewares/authMiddleware.js";
 import connectDB from "../config/DB.js";
 
+/**
+ * @swagger
+ * tags:
+ *   name: Calendar
+ *   description: Calendar data for bookings
+ */
+
 const calendarRouter = express.Router();
+
+/**
+ * @swagger
+ * /api/calendar/:
+ *   get:
+ *     summary: Get calendar data for the current user
+ *     tags: [Calendar]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Calendar data
+ *       500:
+ *         description: Server error
+ */
 
 calendarRouter.get("/", authenticate, async (req, res) => {
   try {

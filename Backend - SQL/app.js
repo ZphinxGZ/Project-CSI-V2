@@ -40,22 +40,38 @@ await connectDB();
 
 const swaggerOptions = {
   swaggerDefinition: {
+    openapi: "3.0.0",
     info: {
-      title: 'Meeting Room Booking API',
-      version: '1.0.0',
-      description: 'API documentation for the Meeting Room Booking system',
+      title: "Meeting Room Booking API",
+      version: "1.0.0",
+      description: "API documentation for the Meeting Room Booking system",
     },
     servers: [
       {
-        url: 'http://localhost:3456',
+        url: "http://localhost:3456",
+        description: "Local server",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
       },
     ],
   },
-  apis: ['./Router/*.js', './controllers/*.js'],
+  apis: ["./Router/*.js", "./controllers/*.js"], // Specify the files containing Swagger annotations
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // ใช้ userRouter สำหรับเส้นทาง /api/users
 app.use("/api/users", userRouter);

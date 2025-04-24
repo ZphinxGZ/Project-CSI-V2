@@ -4,7 +4,40 @@ import connectDB from "../config/DB.js";
 
 const notificationRouter = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Notifications
+ *   description: Notification management
+ */
 
+/**
+ * @swagger
+ * /api/notifications/:
+ *   post:
+ *     summary: Create a new notification
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               booking_id:
+ *                 type: integer
+ *               room_id:
+ *                 type: integer
+ *               message:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Notification created successfully
+ *       500:
+ *         description: Server error
+ */
 notificationRouter.post("/", authenticate, async (req, res) => {
   try {
     const { booking_id, room_id, message } = req.body;
@@ -25,6 +58,22 @@ notificationRouter.post("/", authenticate, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/notifications/:
+ *   get:
+ *     summary: Get all notifications for the current user
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of notifications
+ *       404:
+ *         description: No notifications found
+ *       500:
+ *         description: Server error
+ */
 notificationRouter.get("/", authenticate, async (req, res) => {
   try {
     const connection = await connectDB();
@@ -46,6 +95,29 @@ notificationRouter.get("/", authenticate, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/notifications/{id}:
+ *   delete:
+ *     summary: Delete a notification
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Notification ID
+ *     responses:
+ *       200:
+ *         description: Notification deleted successfully
+ *       404:
+ *         description: Notification not found or not authorized
+ *       500:
+ *         description: Server error
+ */
 notificationRouter.delete("/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -68,6 +140,29 @@ notificationRouter.delete("/:id", authenticate, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/notifications/{id}/read:
+ *   put:
+ *     summary: Mark a notification as read
+ *     tags: [Notifications]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Notification ID
+ *     responses:
+ *       200:
+ *         description: Notification marked as read
+ *       404:
+ *         description: Notification not found or not authorized
+ *       500:
+ *         description: Server error
+ */
 notificationRouter.put("/:id/read", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
