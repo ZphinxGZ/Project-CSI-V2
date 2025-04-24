@@ -44,7 +44,40 @@ const swaggerOptions = {
     info: {
       title: "Meeting Room Booking API",
       version: "1.0.0",
-      description: "API documentation for the Meeting Room Booking system",
+      description: `Meeting Room Booking กลุ่มที่ 28 
+คณะเทคโนโลยีสารสนเทศ สาขาวิทยาการคอมพิวเตอร์ มหาวิทยาลัยศรีปทุม
+
+สมาชิกกลุ่ม
+- นายคุณากร ขำเจริญ รหัส 66075070
+- นายนิติพน อุดมโภชน์ รหัส 66075854
+- นายธีรพันธ์ เทียนพรหมทอง รหัส 66075063
+- นางสาวณัฏณิชา ปรือปรัง รหัส 66013672
+- นายเมธาพร ทองนาค รหัส 66087954
+
+หมวดหมู่ API ทั้งหมดมีดังนี้
+- Authentication จำนวน 5 API
+- Booking จำนวน 6 API
+- Calendar จำนวน 1 API
+- Notification จำนวน 4 API
+- Report จำนวน 1 API
+- Room จำนวน 5 API
+- User จำนวน 4 API
+รวมทั้งหมด 26 API
+
+การแบ่งงานของสมาชิกกลุ่ม:
+- นายคุณากร ขำเจริญ 66075070
+  - User จำนวน 4 API
+  - Calendar จำนวน 1 API
+- นายนิติพน อุดมโภชน์ 66075854
+  - Authentication จำนวน 5 API
+- นายธีรพันธ์ เทียนพรหมทอง 66075063
+  - Room จำนวน 5 API
+- นางสาวณัฏณิชา ปรือปรัง 66013672
+  - Notification จำนวน 4 API
+  - Report จำนวน 1 API
+- นายเมธาพร ทองนาค 66087954
+  - Booking จำนวน 6 API
+      `,
     },
     servers: [
       {

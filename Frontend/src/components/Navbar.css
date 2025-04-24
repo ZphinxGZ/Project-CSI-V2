@@ -3,8 +3,8 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #455d74; /* Dark blue-gray */
-  color: #ecf0f1; /* Light gray text */
+  background-color: #9bbdde; /* Dark blue-gray */
+  color: #1f2020; /* Light gray text */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
   position: sticky;
