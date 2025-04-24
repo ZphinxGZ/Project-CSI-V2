@@ -4,20 +4,6 @@ import connectDB from "../config/DB.js";
 
 const reportRouter = express.Router();
 
-/**
- * @swagger
- * /api/reports:
- *   get:
- *     summary: Get booking reports
- *     tags: [Reports]
- *     responses:
- *       200:
- *         description: Booking reports fetched successfully
- *       403:
- *         description: Access denied. Admins only.
- *       500:
- *         description: Error fetching booking reports
- */
 reportRouter.get("/", authenticate, async (req, res) => {
   try {
     if (req.user.role !== "admin") {

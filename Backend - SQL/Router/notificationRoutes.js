@@ -4,31 +4,6 @@ import connectDB from "../config/DB.js";
 
 const notificationRouter = express.Router();
 
-/**
- * @swagger
- * /api/notifications:
- *   post:
- *     summary: Create a new notification
- *     tags: [Notifications]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               booking_id:
- *                 type: string
- *               room_id:
- *                 type: string
- *               message:
- *                 type: string
- *     responses:
- *       201:
- *         description: Notification created successfully
- *       500:
- *         description: Error creating notification
- */
 
 notificationRouter.post("/", authenticate, async (req, res) => {
   try {
@@ -49,21 +24,6 @@ notificationRouter.post("/", authenticate, async (req, res) => {
     res.status(500).json({ message: "Error creating notification", error: error.message });
   }
 });
-
-/**
- * @swagger
- * /api/notifications:
- *   get:
- *     summary: Get all notifications for the user
- *     tags: [Notifications]
- *     responses:
- *       200:
- *         description: Notifications fetched successfully
- *       404:
- *         description: No notifications found
- *       500:
- *         description: Error fetching notifications
- */
 
 notificationRouter.get("/", authenticate, async (req, res) => {
   try {
@@ -86,28 +46,6 @@ notificationRouter.get("/", authenticate, async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/notifications/{id}:
- *   delete:
- *     summary: Delete a notification
- *     tags: [Notifications]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Notification ID
- *     responses:
- *       200:
- *         description: Notification deleted successfully
- *       404:
- *         description: Notification not found or not authorized to delete
- *       500:
- *         description: Error deleting notification
- */
-
 notificationRouter.delete("/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
@@ -129,28 +67,6 @@ notificationRouter.delete("/:id", authenticate, async (req, res) => {
     res.status(500).json({ message: "Error deleting notification", error: error.message });
   }
 });
-
-/**
- * @swagger
- * /api/notifications/{id}/read:
- *   put:
- *     summary: Mark a notification as read
- *     tags: [Notifications]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: Notification ID
- *     responses:
- *       200:
- *         description: Notification status updated to true successfully
- *       404:
- *         description: Notification not found or not authorized to update
- *       500:
- *         description: Error updating notification status
- */
 
 notificationRouter.put("/:id/read", authenticate, async (req, res) => {
   try {
