@@ -91,4 +91,66 @@ userRouter.get("/reports", authenticate, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/users/{id}/role:
+ *   put:
+ *     summary: Update user role
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [user, admin]
+ *     responses:
+ *       200:
+ *         description: Role updated successfully
+ *       403:
+ *         description: Access denied. Admins only.
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Error updating role
+ */
+userRouter.put("/:id/role", authenticate, async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+
+    const { id } = req.params;
+    const { role } = req.body;
+
+    if (!["user", "admin"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    const connection = await connectDB();
+    const [result] = await connection.execute(
+      "UPDATE users SET role = ? WHERE user_id = ?",
+      [role, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "Role updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating role", error: error.message });
+  }
+});
+
 export default userRouter;

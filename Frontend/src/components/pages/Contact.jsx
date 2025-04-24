@@ -10,7 +10,9 @@ export const Contact = () => {
 
   const formatDateTime = (dateTime) => {
     const options = { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" };
-    return new Date(dateTime).toLocaleString("th-TH", options);
+    const formattedDate = new Date(dateTime).toLocaleString("th-TH", options);
+    const timeWithUnit = formattedDate.replace(/(\d{1,2}:\d{2})/, "$1 น."); // Add "น." after the time
+    return timeWithUnit;
   };
 
   useEffect(() => {
@@ -147,7 +149,7 @@ export const Contact = () => {
   const handleNotificationClick = (id, isRead) => {
     if (isRead) {
       // Show popup message if already read
-      setPopupMessage("This notification has already been marked as read.");
+      setPopupMessage("การแจ้งเตือนนี้ถูกอ่านไปแล้ว!");
       setTimeout(() => setPopupMessage(""), 3000); // Hide popup after 3 seconds
     } else {
       setConfirmRead(id); // Open confirmation popup
@@ -169,19 +171,19 @@ export const Contact = () => {
         <>
           <div className="confirmation-popup-overlay"></div>
           <div className="confirmation-popup">
-            <p>Are you sure you want to mark this notification as read?</p>
+            <p>คุณแน่ใจหรือไม่ว่าต้องการเช็คว่าอ่านการแจ้งเตือนแล้ว?</p>
             <div className="confirmation-buttons">
               <button
                 className="btn confirm"
                 onClick={() => handleConfirmRead(confirmRead)}
               >
-                Confirm
+                ตกลง
               </button>
               <button
                 className="btn cancel"
                 onClick={() => setConfirmRead(null)}
               >
-                Cancel
+                ยกเลิก
               </button>
             </div>
           </div>
@@ -191,19 +193,19 @@ export const Contact = () => {
         <>
           <div className="confirmation-popup-overlay"></div>
           <div className="confirmation-popup">
-            <p>Are you sure you want to delete this notification?</p>
+            <p>คุณแน่ใจหรือไม่ว่าต้องการลบการแจ้งเตือนนี้?</p>
             <div className="confirmation-buttons">
               <button
                 className="btn confirm"
                 onClick={() => handleDeleteNotification(confirmDelete)}
               >
-                Confirm
+                ตกลง
               </button>
               <button
                 className="btn cancel"
                 onClick={() => setConfirmDelete(null)}
               >
-                Cancel
+                ยกเลิก
               </button>
             </div>
           </div>
@@ -249,7 +251,7 @@ export const Contact = () => {
       ) : (
         <div className="no-notifications" style={{ textAlign: "center", color: "#888" }}>
           <span style={{ fontSize: "24px", marginRight: "10px" }}>🔔</span>
-          <span>No notifications available</span>
+          <span>ไม่มีการแจ้งเตือนขณะนี้</span>
         </div>
       )}
     </div>

@@ -21,6 +21,15 @@ export const About = () => {
   const [confirmDelete, setConfirmDelete] = useState(null); // State for delete confirmation
   const [showSuccessModal, setShowSuccessModal] = useState(false); // State for success modal
 
+  const timeSlots = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+  const durationOptions = [
+    { label: "1 ชั่วโมง", value: 1 },
+    { label: "1 ชั่วโมงครึ่ง", value: 1.5 },
+    { label: "2 ชั่วโมง", value: 2 },
+    { label: "2 ชั่วโมงครึ่ง", value: 2.5 },
+    { label: "3 ชั่วโมง", value: 3 },
+  ];
+
   useEffect(() => {
     fetchRooms();
     fetchUserRole(); // Fetch user role on component mount
@@ -188,6 +197,23 @@ export const About = () => {
     setSelectedRoom(null);
   };
 
+  const handleStartTimeChange = (e) => {
+    const startTime = e.target.value;
+    setSelectedRoom({ ...selectedRoom, startTime, endTime: "" }); // Reset endTime when startTime changes
+  };
+
+  const handleDurationChange = (e) => {
+    const duration = parseFloat(e.target.value);
+    const startTime = selectedRoom.startTime;
+    if (startTime) {
+      const [hours, minutes] = startTime.split(":").map(Number);
+      const endTime = new Date(0, 0, 0, hours + Math.floor(duration), minutes + (duration % 1) * 60)
+        .toTimeString()
+        .slice(0, 5);
+      setSelectedRoom({ ...selectedRoom, endTime });
+    }
+  };
+
   const confirmBooking = async () => {
     const { bookingDate, startTime, endTime } = selectedRoom;
 
@@ -352,7 +378,7 @@ export const About = () => {
         </div>
       )}
 
-      <Modal show={showForm} onHide={() => { setShowForm(false); setEditingRoomId(null); }}>
+      <Modal  show={showForm} onHide={() => { setShowForm(false); setEditingRoomId(null); }}>
         <Modal.Header >
           <Modal.Title>{editingRoomId ? "📝 แก้ไขห้อง" : "➕ เพิ่มห้องใหม่"}</Modal.Title>
         </Modal.Header>
@@ -379,7 +405,7 @@ export const About = () => {
       </Modal>
 
       <Modal show={showBookingModal} onHide={closeBookingModal}>
-        <Modal.Header >
+        <Modal.Header>
           <Modal.Title>📅 จองห้อง: {selectedRoom?.room_name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -395,12 +421,16 @@ export const About = () => {
               height: 'auto',
               margin: '1rem auto 0',
               borderRadius: '8px',
-              objectFit: 'contain'
+              objectFit: 'contain',
             }}
           />
           <div style={{ marginTop: '0.5rem' }}>
             <label>📌 วันที่จอง:</label>
-            <input type="date" value={selectedRoom?.bookingDate || ""} onChange={(e) => setSelectedRoom({ ...selectedRoom, bookingDate: e.target.value })} />
+            <input
+              type="date"
+              value={selectedRoom?.bookingDate || ""}
+              onChange={(e) => setSelectedRoom({ ...selectedRoom, bookingDate: e.target.value })}
+            />
             {selectedRoom?.bookingDate && isHoliday(selectedRoom.bookingDate) && (
               <p style={{ color: 'red', fontWeight: 'bold', marginTop: '0.3rem' }}>
                 🚫 ไม่สามารถจองในวันหยุด เสาร์-อาทิตย์ หรือวันนักขัตฤกษ์ได้
@@ -408,16 +438,40 @@ export const About = () => {
             )}
           </div>
           <div style={{ marginTop: '0.5rem' }}>
-            <label>🕐 เวลาจอง:</label>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <input type="time" step="3600" value={selectedRoom?.startTime || ""} onChange={(e) => setSelectedRoom({ ...selectedRoom, startTime: e.target.value })} />
-              <span style={{ alignSelf: 'center' }}>ถึง</span>
-              <input type="time" step="3600" value={selectedRoom?.endTime || ""} onChange={(e) => setSelectedRoom({ ...selectedRoom, endTime: e.target.value })} />
-            </div>
+            <label>🕐 เวลาเริ่มต้น:</label>
+            <select
+              value={selectedRoom?.startTime || ""}
+              onChange={handleStartTimeChange}
+              style={{ width: '100%', marginTop: '0.3rem' }}
+            >
+              <option value="" disabled>เลือกเวลาเริ่มต้น</option>
+              {timeSlots.map((time) => (
+                <option key={time} value={time}>{time}</option>
+              ))}
+            </select>
+          </div>
+          <div style={{ marginTop: '0.5rem' }}>
+            <label>⏳ ระยะเวลา:</label>
+            <select
+              value={selectedRoom?.endTime ? durationOptions.find(d => d.value === (new Date(`1970-01-01T${selectedRoom.endTime}:00Z`) - new Date(`1970-01-01T${selectedRoom.startTime}:00Z`)) / 3600000)?.value : ""}
+              onChange={handleDurationChange}
+              style={{ width: '100%', marginTop: '0.3rem' }}
+              disabled={!selectedRoom?.startTime}
+            >
+              <option value="" disabled>เลือกระยะเวลา</option>
+              {durationOptions.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
           </div>
           <div style={{ marginTop: '0.5rem' }}>
             <label>📝 รายละเอียดเพิ่มเติม:</label>
-            <textarea rows="3" placeholder="ระบุวัตถุประสงค์หรือหมายเหตุ" value={selectedRoom?.bookingNote || ""} onChange={(e) => setSelectedRoom({ ...selectedRoom, bookingNote: e.target.value })} />
+            <textarea
+              rows="3"
+              placeholder="ระบุวัตถุประสงค์หรือหมายเหตุ"
+              value={selectedRoom?.bookingNote || ""}
+              onChange={(e) => setSelectedRoom({ ...selectedRoom, bookingNote: e.target.value })}
+            />
           </div>
         </Modal.Body>
         <Modal.Footer>

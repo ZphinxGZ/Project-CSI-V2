@@ -116,16 +116,16 @@ export const Navbar = ({ token, setToken }) => {
       {isLogoutModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <p>Are you sure you want to logout?</p>
+            <p>คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?</p>
             <div className="modal-buttons">
               <button className="btn confirm" onClick={handleLogout}>
-                Confirm
+                ตกลง
               </button>
               <button
                 className="btn cancel"
                 onClick={() => setIsLogoutModalOpen(false)} // Close modal
               >
-                Cancel
+                ยกเลิก
               </button>
             </div>
           </div>

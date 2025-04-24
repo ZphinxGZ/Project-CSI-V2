@@ -1,4 +1,7 @@
 .settings-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
@@ -16,6 +19,8 @@
 
 .settings-section {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-around;
 }
 
 .settings-section h2 {
@@ -43,8 +48,10 @@ button:hover {
 
 .delete-account-btn {
   background-color: #dc3545;
+  /* margin-left: 18rem;   */
 }
 
 .delete-account-btn:hover {
   background-color: #a71d2a;
 }
+

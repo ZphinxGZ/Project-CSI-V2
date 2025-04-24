@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Settings.css";
@@ -8,7 +8,35 @@ export const Settings = ({ token }) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [users, setUsers] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [newRole, setNewRole] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("http://localhost:3456/api/users", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUsers(data);
+          setIsAdmin(true); // Assume admin role if users are fetched successfully
+        } else {
+          setIsAdmin(false);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, [token]);
 
   const handleChangePassword = async () => {
     try {
@@ -59,21 +87,60 @@ export const Settings = ({ token }) => {
     }
   };
 
+  const handleRoleChange = (userId, role) => {
+    setEditingUserId(userId);
+    setNewRole(role);
+  };
+
+  const confirmRoleChange = async () => {
+    try {
+      const response = await fetch(`http://localhost:3456/api/users/${editingUserId}/role`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
+
+      if (response.ok) {
+        alert("Role updated successfully!");
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.user_id === editingUserId ? { ...user, role: newRole } : user
+          )
+        );
+        setEditingUserId(null);
+        setNewRole("");
+      } else {
+        alert("Failed to update role. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error updating role:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
+
+  const cancelRoleChange = () => {
+    setEditingUserId(null);
+    setNewRole("");
+  };
+
   return (
     <div className="settings-container" style={{ color: "black" }}>
-      <h1>Account Settings</h1>
+      <h1>จัดการบัญชีของคุณ</h1>
       <div className="settings-section">
         <button
           className="change-password-btn btn btn-primary"
           onClick={() => setIsModalOpen(true)}
         >
-          Change Password
+          เปลี่ยนรหัสผ่าน
         </button>
         <button
           className="delete-account-btn btn btn-danger"
           onClick={() => setIsDeleteModalOpen(true)}
         >
-          Delete Account
+          ลบบัญชีผู้ใช้
         </button>
       </div>
 
@@ -82,11 +149,11 @@ export const Settings = ({ token }) => {
           <div className="modal-dialog" role="document">
             <div className="modal-content" style={{ color: "black" }}>
               <div className="modal-header">
-                <h5 className="modal-title">Change Password</h5>
+                <h5 className="modal-title">เปลี่ยนรหัสผ่าน</h5>
               </div>
               <div className="modal-body">
                 <div className="form-group">
-                  <label>Old Password:</label>
+                  <label>รหัสผ่านเก่า:</label>
                   <input
                     type="password"
                     className="form-control"
@@ -95,7 +162,7 @@ export const Settings = ({ token }) => {
                   />
                 </div>
                 <div className="form-group">
-                  <label>New Password:</label>
+                  <label>รหัสผ่านใหม่:</label>
                   <input
                     type="password"
                     className="form-control"
@@ -110,14 +177,14 @@ export const Settings = ({ token }) => {
                   className="btn btn-primary"
                   onClick={handleChangePassword}
                 >
-                  Confirm
+                  ตกลง
                 </button>
                 <button
                   type="button"
                   className="btn btn-secondary"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  Cancel
+                  ยกเลิก
                 </button>
               </div>
             </div>
@@ -130,10 +197,10 @@ export const Settings = ({ token }) => {
           <div className="modal-dialog" role="document">
             <div className="modal-content" style={{ color: "black" }}>
               <div className="modal-header">
-                <h5 className="modal-title">Confirm Account Deletion</h5>
+                <h5 className="modal-title">คุณจะทำการลบบัญชีของคุณใช่ไหม</h5>
               </div>
               <div className="modal-body">
-                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                <p>คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีของคุณ การลบบัญชีของคุณไม่สามารถกู้คืนได้</p>
               </div>
               <div className="modal-footer">
                 <button
@@ -141,18 +208,81 @@ export const Settings = ({ token }) => {
                   className="btn btn-danger"
                   onClick={handleDeleteAccount}
                 >
-                  Confirm
+                  ตกลง
                 </button>
                 <button
                   type="button"
                   className="btn btn-secondary"
                   onClick={() => setIsDeleteModalOpen(false)}
                 >
-                  Cancel
+                  ยกเลิก
                 </button>
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {isAdmin && token && users.some((user) => user.role === "admin") && (
+        <div className="user-table-section">
+          <h2>จัดการรายชื่อผู้ใช้ </h2>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>ชื่อผู้ใช้</th>
+                <th>สถานะเดิมผู้ใช้</th>
+                <th style={{ width: "200px" }}>เปลี่ยน สถานะ</th>
+                <th style={{ width: "150px" }}>แก้ไข</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.user_id}>
+                  <td>{user.username}</td>
+                  <td>{user.role}</td>
+                  <td>
+                    {editingUserId === user.user_id ? (
+                      <select
+                        value={newRole}
+                        onChange={(e) => setNewRole(e.target.value)}
+                        style={{ width: "100%" }}
+                      >
+                        <option value="user">user</option>
+                        <option value="admin">admin</option>
+                      </select>
+                    ) : (
+                      user.role
+                    )}
+                  </td>
+                  <td>
+                    {editingUserId === user.user_id ? (
+                      <>
+                        <button
+                          className="btn btn-success"
+                          onClick={confirmRoleChange}
+                        >
+                          ตกลง
+                        </button>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={cancelRoleChange}
+                        >
+                          ยกเลิก
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleRoleChange(user.user_id, user.role)}
+                      >
+                        Edit
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
